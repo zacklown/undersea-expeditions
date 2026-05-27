@@ -33,10 +33,16 @@ const extraAllowedOrigins = (process.env.PAYLOAD_PUBLIC_ORIGINS || "")
 const allowedOrigins = Array.from(
   new Set([serverURL, frontendURL, "http://localhost:3001", "http://127.0.0.1:3001", ...extraAllowedOrigins]),
 );
-const databaseURL = process.env.DATABASE_URL;
+const databaseURL =
+  process.env.DATABASE_URL ||
+  process.env.POSTGRES_URL ||
+  process.env.POSTGRES_URL_NON_POOLING ||
+  process.env.DATABASE_URL_UNPOOLED;
 
 if (isProduction && !databaseURL) {
-  throw new Error("DATABASE_URL must be set in production.");
+  throw new Error(
+    "A database connection string must be set in production. Expected one of DATABASE_URL, POSTGRES_URL, POSTGRES_URL_NON_POOLING, or DATABASE_URL_UNPOOLED.",
+  );
 }
 
 export default buildConfig({
