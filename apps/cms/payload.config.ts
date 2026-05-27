@@ -23,6 +23,7 @@ import { TripsPage } from "./src/globals/TripsPage";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
+const isProduction = process.env.NODE_ENV === "production";
 const serverURL = process.env.SERVER_URL || "http://localhost:3001";
 const frontendURL = process.env.FRONTEND_URL || "http://localhost:4321";
 const extraAllowedOrigins = (process.env.PAYLOAD_PUBLIC_ORIGINS || "")
@@ -32,6 +33,11 @@ const extraAllowedOrigins = (process.env.PAYLOAD_PUBLIC_ORIGINS || "")
 const allowedOrigins = Array.from(
   new Set([serverURL, frontendURL, "http://localhost:3001", "http://127.0.0.1:3001", ...extraAllowedOrigins]),
 );
+const databaseURL = process.env.DATABASE_URL;
+
+if (isProduction && !databaseURL) {
+  throw new Error("DATABASE_URL must be set in production.");
+}
 
 export default buildConfig({
   admin: {
@@ -42,9 +48,7 @@ export default buildConfig({
   csrf: allowedOrigins,
   db: postgresAdapter({
     pool: {
-      connectionString:
-        process.env.DATABASE_URL ||
-        "postgresql://undersea_cms:undersea_cms_dev_password@127.0.0.1:55432/undersea_payload",
+      connectionString: databaseURL || "postgresql://undersea_cms:undersea_cms_dev_password@127.0.0.1:55433/undersea_payload",
     },
   }),
   editor: lexicalEditor(),
