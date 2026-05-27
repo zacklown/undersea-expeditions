@@ -1,0 +1,71 @@
+---
+import Footer from "../../components/Footer.astro";
+import Header from "../../components/Header.astro";
+import Layout from "../../layouts/Layout.astro";
+import { getGalleryBySlug, getGalleries } from "../../lib/content";
+
+export async function getStaticPaths() {
+  const galleries = await getGalleries();
+
+  return galleries.map((gallery) => ({
+    params: { slug: gallery.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const gallery = slug ? await getGalleryBySlug(slug) : null;
+---
+
+<Layout title={`${gallery?.title || "Gallery"} | Undersea Expeditions`}>
+  <Header active="gallery" />
+  <main>
+    {gallery ? (
+      <>
+        <section class="relative min-h-[420px] flex items-end overflow-hidden">
+          <img
+            alt={gallery.coverImage.alt || gallery.title}
+            class="absolute inset-0 h-full w-full object-cover"
+            src={gallery.coverImage.url}
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-primary via-primary/50 to-transparent"></div>
+          <div class="relative z-10 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full py-20 text-white">
+            <div class="max-w-3xl">
+              <p class="font-label-sm text-label-sm uppercase tracking-[0.2em] text-white/80 mb-4">
+                {gallery.overlayText}
+              </p>
+              <h1 class="font-display-lg text-display-lg mb-6">{gallery.title}</h1>
+              <p class="font-body-lg text-body-lg text-white/90">{gallery.excerpt}</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="py-section-padding px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {gallery.images.map((item) => (
+              <figure class="overflow-hidden rounded-3xl bg-secondary-container/40 border border-outline-variant/20">
+                <img
+                  alt={item.image.alt || item.caption || gallery.title}
+                  class="h-[340px] w-full object-cover"
+                  src={item.image.url}
+                />
+                {item.caption && (
+                  <figcaption class="px-6 py-4 text-body-md text-on-surface-variant">
+                    {item.caption}
+                  </figcaption>
+                )}
+              </figure>
+            ))}
+          </div>
+        </section>
+      </>
+    ) : (
+      <section class="py-24 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+        <h1 class="font-display-lg text-display-lg text-primary mb-4">Gallery not found</h1>
+        <a class="text-on-tertiary-container font-bold hover:underline" href="/gallery">
+          Back to all galleries
+        </a>
+      </section>
+    )}
+  </main>
+  <Footer active="gallery" />
+</Layout>

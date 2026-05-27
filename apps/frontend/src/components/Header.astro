@@ -1,0 +1,94 @@
+---
+import logo from "../assets/underseax_logo.jpg";
+
+interface Props {
+  active?: "home" | "trips" | "about" | "gallery" | "faq" | "contact";
+}
+
+const { active = "home" } = Astro.props;
+
+const navItems = [
+  { key: "home", label: "Home", href: "/" },
+  { key: "trips", label: "Trips", href: "/trips" },
+  { key: "about", label: "About", href: "/about" },
+  { key: "gallery", label: "Gallery", href: "/gallery" },
+  { key: "faq", label: "FAQ", href: "/faq" },
+];
+---
+
+<header class="bg-surface/80 dark:bg-surface-container-highest/80 backdrop-blur-md border-b border-outline-variant/30 dark:border-outline/20 shadow-sm dark:shadow-none docked full-width top-0 sticky z-50">
+  <div class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-4 max-w-container-max mx-auto">
+    <a class="inline-flex items-center" href="/" aria-label="Undersea Expeditions home">
+      <img
+        src={logo.src}
+        width={logo.width}
+        height={logo.height}
+        alt="Undersea Expeditions"
+        class="h-14 w-auto md:h-16"
+      />
+    </a>
+
+    <nav class="hidden md:flex items-center gap-8">
+      {navItems.map((item) => (
+        <a
+          class:list={[
+            "font-body-md text-body-md transition-colors relative pb-1",
+            active === item.key
+              ? "text-primary border-b-2 border-on-tertiary-container font-bold"
+              : "text-primary hover:text-on-tertiary-container",
+          ]}
+          href={item.href}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="hidden md:flex items-center gap-4">
+      <a class="bg-on-tertiary-container text-white px-6 py-2 rounded-full font-label-sm text-label-sm uppercase tracking-wider hover:opacity-90 transition-all" href="/contact">
+        Contact Us
+      </a>
+    </div>
+
+    <button
+      class="md:hidden inline-flex items-center justify-center rounded-full border border-outline-variant/40 p-2 text-primary"
+      type="button"
+      aria-expanded="false"
+      aria-controls="mobile-nav"
+      data-nav-toggle
+    >
+      <span class="material-symbols-outlined">menu</span>
+    </button>
+  </div>
+
+  <div id="mobile-nav" class="hidden border-t border-outline-variant/30 bg-surface-container-low/95 md:hidden" data-mobile-nav>
+    <nav class="px-margin-mobile py-4">
+      <div class="flex flex-col gap-4">
+        {navItems.map((item) => (
+          <a
+            class:list={[
+              "font-body-md text-body-md transition-colors",
+              active === item.key ? "text-primary font-bold" : "text-primary hover:text-on-tertiary-container",
+            ]}
+            href={item.href}
+          >
+            {item.label}
+          </a>
+        ))}
+      </div>
+    </nav>
+  </div>
+</header>
+
+<script is:inline>
+  const toggle = document.querySelector("[data-nav-toggle]");
+  const nav = document.querySelector("[data-mobile-nav]");
+
+  if (toggle && nav) {
+    toggle.addEventListener("click", () => {
+      const isOpen = toggle.getAttribute("aria-expanded") === "true";
+      toggle.setAttribute("aria-expanded", String(!isOpen));
+      nav.classList.toggle("hidden", isOpen);
+    });
+  }
+</script>

@@ -1,0 +1,45 @@
+---
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import Layout from "../layouts/Layout.astro";
+import { getTrips, getTripsPageContent } from "../lib/content";
+
+const [pageContent, trips] = await Promise.all([getTripsPageContent(), getTrips()]);
+---
+
+<Layout title="Trips | Undersea Expeditions">
+  <Header active="trips" />
+  <main>
+    <section class="py-24 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+      <div class="max-w-3xl">
+        <h1 class="font-display-lg text-display-lg text-primary mb-6">{pageContent.title}</h1>
+        <p class="font-body-lg text-body-lg text-on-surface-variant">
+          {pageContent.description}
+        </p>
+      </div>
+    </section>
+    <section class="pb-section-padding px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {trips.map((trip) => (
+          <article class="group relative bg-white rounded-2xl overflow-hidden border border-secondary-fixed shadow-sm hover:shadow-xl transition-shadow">
+            <div class="aspect-[4/3] relative overflow-hidden">
+              <img alt={trip.coverImage.alt || trip.title} class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src={trip.coverImage.url} />
+              <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded text-label-sm font-label-sm text-primary">{trip.regionLabel}</div>
+              {trip.isNew && (
+                <div class="absolute top-4 right-4 bg-[#C5A059] px-3 py-1 rounded text-label-sm font-label-sm text-white">New</div>
+              )}
+            </div>
+            <div class="p-6">
+              <h3 class="font-headline-md text-headline-md text-primary mb-2">{trip.title}</h3>
+              <p class="text-secondary mb-2">{trip.countries.join(", ")}</p>
+              <p class="text-on-tertiary-container font-bold mb-4">{trip.dateLabel}</p>
+              <p class="font-body-md text-body-md text-secondary mb-6">{trip.summary}</p>
+              <a class="block w-full py-3 rounded-lg border border-primary text-primary font-bold group-hover:bg-primary group-hover:text-white transition-all text-center" href={`/trips/${trip.slug}`}>Details &amp; Booking</a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  </main>
+  <Footer active="trips" />
+</Layout>

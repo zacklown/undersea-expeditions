@@ -1,0 +1,51 @@
+---
+import "../styles/globals.css";
+
+interface Props {
+  title: string;
+  bodyClass?: string;
+}
+
+const { title, bodyClass = "bg-background text-on-background font-body-md" } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html class="light" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>{title}</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <style is:global>
+      .material-symbols-outlined {
+        font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+      }
+
+      .glass-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+
+      .glass-panel {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+
+      .blue-shadow {
+        box-shadow: 0 10px 40px -10px rgba(0, 51, 102, 0.1);
+      }
+    </style>
+  </head>
+  <body class={bodyClass}>
+    <slot />
+  </body>
+</html>

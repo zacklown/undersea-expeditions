@@ -1,0 +1,55 @@
+---
+import { getSiteSettings } from "../lib/content";
+
+interface Props {
+  active?: "home" | "trips" | "about" | "gallery" | "faq" | "contact";
+}
+
+const { active = "home" } = Astro.props;
+const siteSettings = await getSiteSettings();
+---
+
+<footer class="bg-primary dark:bg-primary-container full-width bottom-0 mt-section-padding">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter px-margin-mobile md:px-margin-desktop py-12 max-w-container-max mx-auto">
+    <div class="space-y-4">
+      <span class="font-headline-md text-headline-md text-tertiary-fixed block">{siteSettings.companyName}</span>
+      <p class="font-body-md text-body-md text-primary-fixed/80">
+        {siteSettings.footerBlurb}
+      </p>
+    </div>
+    <div class="space-y-4">
+      <h6 class="font-label-sm text-label-sm text-white uppercase tracking-widest">Navigation</h6>
+      <div class="grid grid-cols-1 gap-2">
+        <a class:list={["font-body-md transition-colors", active === "home" ? "text-tertiary-fixed font-bold underline" : "text-primary-fixed/80 hover:text-white"]} href="/">Home</a>
+        <a class:list={["font-body-md transition-colors", active === "trips" ? "text-tertiary-fixed font-bold underline" : "text-primary-fixed/80 hover:text-white"]} href="/trips">Trips</a>
+        <a class:list={["font-body-md transition-colors", active === "about" ? "text-tertiary-fixed font-bold underline" : "text-primary-fixed/80 hover:text-white"]} href="/about">About</a>
+        <a class:list={["font-body-md transition-colors", active === "gallery" ? "text-tertiary-fixed font-bold underline" : "text-primary-fixed/80 hover:text-white"]} href="/gallery">Gallery</a>
+        <a class:list={["font-body-md transition-colors", active === "faq" ? "text-tertiary-fixed font-bold underline" : "text-primary-fixed/80 hover:text-white"]} href="/faq">FAQ</a>
+        <a class:list={["font-body-md transition-colors", active === "contact" ? "text-tertiary-fixed font-bold underline" : "text-primary-fixed/80 hover:text-white"]} href="/contact">Contact</a>
+      </div>
+    </div>
+    <div class="space-y-4">
+      <h6 class="font-label-sm text-label-sm text-white uppercase tracking-widest">Certifications</h6>
+      {siteSettings.certifications.map((certification) => (
+        <p class="text-body-md text-primary-fixed/80">{certification}</p>
+      ))}
+      <div class="flex gap-4 mt-4">
+        {siteSettings.socialLinks.map((social) => (
+          <a
+            class="text-primary-fixed/80 hover:text-white transition-colors"
+            href={social.url}
+            rel="noreferrer"
+            target="_blank"
+          >
+            {social.label}
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+  <div class="border-t border-white/10 px-margin-mobile md:px-margin-desktop py-6 max-w-container-max mx-auto text-center">
+    <p class="font-label-sm text-label-sm text-primary-fixed/60">
+      &copy; 2026 {siteSettings.companyName} LLC. All Rights Reserved. {siteSettings.tagline}
+    </p>
+  </div>
+</footer>

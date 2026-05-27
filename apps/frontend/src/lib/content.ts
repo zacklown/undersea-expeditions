@@ -1,0 +1,788 @@
+import { renderRichText } from "./richText";
+
+const DEFAULT_CMS_API_URL = "http://127.0.0.1:3001/api";
+
+export type CMSMedia = {
+  alt?: string | null;
+  url: string;
+};
+
+export type Trip = {
+  bookingHref: string;
+  bookingLabel: string;
+  coverImage: CMSMedia;
+  countries: string[];
+  dateLabel: string;
+  days?: number;
+  deposit?: string;
+  flights?: string;
+  gender?: "male" | "female" | "mixed";
+  groupTypeLabel?: string;
+  id: number | string;
+  isNew?: boolean;
+  nights?: number;
+  notIncluded?: string[];
+  overview?: string;
+  packageIncludes?: string[];
+  pricingOptions?: Array<{
+    amount: number;
+    label: string;
+    note?: string;
+  }>;
+  regionLabel: string;
+  relatedGallery?: {
+    coverImage: CMSMedia;
+    excerpt?: string;
+    overlayText?: string;
+    slug: string;
+    title: string;
+  };
+  slug: string;
+  stays: string[];
+  summary: string;
+  summaryHtml?: string;
+  title: string;
+  tripStyle?: "liveaboard" | "land-resort";
+  tripStyleLabel?: string;
+};
+
+export type GalleryImage = {
+  caption?: string;
+  image: CMSMedia;
+};
+
+export type Gallery = {
+  coverImage: CMSMedia;
+  excerpt: string;
+  id: number | string;
+  images: GalleryImage[];
+  overlayText: string;
+  slug: string;
+  title: string;
+};
+
+export type FAQ = {
+  answer: string;
+  category?: string;
+  id: number | string;
+  question: string;
+};
+
+export type FAQHighlight = {
+  description: string;
+  icon: string;
+  title: string;
+};
+
+export type SiteSettings = {
+  certifications: string[];
+  companyName: string;
+  contact: {
+    addressLines: string[];
+    email: string;
+    internationalPhone?: string;
+    tollFreePhone: string;
+  };
+  footerBlurb: string;
+  socialLinks: Array<{
+    label: string;
+    url: string;
+  }>;
+  tagline: string;
+};
+
+export type HomePageContent = {
+  cta: {
+    description: string;
+    emailLabel: string;
+    newsletterButtonLabel: string;
+    newsletterHelperText: string;
+    newsletterPlaceholder: string;
+    phoneLabel: string;
+    title: string;
+  };
+  featuredIntro: {
+    eyebrow: string;
+  };
+  hero: {
+    description: string;
+    eyebrow?: string;
+    image: CMSMedia;
+    primaryCtaHref: string;
+    primaryCtaLabel: string;
+    secondaryCtaHref: string;
+    secondaryCtaLabel: string;
+    title: string;
+  };
+  story: {
+    body: string[];
+    image: CMSMedia;
+    statOneBody: string;
+    statOneTitle: string;
+    statTwoBody: string;
+    statTwoTitle: string;
+    title: string;
+  };
+  tripsIntro: {
+    description: string;
+    title: string;
+  };
+};
+
+export type TripsPageContent = {
+  description: string;
+  title: string;
+};
+
+export type GalleryPageContent = {
+  description: string;
+  title: string;
+};
+
+export type FAQPageContent = {
+  description: string;
+  highlights: FAQHighlight[];
+  title: string;
+};
+
+export type ContactPageContent = {
+  image: CMSMedia;
+  imageText: string;
+  intro: string;
+  privacyNote: string;
+  title: string;
+};
+
+type CollectionResponse<T> = {
+  docs: T[];
+};
+
+const cmsApiUrl =
+  import.meta.env.PAYLOAD_API_INTERNAL_URL ||
+  import.meta.env.PUBLIC_PAYLOAD_API_URL ||
+  DEFAULT_CMS_API_URL;
+const cmsPublicOrigin = (
+  import.meta.env.PUBLIC_PAYLOAD_PUBLIC_URL ||
+  import.meta.env.PUBLIC_PAYLOAD_API_URL ||
+  DEFAULT_CMS_API_URL
+).replace(/\/api\/?$/, "");
+
+const homeHeroImage =
+  "https://lh3.googleusercontent.com/aida-public/AB6AXuA4SJlxoT5Jt-S5PRXOoSfDzJQgeMe0CnJkrJJRMVkTUJyJComrz9sj-P3DR4urnTSc6npm43IUFY8NXu6rtN8ocICycAOJ5hi9TKKDYBhltyTJw2YME6ZlIaCP8C3aQxK6kXs19uc31q_tpsef3HMdkAU1FhA7QoUoCp_rDXp46MUxB4GSzoGR2khvsk-H1qrcNpyCfegDbbTgEzlNkGu3wz46EfvdLutcDndUft4-Oxqg_2yitMvw0YEO5NUk8B5FdmSDJklO41xG";
+const featuredTripImage =
+  "https://lh3.googleusercontent.com/aida-public/AB6AXuDo6Bec8ZPLRMt1jWuGWse8bBANZl95yo_BwKR5rm478joy2U0CoSnlcQ5LtCnuXWgbxL8vae7vjePIv1NdNeaj8hBeOiIwvWRuK8JW1Lv4sGZ6lC1sgoKgsqEi55UkighzrwFaAGBL5OmueruUhO0g8IdclnoEdh261_BRv-mZWbaIu5S67lZUn0Pk_i2QOpWqKx7j6fX-gw_wiiaD_IlY2RpEndOouhfjTjXYfqSNmPv45cq8jMfeoTnTLXxmHJkAMetgTXxJIz28";
+const storyImage =
+  "https://lh3.googleusercontent.com/aida-public/AB6AXuDN7sYwACIUC--LW0G4KjzZKdeS6UDelcpQOarLGy6Ovga0ffJWJsPpbKoDWjOO_wtuuKCpfprzF3bspUpZGP4V2wYhlUVnY2A3ha2CSvKiUowPWeNlL-f8S1cY886x9RAcN6zZObjb3eZMHptTqERbgVGnj6CGxVARTL7Jhrkfp1y18SKeDXhQ9-nTpNStKYHjq8ktXV0WTxefUoYmRJXK-jAF4dDCJ-w7Ok1mbm28XFq-U_v8Mq2xxDXMDwjptVNj1sBUM8ervD0M";
+const contactImage =
+  "https://lh3.googleusercontent.com/aida-public/AB6AXuAtebHlrWhl-0uhXtSPKVk8B0KdaPxc0XXBMCmOUsfbtJtNam8tYjRoO5Uk8PnP1Z1XlIoOgKVgBsbr5AYD-tHhvSX6QImayLUeGm1ui1c9QLcAlPs8d5nFyUt4rLVGpTOQj5reqZ-8CgQSDzseUYdfT7g7jUjZZB57eomzycfzf7O5YdOBfDkKPt4dUw5ItU4P1QsAyww-D0Qc8fwSDkMq-44vJsVF4H5rBu2IP9BxBB7IUyc3V-985EKYcHX8Tz34I5DOy9s8eAbY";
+
+const fallbackTrips: Trip[] = [
+  {
+    bookingHref: "/contact",
+    bookingLabel: "Reserve Your Spot",
+    overview:
+      "Join us in the Unspoiled Queen of the Caribbean for a week of dramatic volcanic pinnacles, lush reefs, and a social onboard atmosphere built for LGBTQ+ divers.",
+    coverImage: { alt: "Saba Expedition", url: featuredTripImage },
+    countries: ["Saba"],
+    dateLabel: "October 17-24, 2026",
+    id: "trip-saba",
+    regionLabel: "SABA",
+    stays: ["Juliana's Hotel"],
+    slug: "lgbtq-scuba-saba",
+    summary:
+      "Join us for an exclusive week in the Unspoiled Queen of the Caribbean, with Sea & Learn programming and a warm, community-first atmosphere.",
+    title: "LGBTQ+ Scuba Saba",
+    tripStyle: "land-resort",
+  },
+  {
+    bookingHref: "/contact",
+    bookingLabel: "Details & Booking",
+    overview:
+      "Explore the legendary Red Sea with pristine house reefs, strong hospitality, and a trip design tuned for women who want both diving and community.",
+    coverImage: {
+      alt: "Red Sea",
+      url: "https://lh3.googleusercontent.com/aida-public/AB6AXuDlPUIVi1CcXvmr1q1Ys3FSJDneOpJbw_vknGnvYLDjj5r0aS7pVnaXuyyNVGbewNztVq_aTE8ks2XwtpKRawDB8NomyfkLWQLPJYl8JaY-SauTrkHM09YZPOhcHwr9EBnfG4tRk7jWtS4cEBBG1FMvsnFTf6lXoqlfaQGa6ImzuoOIQewVeF7ln_qVYA6G9xkfUGGfv34b55xt-zjBIzLBX-R4NqBrQVQ-2TIWvLvyaZhBNIq2vEwJw7ciZS-fiAPkJy3p7quyf8wW",
+    },
+    countries: ["Egypt"],
+    dateLabel: "October 11-18, 2026",
+    id: "trip-red-sea",
+    regionLabel: "RED SEA",
+    stays: ["Marsa Shagra Dive Village"],
+    slug: "marsa-shagra-dive-village",
+    summary:
+      "Explore the legendary Red Sea for women only, featuring pristine house reefs and world-class hospitality.",
+    title: "Marsa Shagra Dive Village",
+    tripStyle: "land-resort",
+  },
+  {
+    bookingHref: "/contact",
+    bookingLabel: "Details & Booking",
+    overview:
+      "Dive the Sea of Cortez for sea lion encounters, whale shark sightings, and relaxed Baja energy with a group that actually wants to hang out after the dives.",
+    coverImage: {
+      alt: "La Paz",
+      url: "https://lh3.googleusercontent.com/aida-public/AB6AXuC56og5pfXNSCbdx3GnLnULIShYtyXbrXCmLdEW9jvVauWpnaLN-tNjFT6A8-m4mU8WxCarO9ptWp6SV5hh6sVBdxcfSTKWBZANeBjfvZTVOkidc3agefFe--3L3ZqEq0A_DeVMBuhwrOqk8WXXqQtOlHnq5wfMPw4md9h_IE2hIh4SsnvnHcgy82g-jAqhBkwJYAFHDNplfOuB8J4P3OL0C61MBeisbu2_FM4pBRK9nDd5RO5OnlgaHby-eUHRkTggbFfrU5QQINu8",
+    },
+    countries: ["Mexico"],
+    dateLabel: "November 21-28, 2026",
+    id: "trip-la-paz",
+    regionLabel: "MEXICO",
+    stays: ["La Paz Resort"],
+    slug: "la-paz-baja-california",
+    summary:
+      'Dive the Sea of Cortez, the "world\'s aquarium," for sea lion encounters and whale shark sightings.',
+    title: "La Paz, Baja California",
+    tripStyle: "land-resort",
+  },
+  {
+    bookingHref: "/contact",
+    bookingLabel: "Details & Booking",
+    overview:
+      "Board a luxury liveaboard for manta action, current-swept channels, and the kind of polished logistics that let you focus on the diving.",
+    coverImage: {
+      alt: "Maldives",
+      url: "https://lh3.googleusercontent.com/aida-public/AB6AXuBycCrQqKtoSOqz6jXNXXD37n9FYxOosdJSN_Ai2pQI1kapCZjwJyd-CChOg6a6lMURhqXmAcfbC-9vRWs3IPdIRa_z_MEeZ7JWrTCDuryIWDwiLM_D3lZe3hOUmITbyVZbugpCsrzRBm1uWa8M1UgiakpZeb2eU8M5cVbE8NrbMyWnVZfZ8BN9p65avRT2JR1MScukUTi8XsNmDsMBHp0clenKkKpF3l4c6Ftz7Fd_bJKbGAT6APHDpapGzLWRhSXMCkj8hiXcpHGo",
+    },
+    countries: ["Maldives"],
+    dateLabel: "February 17-27, 2027",
+    id: "trip-maldives",
+    regionLabel: "MALDIVES",
+    stays: ["Luxury Liveaboard"],
+    slug: "magic-of-the-maldives",
+    summary:
+      "A luxury liveaboard expedition through the central atolls, seeking mantas and breathtaking reefs.",
+    title: "Magic of the Maldives",
+    tripStyle: "liveaboard",
+  },
+];
+
+const fallbackGalleries: Gallery[] = [
+  {
+    coverImage: {
+      alt: "Travelers on yacht deck",
+      url: "https://lh3.googleusercontent.com/aida-public/AB6AXuBYz-A_ur5AOab3Z-oL6KSdxUlPQOC0awWQLwhO5kqZK1UDl010zUBFT59fcxkYjkXkKUq0c8CGIiFlT3-jePnNHEvmxLNb_ZN1b4f2YaHXI6Xhkou_N_z6QObjB-GUs_ige8bdusl9tprc0TCFg_PYpbI0tkN3E8gtQ-BzyLn2ssQU2OHHqRY6RSbQQiQSRh3GPv-FHVznRtFJeUaJ734izKC-66-d-3-LI2kwPxU-GrF32IFhciQydfVakL5ZuuYqojlJyrhKFTp2",
+    },
+    excerpt: "Aboard moments, reef encounters, and the social side of life at sea in the Maldives.",
+    id: "gallery-maldives",
+    images: [
+      {
+        caption: "On deck between dives",
+        image: {
+          alt: "Travelers on yacht deck",
+          url: "https://lh3.googleusercontent.com/aida-public/AB6AXuBYz-A_ur5AOab3Z-oL6KSdxUlPQOC0awWQLwhO5kqZK1UDl010zUBFT59fcxkYjkXkKUq0c8CGIiFlT3-jePnNHEvmxLNb_ZN1b4f2YaHXI6Xhkou_N_z6QObjB-GUs_ige8bdusl9tprc0TCFg_PYpbI0tkN3E8gtQ-BzyLn2ssQU2OHHqRY6RSbQQiQSRh3GPv-FHVznRtFJeUaJ734izKC-66-d-3-LI2kwPxU-GrF32IFhciQydfVakL5ZuuYqojlJyrhKFTp2",
+        },
+      },
+      {
+        caption: "Vibrant coral detail",
+        image: {
+          alt: "Vibrant coral detail",
+          url: "https://lh3.googleusercontent.com/aida-public/AB6AXuBtXG5a_JwFt4BPq8cqmrG3pvmOO9DZpvPrFfx7-B9O5EeqWQ-K8nMhmuyGBO6KcUb1SVnFtvJx89b5OHjoUHTrcVZSj7g0YSQUiTPE_oNRWm1LgC4mdk3DcpOQOsgt8qjqB74NT5LpwBcCmqxNT-HWmfzXpObkj-PckIQmwdnbySAcAPAUcTcwkvHLECYtpSAZ6M2CyyumQFgSeeyBEhvVVboLezvZYeHI9cMgh_k8MJjOGMLtZmisccfKXKEPB_nKdWzZfeG-KDhr",
+        },
+      },
+      {
+        caption: "Divers exploring the reef",
+        image: {
+          alt: "Divers exploring a reef",
+          url: "https://lh3.googleusercontent.com/aida-public/AB6AXuAbhQM8shZzX_biIIIYFX_v7DJrfoP66BEdKVEb_7KVSVV4A36ze4iFO_A09fyxvu9bDfWMnF8cwD2dyZWdaAqAavDxdKbuJAJEa9yibT56ly6evCMvZIZ52Z5hSPaeuhHMe_zh1QR9DnLY2IOtWQjzfJ38pLz556agiyB2zKRvhTK2sT9fwLsDwy2PH31knIv5VScCFCQoeY9qRsPzE5Ia3jrmuNlnlpMVuEjffaSkNcY5VEPKXv13z1ouKHKi0ir6TR7s9I36ijkl",
+        },
+      },
+      {
+        caption: "Sunset pride moment",
+        image: {
+          alt: "Pride flag at sunset over water",
+          url: "https://lh3.googleusercontent.com/aida-public/AB6AXuAATrLLmvo1tyj38AWl7Dki6EIDzFgsUBh3ads1MkLTXC6bWKA46N9hFcNI6qjVWH45pnj43otOrPeniN6cDgotqFYSxsGt0DDNPGaRwW0sacKoafTVG_2vHpOr56kxxJCsvNah1iu0QhdxmLJqvLGAm2phyeRsrEhLFCJjZhlKRt9rps_F5XsUznESxVoit5uGhoN8Cy_S9z_jJHFT2r0ssTIhBjzswRZmAKx-yojULnkUxmQTDp0wyHgWyg9s6tL_ZLLBha0cU4li",
+        },
+      },
+    ],
+    overlayText: "On Deck in the Maldives",
+    slug: "maldives-liveaboard",
+    title: "Maldives Liveaboard",
+  },
+];
+
+const fallbackFaqs: FAQ[] = [
+  {
+    answer:
+      "No. Some trips suit newer divers and some are intended for more experienced guests. We help place you on the right departure.",
+    category: "Experience Levels",
+    id: "faq-1",
+    question: "Do I need to be an advanced diver?",
+  },
+  {
+    answer: "Yes. The social atmosphere is a core part of the experience, not an afterthought.",
+    category: "Community",
+    id: "faq-2",
+    question: "Are trips community-focused?",
+  },
+  {
+    answer:
+      "Yes. Use the contact page to ask about destinations, dive requirements, cabins, or itinerary fit.",
+    category: "Booking",
+    id: "faq-3",
+    question: "Can I ask questions before booking?",
+  },
+  {
+    answer:
+      "Examples include Saba, the Red Sea, Baja California, the Maldives, and additional curated departures by season.",
+    category: "Destinations",
+    id: "faq-4",
+    question: "What destinations are offered?",
+  },
+];
+
+const fallbackSiteSettings: SiteSettings = {
+  certifications: ["Hawaii TAR 6711", "CST 2072890-40"],
+  companyName: "Undersea Expeditions",
+  contact: {
+    addressLines: ["758 Kapahulu Ave, #100-1188", "Honolulu, HI 96816", "USA"],
+    email: "info@UnderseaX.com",
+    internationalPhone: "+1 858-270-2900",
+    tollFreePhone: "1-800-669-0310",
+  },
+  footerBlurb:
+    "Gay and Lesbian Scuba Dive Travel Experts since 1991. Leading the world in community-focused aquatic adventures.",
+  socialLinks: [
+    { label: "Facebook", url: "https://facebook.com" },
+    { label: "Instagram", url: "https://instagram.com" },
+  ],
+  tagline: "World-class diving and community-driven travel for the LGBTQ+ community since 1991.",
+};
+
+const fallbackHomePage: HomePageContent = {
+  cta: {
+    description:
+      "Our experts are ready to help you plan your next underwater adventure. Reach out today for specialized trip details and availability.",
+    emailLabel: "EMAIL OUR TEAM",
+    newsletterButtonLabel: "Sign Me Up",
+    newsletterHelperText:
+      "We respect your privacy - no sharing of your e-mail address with outside parties.",
+    newsletterPlaceholder: "Your email address",
+    phoneLabel: "CALL US TOLL-FREE",
+    title: "Ready to Dive In?",
+  },
+  featuredIntro: {
+    eyebrow: "FEATURED EXPEDITION",
+  },
+  hero: {
+    description: fallbackSiteSettings.tagline,
+    image: { alt: "Experience the freedom of the deep", url: homeHeroImage },
+    primaryCtaHref: "/trips",
+    primaryCtaLabel: "Book Your Journey",
+    secondaryCtaHref: "/gallery",
+    secondaryCtaLabel: "Explore Gallery",
+    title: "Experience the Freedom of the Deep",
+  },
+  story: {
+    body: [
+      "Scuba diving is more fun when it's shared with friends. Friends who share our values, humor, and lifestyle. New friends are what we make on our Undersea Expeditions, exploring the world and having a great time doing it.",
+      "We dive the clear, warm waters of our planet's most exciting and exotic locations in the company of friends. We offer trips for all levels of divers, from instruction for new divers to advanced destinations for the experienced.",
+    ],
+    image: { alt: "Community of divers", url: storyImage },
+    statOneBody: "A welcoming space for all.",
+    statOneTitle: "Inclusive Community",
+    statTwoBody: "30+ years of dive expertise.",
+    statTwoTitle: "Expert Guides",
+    title: "Dive with Friends, Explore the World",
+  },
+  tripsIntro: {
+    description: "Discover our upcoming curated global expeditions.",
+    title: "2026 & 2027 Vacations",
+  },
+};
+
+const fallbackTripsPage: TripsPageContent = {
+  description:
+    "Discover our upcoming curated global expeditions, built around strong diving, polished logistics, and the kind of social atmosphere that keeps people coming back.",
+  title: "2026 & 2027 Vacations",
+};
+
+const fallbackGalleryPage: GalleryPageContent = {
+  description:
+    "A glimpse into the life aquatic with Undersea Expeditions. These are more than just photos; they're memories of freedom and discovery.",
+  title: "Capturing the Magic",
+};
+
+const fallbackFAQPage: FAQPageContent = {
+  description:
+    "Practical answers about certification, trip fit, and how the Undersea Expeditions community works.",
+  highlights: [
+    {
+      description: "We are CST 2072890-40 certified experts in LGBTQ+ dive travel.",
+      icon: "verified_user",
+      title: "Accreditation",
+    },
+    {
+      description: "From Open Water to Dive Masters, we cater to all skill levels on deck.",
+      icon: "water_drop",
+      title: "Experience Levels",
+    },
+    {
+      description: "Learn more about the unique culture and friendships built underwater.",
+      icon: "diversity_3",
+      title: "The Community",
+    },
+  ],
+  title: "Common Questions",
+};
+
+const fallbackContactPage: ContactPageContent = {
+  image: { alt: "Diverse group of divers on a boat", url: contactImage },
+  imageText: "Gay and Lesbian Scuba Dive Experts since 1991",
+  intro:
+    "Join our global community of LGBTQ+ divers. Whether you're a beginner or a dive master, we have a deck waiting for you.",
+  privacyNote: "We respect your privacy - no sharing of your e-mail address with outside parties.",
+  title: "Start Your Next Adventure",
+};
+
+function resolveMediaUrl(url?: string | null) {
+  if (!url) return "";
+  if (/^https?:\/\//.test(url)) return url;
+  return `${cmsPublicOrigin}${url.startsWith("/") ? "" : "/"}${url}`;
+}
+
+function mapMedia(value: any, fallback: CMSMedia): CMSMedia {
+  if (!value || typeof value !== "object") return fallback;
+
+  return {
+    alt: value.alt || fallback.alt,
+    url: resolveMediaUrl(value.url) || fallback.url,
+  };
+}
+
+function getGroupTypeLabel(gender?: "male" | "female" | "mixed") {
+  switch (gender) {
+    case "male":
+      return "Male Only Trip";
+    case "female":
+      return "Female Only Trip";
+    case "mixed":
+      return "CoEd Trip";
+    default:
+      return "";
+  }
+}
+
+function getTripStyleLabel(tripStyle?: "liveaboard" | "land-resort") {
+  switch (tripStyle) {
+    case "liveaboard":
+      return "Liveaboard";
+    case "land-resort":
+      return "Land Resort";
+    default:
+      return "";
+  }
+}
+
+function stripHtml(value?: string) {
+  return value ? value.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim() : "";
+}
+
+function formatTripDateLabel(tripStart?: string, tripEnd?: string, fallback?: string) {
+  if (!tripStart || !tripEnd) return fallback || "";
+
+  const start = new Date(tripStart);
+  const end = new Date(tripEnd);
+
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
+    return fallback || "";
+  }
+
+  const fmt = (value: Date, options: Intl.DateTimeFormatOptions) =>
+    new Intl.DateTimeFormat("en-US", { ...options, timeZone: "UTC" }).format(value);
+
+  const startMonth = fmt(start, { month: "long" });
+  const endMonth = fmt(end, { month: "long" });
+  const startDay = fmt(start, { day: "numeric" });
+  const endDay = fmt(end, { day: "numeric" });
+  const startYear = fmt(start, { year: "numeric" });
+  const endYear = fmt(end, { year: "numeric" });
+
+  if (startMonth === endMonth && startYear === endYear) {
+    return `${startMonth} ${startDay}-${endDay}, ${startYear}`;
+  }
+
+  if (startYear === endYear) {
+    return `${startMonth} ${startDay} - ${endMonth} ${endDay}, ${startYear}`;
+  }
+
+  return `${fmt(start, { month: "long", day: "numeric", year: "numeric" })} - ${fmt(end, {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  })}`;
+}
+
+async function fetchCMS<T>(path: string) {
+  try {
+    const response = await fetch(`${cmsApiUrl}${path}`, {
+      headers: { Accept: "application/json" },
+    });
+
+    if (!response.ok) return null;
+
+    return (await response.json()) as T;
+  } catch {
+    return null;
+  }
+}
+
+function normalizeTrip(doc: any, fallback?: Trip): Trip | null {
+  if (!doc?.slug || !doc?.title) return fallback || null;
+
+  const regionLabel =
+    (typeof doc.region === "object" ? doc.region?.name : "") ||
+    doc.regionLabel ||
+    fallback?.regionLabel ||
+    "";
+  const countries =
+    doc.countries?.map((item: any) => (typeof item === "object" ? item?.name : "")).filter(Boolean) ||
+    (fallback?.countries?.length ? fallback.countries : []);
+  const stays =
+    doc.stays?.map((item: any) => (typeof item === "object" ? item?.name : "")).filter(Boolean) ||
+    (fallback?.stays?.length ? fallback.stays : []);
+
+  return {
+    bookingHref: doc.bookingHref || fallback?.bookingHref || "/contact",
+    bookingLabel: doc.bookingLabel || fallback?.bookingLabel || "Contact Us",
+    coverImage: mapMedia(doc.coverImage, fallback?.coverImage || fallbackTrips[0].coverImage),
+    countries,
+    dateLabel: formatTripDateLabel(doc.tripStart, doc.tripEnd, doc.dateLabel || fallback?.dateLabel),
+    days: doc.days || fallback?.days,
+    deposit: renderRichText(doc.contentSections?.deposit) || fallback?.deposit,
+    flights: renderRichText(doc.contentSections?.flights) || fallback?.flights,
+    gender: doc.gender || fallback?.gender,
+    groupTypeLabel: getGroupTypeLabel(doc.gender || fallback?.gender),
+    id: doc.id || fallback?.id || doc.slug,
+    isNew: typeof doc.isNew === "boolean" ? doc.isNew : fallback?.isNew,
+    nights: doc.nights || fallback?.nights,
+    notIncluded:
+      doc.contentSections?.notIncluded?.map((item: any) => item.item).filter(Boolean) ||
+      fallback?.notIncluded,
+    overview: renderRichText(doc.contentSections?.overview) || fallback?.overview,
+    packageIncludes:
+      doc.contentSections?.packageIncludes?.map((item: any) => item.item).filter(Boolean) ||
+      fallback?.packageIncludes,
+    pricingOptions:
+      doc.pricingOptions?.map((item: any) => ({
+        amount: item.amount,
+        label: item.label,
+        note: renderRichText(item.note),
+      })) || fallback?.pricingOptions,
+    regionLabel,
+    relatedGallery:
+      typeof doc.gallery === "object" && doc.gallery?.slug && doc.gallery?.title
+        ? {
+            coverImage: mapMedia(doc.gallery.coverImage, fallbackGalleries[0].coverImage),
+            excerpt: doc.gallery.excerpt || "",
+            overlayText: doc.gallery.overlayText || doc.gallery.title,
+            slug: doc.gallery.slug,
+            title: doc.gallery.title,
+          }
+        : fallback?.relatedGallery,
+    slug: doc.slug,
+    stays,
+    summary: stripHtml(renderRichText(doc.summary)) || fallback?.summary || "",
+    summaryHtml: renderRichText(doc.summary) || fallback?.summaryHtml,
+    title: doc.title,
+    tripStyle: doc.tripStyle || fallback?.tripStyle,
+    tripStyleLabel: getTripStyleLabel(doc.tripStyle || fallback?.tripStyle),
+  };
+}
+
+function normalizeGallery(doc: any, fallback?: Gallery): Gallery | null {
+  if (!doc?.slug || !doc?.title) return fallback || null;
+
+  return {
+    coverImage: mapMedia(doc.coverImage, fallback?.coverImage || fallbackGalleries[0].coverImage),
+    excerpt: doc.excerpt || fallback?.excerpt || "",
+    id: doc.id || fallback?.id || doc.slug,
+    images:
+      doc.images?.map((item: any) => ({
+        caption: item.caption,
+        image: mapMedia(item.image, fallback?.coverImage || fallbackGalleries[0].coverImage),
+      })) || fallback?.images || [],
+    overlayText: doc.overlayText || fallback?.overlayText || doc.title,
+    slug: doc.slug,
+    title: doc.title,
+  };
+}
+
+export async function getSiteSettings(): Promise<SiteSettings> {
+  const global = await fetchCMS<any>("/globals/site-settings?depth=1");
+
+  if (!global) return fallbackSiteSettings;
+
+  return {
+    certifications:
+      global.certifications?.map((item: any) => item.label).filter(Boolean) ||
+      fallbackSiteSettings.certifications,
+    companyName: global.companyName || fallbackSiteSettings.companyName,
+    contact: {
+      addressLines:
+        global.contact?.addressLines?.map((item: any) => item.line).filter(Boolean) ||
+        fallbackSiteSettings.contact.addressLines,
+      email: global.contact?.email || fallbackSiteSettings.contact.email,
+      internationalPhone:
+        global.contact?.internationalPhone || fallbackSiteSettings.contact.internationalPhone,
+      tollFreePhone: global.contact?.tollFreePhone || fallbackSiteSettings.contact.tollFreePhone,
+    },
+    footerBlurb: global.footerBlurb || fallbackSiteSettings.footerBlurb,
+    socialLinks:
+      global.socialLinks?.map((item: any) => ({
+        label: item.label,
+        url: item.url,
+      })) || fallbackSiteSettings.socialLinks,
+    tagline: global.tagline || fallbackSiteSettings.tagline,
+  };
+}
+
+export async function getHomePageContent(): Promise<HomePageContent> {
+  const global = await fetchCMS<any>("/globals/home-page?depth=2");
+
+  if (!global) return fallbackHomePage;
+
+  return {
+    cta: {
+      description: global.cta?.description || fallbackHomePage.cta.description,
+      emailLabel: global.cta?.emailLabel || fallbackHomePage.cta.emailLabel,
+      newsletterButtonLabel:
+        global.cta?.newsletterButtonLabel || fallbackHomePage.cta.newsletterButtonLabel,
+      newsletterHelperText:
+        global.cta?.newsletterHelperText || fallbackHomePage.cta.newsletterHelperText,
+      newsletterPlaceholder:
+        global.cta?.newsletterPlaceholder || fallbackHomePage.cta.newsletterPlaceholder,
+      phoneLabel: global.cta?.phoneLabel || fallbackHomePage.cta.phoneLabel,
+      title: global.cta?.title || fallbackHomePage.cta.title,
+    },
+    featuredIntro: {
+      eyebrow: global.featuredIntro?.eyebrow || fallbackHomePage.featuredIntro.eyebrow,
+    },
+    hero: {
+      description: global.hero?.description || fallbackHomePage.hero.description,
+      eyebrow: global.hero?.eyebrow || fallbackHomePage.hero.eyebrow,
+      image: mapMedia(global.hero?.image, fallbackHomePage.hero.image),
+      primaryCtaHref: global.hero?.primaryCtaHref || fallbackHomePage.hero.primaryCtaHref,
+      primaryCtaLabel: global.hero?.primaryCtaLabel || fallbackHomePage.hero.primaryCtaLabel,
+      secondaryCtaHref: global.hero?.secondaryCtaHref || fallbackHomePage.hero.secondaryCtaHref,
+      secondaryCtaLabel:
+        global.hero?.secondaryCtaLabel || fallbackHomePage.hero.secondaryCtaLabel,
+      title: global.hero?.title || fallbackHomePage.hero.title,
+    },
+    story: {
+      body:
+        global.story?.body?.map((item: any) => item.paragraph).filter(Boolean) ||
+        fallbackHomePage.story.body,
+      image: mapMedia(global.story?.image, fallbackHomePage.story.image),
+      statOneBody: global.story?.statOneBody || fallbackHomePage.story.statOneBody,
+      statOneTitle: global.story?.statOneTitle || fallbackHomePage.story.statOneTitle,
+      statTwoBody: global.story?.statTwoBody || fallbackHomePage.story.statTwoBody,
+      statTwoTitle: global.story?.statTwoTitle || fallbackHomePage.story.statTwoTitle,
+      title: global.story?.title || fallbackHomePage.story.title,
+    },
+    tripsIntro: {
+      description: global.tripsIntro?.description || fallbackHomePage.tripsIntro.description,
+      title: global.tripsIntro?.title || fallbackHomePage.tripsIntro.title,
+    },
+  };
+}
+
+export async function getTripsPageContent(): Promise<TripsPageContent> {
+  const global = await fetchCMS<any>("/globals/trips-page");
+
+  if (!global) return fallbackTripsPage;
+
+  return {
+    description: global.description || fallbackTripsPage.description,
+    title: global.title || fallbackTripsPage.title,
+  };
+}
+
+export async function getGalleryPageContent(): Promise<GalleryPageContent> {
+  const global = await fetchCMS<any>("/globals/gallery-page");
+
+  if (!global) return fallbackGalleryPage;
+
+  return {
+    description: global.description || fallbackGalleryPage.description,
+    title: global.title || fallbackGalleryPage.title,
+  };
+}
+
+export async function getFAQPageContent(): Promise<FAQPageContent> {
+  const global = await fetchCMS<any>("/globals/faq-page");
+
+  if (!global) return fallbackFAQPage;
+
+  return {
+    description: global.description || fallbackFAQPage.description,
+    highlights:
+      global.highlights?.map((item: any) => ({
+        description: item.description,
+        icon: item.icon,
+        title: item.title,
+      })) || fallbackFAQPage.highlights,
+    title: global.title || fallbackFAQPage.title,
+  };
+}
+
+export async function getContactPageContent(): Promise<ContactPageContent> {
+  const global = await fetchCMS<any>("/globals/contact-page?depth=1");
+
+  if (!global) return fallbackContactPage;
+
+  return {
+    image: mapMedia(global.image, fallbackContactPage.image),
+    imageText: global.imageText || fallbackContactPage.imageText,
+    intro: global.intro || fallbackContactPage.intro,
+    privacyNote: global.privacyNote || fallbackContactPage.privacyNote,
+    title: global.title || fallbackContactPage.title,
+  };
+}
+
+export async function getTrips(): Promise<Trip[]> {
+  const response = await fetchCMS<CollectionResponse<any>>("/trips?depth=2&limit=100");
+  const docs = response?.docs?.map((doc, index) => normalizeTrip(doc, fallbackTrips[index]))?.filter(Boolean);
+
+  return docs?.length ? (docs as Trip[]) : fallbackTrips;
+}
+
+export async function getTripBySlug(slug: string): Promise<Trip | null> {
+  const response = await fetchCMS<CollectionResponse<any>>(
+    `/trips?depth=2&limit=1&where[slug][equals]=${encodeURIComponent(slug)}`,
+  );
+
+  return normalizeTrip(response?.docs?.[0], fallbackTrips.find((trip) => trip.slug === slug));
+}
+
+export async function getGalleries(): Promise<Gallery[]> {
+  const response = await fetchCMS<CollectionResponse<any>>(
+    "/galleries?depth=2&limit=100&sort=sortOrder",
+  );
+  const docs = response?.docs?.map((doc, index) => normalizeGallery(doc, fallbackGalleries[index]))?.filter(Boolean);
+
+  return docs?.length ? (docs as Gallery[]) : fallbackGalleries;
+}
+
+export async function getGalleryBySlug(slug: string): Promise<Gallery | null> {
+  const response = await fetchCMS<CollectionResponse<any>>(
+    `/galleries?depth=2&limit=1&where[slug][equals]=${encodeURIComponent(slug)}`,
+  );
+
+  return normalizeGallery(
+    response?.docs?.[0],
+    fallbackGalleries.find((gallery) => gallery.slug === slug),
+  );
+}
+
+export async function getFAQs(): Promise<FAQ[]> {
+  const response = await fetchCMS<CollectionResponse<any>>("/faqs?limit=100&sort=sortOrder");
+  const faqs =
+    response?.docs?.map((doc) => ({
+      answer: doc.answer || "",
+      category: doc.category || "",
+      id: doc.id || doc.question,
+      question: doc.question || "",
+    })) || [];
+
+  return faqs.length ? faqs : fallbackFaqs;
+}

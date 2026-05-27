@@ -1,0 +1,50 @@
+---
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import Layout from "../layouts/Layout.astro";
+import { getGalleries, getGalleryPageContent } from "../lib/content";
+
+const [pageContent, galleries] = await Promise.all([getGalleryPageContent(), getGalleries()]);
+---
+
+<Layout title="Gallery | Undersea Expeditions">
+  <Header active="gallery" />
+  <main>
+    <section class="py-24 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+      <div class="max-w-xl">
+        <h1 class="font-display-lg text-display-lg text-primary mb-6">{pageContent.title}</h1>
+        <p class="font-body-lg text-body-lg text-on-surface-variant">
+          {pageContent.description}
+        </p>
+      </div>
+    </section>
+    <section class="pb-section-padding px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+        {galleries.map((gallery) => (
+          <a class="group block" href={`/gallery/${gallery.slug}`}>
+            <article class="overflow-hidden rounded-3xl bg-white border border-secondary-fixed shadow-sm hover:shadow-xl transition-shadow">
+              <div class="relative aspect-[4/3] overflow-hidden">
+                <img
+                  alt={gallery.coverImage.alt || gallery.title}
+                  class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  src={gallery.coverImage.url}
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent"></div>
+                <div class="absolute inset-x-0 bottom-0 p-6">
+                  <p class="text-white/75 text-label-sm uppercase tracking-[0.18em] mb-2">
+                    {gallery.overlayText}
+                  </p>
+                  <h2 class="font-headline-md text-headline-md text-white">{gallery.title}</h2>
+                </div>
+              </div>
+              <div class="p-6">
+                <p class="text-body-md text-on-surface-variant">{gallery.excerpt}</p>
+              </div>
+            </article>
+          </a>
+        ))}
+      </div>
+    </section>
+  </main>
+  <Footer active="gallery" />
+</Layout>

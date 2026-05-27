@@ -1,0 +1,103 @@
+---
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="About Us | Undersea Expeditions" bodyClass="bg-background text-on-surface font-body-md selection:bg-on-tertiary-container selection:text-white">
+  <Header active="about" />
+  <main>
+    <section class="relative h-[614px] min-h-[500px] flex items-center overflow-hidden">
+      <img class="absolute inset-0 w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAf78J9Nd4mM0OC1BkmCBaQVt7kjRW-4a0kgSLfR6mbJfN-QU9ioHxsnv0hf7YbcNsYW4pJG8PSH5OFdeoSXBIzriL15402T3HhK0zaf0tOSn4RlgZPTtqRUbc5kPu6Xjbk1nJz_oUtDHmq5bXz-mI1yPx3H575mIjV7KHUJemZWtw1gX8_mZF4oVhUS0TJhwk24dLnFJAcrWQSTPcxgTA1vZ4z-v0m-NOyqJb4TiPRMQK_EmP1Tnpr_FFpJArJa74s1BgOBSPB7YeL" alt="Luxury scuba expedition at sunset" />
+      <div class="absolute inset-0 bg-gradient-to-r from-primary/60 to-transparent"></div>
+      <div class="relative z-10 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
+        <div class="max-w-2xl text-white">
+          <span class="font-label-sm text-label-sm uppercase tracking-widest text-tertiary-fixed mb-4 block">Since 1991</span>
+          <h1 class="font-display-lg text-display-lg mb-6 leading-tight text-white">Gay and Lesbian Scuba Dive Travel Experts</h1>
+          <p class="font-body-lg text-body-lg text-primary-fixed/90">Pioneering world-class underwater adventures for our community for over three decades.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-section-padding px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
+        <div class="md:col-span-7 space-y-8">
+          <div class="space-y-4">
+            <h2 class="font-headline-lg text-headline-lg text-primary">A Legacy of Connection</h2>
+            <div class="h-1 w-24 bg-on-tertiary-container"></div>
+          </div>
+          <div class="bg-secondary-container/30 p-10 rounded-xl border border-secondary-fixed-dim/50 space-y-6">
+            <p class="font-body-lg text-body-lg text-on-surface leading-relaxed italic">
+              "Scuba diving is more fun when it's shared with friends. Friends who share our values, humor, and lifestyle."
+            </p>
+            <p class="font-body-md text-body-md text-on-surface-variant leading-loose">
+              Founded in 1991, Undersea Expeditions was born from a simple desire: to explore the world's most breathtaking underwater habitats in a space that celebrates our identity. We aren't just a travel agency; we are a community of adventurers who believe that the magic of the ocean is amplified by the camaraderie on deck.
+            </p>
+            <p class="font-body-md text-body-md text-on-surface-variant leading-loose">
+              From the vibrant reefs of Saba to the mysterious depths of the Red Sea, we curate expeditions that cater to all skill levels. Whether you're making your first descent or you're a seasoned master diver, you'll find a welcoming home beneath the waves with us.
+            </p>
+          </div>
+        </div>
+        <div class="md:col-span-5 relative">
+          <div class="aspect-[4/5] rounded-2xl overflow-hidden blue-shadow">
+            <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYfLqRlkxAewXmnnDItb-99ywuc7MT6tFubjX3m8Etw4koEsaQ_N-cpyoLHqhIz1Znn2j0we7TxOwol8chG8-t9KA1IHZDqLtG4bSvzGIR4YkwmrZaQpvtp_7X-byxmjZrLLwzur9cgNgawop-SnFOsbHOxm14UgVP9k1aFbF9gLcnu-YEVwj351iW76Qe7cyhHbqEfEQwl3M2KJqFOzCG-1wWNVQxR_Yt7yPomTXvY-juYjrrr0rwvDOMs_NVU8b5f6fwLLTS7pNd" alt="Two divers smiling after surfacing" />
+          </div>
+          <div class="absolute -bottom-10 -left-10 glass-card p-6 rounded-xl blue-shadow border border-white/50 hidden md:block max-w-[240px]">
+            <div class="flex items-center gap-4 mb-3">
+              <div class="w-12 h-12 rounded-full border-2 border-on-tertiary-container overflow-hidden">
+                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJ03zhfi5Z7DL1mGvF15PRWbllw6QbjVJiQcqgzK4nS-IQQi0j3d6S4ALpAMISXHUEhiIAvz2XOaA60thxGR_qde2ANmGaaQESqh0-n31tuLsh7ilp6A3-8j1INtNZeKlzSTF-7NQTEdIuwwwI4_0mBf0g_CtEgyDfTiGlCk4Emvn1x872oOLkrQUahYzsmDwabB8uWeNhHBpJCd-qSzd-JnvZBgbKmUVH2WwNznncNVm2v21DFmNCJGfgHXicZYAMU9MODwhTAXLM" alt="Dive master portrait" />
+              </div>
+              <div>
+                <p class="font-label-sm text-label-sm font-bold text-primary">Join the family</p>
+                <p class="text-[10px] text-on-surface-variant">33 Years of Adventure</p>
+              </div>
+            </div>
+            <p class="text-xs text-on-surface-variant">"The friends I've made on these trips have become my chosen family for life."</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-primary py-section-padding text-white">
+      <div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+        <div class="text-center mb-16">
+          <h2 class="font-headline-lg text-headline-lg text-tertiary-fixed mb-4">Our Journey</h2>
+          <p class="font-body-md text-primary-fixed max-w-xl mx-auto">Evolution of the world's premier LGBTQ+ scuba travel specialist.</p>
+        </div>
+        <div class="relative">
+          <div class="absolute left-1/2 top-0 bottom-0 w-px bg-on-tertiary-container/30 hidden md:block"></div>
+          <div class="space-y-12 md:space-y-0">
+            <div class="relative md:grid md:grid-cols-2 gap-gutter items-center">
+              <div class="md:text-right md:pr-12">
+                <span class="font-headline-md text-headline-md text-on-tertiary-container block mb-2">1991</span>
+                <h3 class="font-headline-md text-[24px] mb-2 text-white">The First Splash</h3>
+                <p class="font-body-md text-primary-fixed/70">Founded in Hawaii to bring together the gay and lesbian diving community in a safe, inclusive, and luxurious environment.</p>
+              </div>
+              <div class="absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-on-tertiary-container border-4 border-primary hidden md:block"></div>
+              <div class="hidden md:block"></div>
+            </div>
+            <div class="relative md:grid md:grid-cols-2 gap-gutter items-center mt-12">
+              <div class="hidden md:block"></div>
+              <div class="absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-on-tertiary-container border-4 border-primary hidden md:block"></div>
+              <div class="md:pl-12">
+                <span class="font-headline-md text-headline-md text-on-tertiary-container block mb-2">2010</span>
+                <h3 class="font-headline-md text-[24px] mb-2 text-white">Global Expansion</h3>
+                <p class="font-body-md text-primary-fixed/70">Broadening our horizons to include exclusive charters in the Galapagos, Indonesia, and the Great Barrier Reef.</p>
+              </div>
+            </div>
+            <div class="relative md:grid md:grid-cols-2 gap-gutter items-center mt-12">
+              <div class="md:text-right md:pr-12">
+                <span class="font-headline-md text-headline-md text-on-tertiary-container block mb-2">Today</span>
+                <h3 class="font-headline-md text-[24px] mb-2 text-white">30+ Years Strong</h3>
+                <p class="font-body-md text-primary-fixed/70">Continually setting the gold standard for queer travel with over 500 successful expeditions completed worldwide.</p>
+              </div>
+              <div class="absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-on-tertiary-container border-4 border-primary hidden md:block"></div>
+              <div class="hidden md:block"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer active="about" />
+</Layout>
