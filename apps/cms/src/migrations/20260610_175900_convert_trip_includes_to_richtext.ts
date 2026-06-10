@@ -1,9 +1,10 @@
-import { MigrateDownArgs, MigrateUpArgs, sql } from "@payloadcms/db-postgres";
+import { MigrateDownArgs, MigrateUpArgs } from "@payloadcms/db-postgres";
 
-const emptyLexicalDocument = sql`'{"root":{"children":[],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}'::jsonb`;
+const emptyLexicalDocument =
+  `'{"root":{"children":[],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}'::jsonb`;
 
 export async function up({ db }: MigrateUpArgs): Promise<void> {
-  await db.execute(sql`
+  await db.execute(`
     ALTER TABLE "trips" ADD COLUMN "content_sections_package_includes" jsonb;
     ALTER TABLE "trips" ADD COLUMN "content_sections_not_included" jsonb;
 
@@ -103,7 +104,7 @@ export async function up({ db }: MigrateUpArgs): Promise<void> {
 }
 
 export async function down({ db }: MigrateDownArgs): Promise<void> {
-  await db.execute(sql`
+  await db.execute(`
     CREATE TABLE "trips_content_sections_package_includes" (
       "_order" integer NOT NULL,
       "_parent_id" integer NOT NULL,

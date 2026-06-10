@@ -1,7 +1,7 @@
-import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-postgres'
+import { MigrateUpArgs, MigrateDownArgs } from '@payloadcms/db-postgres'
 
 export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
-  await db.execute(sql`
+  await db.execute(`
    ALTER TABLE "trips" ALTER COLUMN "map_pin_color" SET DATA TYPE text;
   ALTER TABLE "trips" ALTER COLUMN "map_pin_color" SET DEFAULT 'amber'::text;
   DROP TYPE "public"."enum_trips_map_pin_color";
@@ -12,7 +12,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
 }
 
 export async function down({ db, payload, req }: MigrateDownArgs): Promise<void> {
-  await db.execute(sql`
+  await db.execute(`
    ALTER TABLE "trips" ALTER COLUMN "map_pin_color" SET DATA TYPE text;
   ALTER TABLE "trips" ALTER COLUMN "map_pin_color" SET DEFAULT 'gold'::text;
   DROP TYPE "public"."enum_trips_map_pin_color";
