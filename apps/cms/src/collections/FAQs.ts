@@ -1,9 +1,13 @@
 import type { CollectionConfig } from "payload";
+import { isAuthenticated } from "../access/isAuthenticated";
 
 export const FAQs: CollectionConfig = {
   slug: "faqs",
   access: {
+    create: isAuthenticated,
+    delete: isAuthenticated,
     read: () => true,
+    update: isAuthenticated,
   },
   admin: {
     defaultColumns: ["question", "category", "updatedAt"],

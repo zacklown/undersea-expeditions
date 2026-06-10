@@ -1,0 +1,48 @@
+---
+import { getTrips } from "../../lib/content";
+
+export async function getStaticPaths() {
+  const trips = await getTrips();
+
+  return trips
+    .map((trip) => {
+      const legacyUrl = trip.legacyUrl || "";
+
+      if (!legacyUrl.startsWith("/gay-scuba-trips/")) {
+        return null;
+      }
+
+      const legacy = legacyUrl.replace(/^\/gay-scuba-trips\//, "");
+
+      if (!legacy || legacy.includes("/")) {
+        return null;
+      }
+
+      return {
+        params: { legacy },
+        props: { path: trip.path },
+      };
+    })
+    .filter(Boolean);
+}
+
+const { path } = Astro.props as { path?: string };
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirecting…</title>
+    {path && <meta http-equiv="refresh" content={`0;url=${path}`} />}
+    {path && <link rel="canonical" href={path} />}
+  </head>
+  <body>
+    {path ? (
+      <p>
+        Redirecting to <a href={path}>{path}</a>.
+      </p>
+    ) : (
+      <p>Trip not found.</p>
+    )}
+  </body>
+</html>

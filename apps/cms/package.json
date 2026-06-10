@@ -12,6 +12,7 @@
     "generate:payload": "npm run generate:types && npm run generate:importmap",
     "generate:importmap": "payload generate:importmap",
     "generate:types": "payload generate:types",
+    "migrate:prod": "node ./scripts/migrate-prod.mjs",
     "start": "npm run generate:payload && next start -p 3001"
   },
   "dependencies": {

@@ -250,11 +250,58 @@ export interface Trip {
    * Use lowercase kebab-case. Example: magic-of-the-maldives
    */
   slug: string;
+  /**
+   * Optional old UnderseaX URL to redirect, such as /gay-scuba-trips/havana.html or the full old URL.
+   */
+  legacyUrl?: string | null;
   region: number | Region;
   countries: (number | Country)[];
   stays: (number | Stay)[];
+  /**
+   * Place a clickable destination pin on the homepage map for this trip.
+   */
+  mapPin: {
+    showOnHomepage?: boolean | null;
+    /**
+     * 0 is the far left of the map and 100 is the far right.
+     */
+    xPercent?: number | null;
+    /**
+     * 0 is the top of the map and 100 is the bottom.
+     */
+    yPercent?: number | null;
+    color:
+      | 'amber'
+      | 'apricot'
+      | 'aqua'
+      | 'berry'
+      | 'blush'
+      | 'brick'
+      | 'bronze'
+      | 'coral'
+      | 'crimson'
+      | 'deep-blue'
+      | 'emerald'
+      | 'forest'
+      | 'gold'
+      | 'hot-pink'
+      | 'indigo'
+      | 'lavender'
+      | 'lemon'
+      | 'mint'
+      | 'ocean'
+      | 'orchid'
+      | 'peacock'
+      | 'plum'
+      | 'seafoam'
+      | 'terracotta';
+  };
   tripStyle: 'liveaboard' | 'land-resort';
   gender: 'male' | 'female' | 'mixed';
+  /**
+   * Used in the trip URL, for example /2027/maldives.
+   */
+  tripYear?: number | null;
   tripStart: string;
   tripEnd: string;
   isNew?: boolean | null;
@@ -297,18 +344,42 @@ export interface Trip {
       };
       [k: string]: unknown;
     } | null;
-    packageIncludes?:
-      | {
-          item: string;
-          id?: string | null;
-        }[]
-      | null;
-    notIncluded?:
-      | {
-          item: string;
-          id?: string | null;
-        }[]
-      | null;
+    /**
+     * Formatted package inclusions shown on the trip detail page.
+     */
+    packageIncludes?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    /**
+     * Formatted exclusions shown on the trip detail page.
+     */
+    notIncluded?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
     flights?: {
       root: {
         type: string;
@@ -597,11 +668,21 @@ export interface StaysSelect<T extends boolean = true> {
 export interface TripsSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
+  legacyUrl?: T;
   region?: T;
   countries?: T;
   stays?: T;
+  mapPin?:
+    | T
+    | {
+        showOnHomepage?: T;
+        xPercent?: T;
+        yPercent?: T;
+        color?: T;
+      };
   tripStyle?: T;
   gender?: T;
+  tripYear?: T;
   tripStart?: T;
   tripEnd?: T;
   isNew?: T;
@@ -612,18 +693,8 @@ export interface TripsSelect<T extends boolean = true> {
     | T
     | {
         overview?: T;
-        packageIncludes?:
-          | T
-          | {
-              item?: T;
-              id?: T;
-            };
-        notIncluded?:
-          | T
-          | {
-              item?: T;
-              id?: T;
-            };
+        packageIncludes?: T;
+        notIncluded?: T;
         flights?: T;
         deposit?: T;
       };

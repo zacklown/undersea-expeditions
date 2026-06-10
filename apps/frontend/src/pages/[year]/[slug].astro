@@ -1,0 +1,258 @@
+---
+import Footer from "../../components/Footer.astro";
+import Header from "../../components/Header.astro";
+import Layout from "../../layouts/Layout.astro";
+import { getTripByYearAndSlug, getTrips } from "../../lib/content";
+
+export async function getStaticPaths() {
+  const trips = await getTrips();
+
+  return trips.map((trip) => ({
+    params: { slug: trip.slug, year: String(trip.tripYear) },
+  }));
+}
+
+const { slug, year } = Astro.params;
+const trips = await getTrips();
+const trip = slug && year ? await getTripByYearAndSlug(year, slug) : null;
+const otherTrips = trips.filter((item) => item.path !== trip?.path);
+const newTrips = otherTrips.filter((item) => item.isNew).slice(0, 4);
+const upcomingTrips = otherTrips.filter((item) => !item.isNew).slice(0, 6);
+---
+
+<Layout title={`${trip?.title || "Trip"} | Undersea Expeditions`}>
+  <Header active="trips" />
+  <main>
+    {trip ? (
+      <>
+        <section class="relative flex min-h-[520px] items-end overflow-hidden">
+          <img
+            alt={trip.coverImage.alt || trip.title}
+            class="absolute inset-0 h-full w-full object-cover"
+            src={trip.coverImage.url}
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-primary via-primary/50 to-transparent"></div>
+          <div class="relative z-10 mx-auto w-full max-w-container-max px-margin-mobile py-20 text-white md:px-margin-desktop">
+            <div class="max-w-3xl">
+              <span class="inline-flex rounded-full bg-white/15 px-4 py-1 text-label-sm font-label-sm backdrop-blur-md">
+                {trip.regionLabel}
+              </span>
+              {trip.isNew && (
+                <span class="ml-3 inline-flex rounded-full bg-[#C5A059] px-4 py-1 text-label-sm font-label-sm text-white">
+                  New
+                </span>
+              )}
+              <h1 class="mt-6 mb-4 font-display-lg text-display-lg">{trip.title}</h1>
+              <p class="mb-4 font-headline-md text-headline-md text-white/90">
+                {trip.countries.join(", ")}
+              </p>
+              {trip.groupTypeLabel && (
+                <p class="mb-4 font-label-sm text-label-sm uppercase tracking-[0.16em] text-white/80">
+                  {trip.groupTypeLabel}{trip.tripStyleLabel ? ` | ${trip.tripStyleLabel}` : ""}
+                </p>
+              )}
+              <div
+                class="max-w-2xl text-white/85 [&>p]:mb-4 [&>p]:font-body-lg [&>p]:text-body-lg"
+                set:html={trip.summaryHtml || trip.summary}
+              ></div>
+            </div>
+          </div>
+        </section>
+
+        {trip.relatedGallery && (
+          <section class="relative z-20 mx-auto -mt-10 mb-12 max-w-container-max px-margin-mobile md:px-margin-desktop">
+            <a
+              class="grid overflow-hidden rounded-3xl border border-primary/15 bg-white/95 shadow-xl backdrop-blur-md transition-transform hover:-translate-y-1 md:grid-cols-[1.2fr_0.8fr]"
+              href={`/gallery/${trip.relatedGallery.slug}`}
+            >
+              <div class="relative min-h-[260px]">
+                <img
+                  alt={trip.relatedGallery.coverImage.alt || trip.relatedGallery.title}
+                  class="absolute inset-0 h-full w-full object-cover"
+                  src={trip.relatedGallery.coverImage.url}
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-primary via-primary/35 to-transparent"></div>
+                <div class="absolute inset-x-0 bottom-0 p-8 text-white">
+                  <p class="mb-2 font-label-sm text-label-sm uppercase tracking-[0.16em] text-white/75">
+                    Featured Gallery
+                  </p>
+                  <h2 class="font-headline-md text-headline-md">
+                    {trip.relatedGallery.overlayText || trip.relatedGallery.title}
+                  </h2>
+                </div>
+              </div>
+              <div class="flex flex-col justify-center p-8">
+                <p class="mb-2 font-label-sm text-label-sm uppercase tracking-[0.16em] text-on-tertiary-container">
+                  Explore Photos
+                </p>
+                <h3 class="mb-4 font-headline-md text-headline-md text-primary">
+                  {trip.relatedGallery.title}
+                </h3>
+                {trip.relatedGallery.excerpt && (
+                  <p class="mb-6 text-body-md text-on-surface-variant">
+                    {trip.relatedGallery.excerpt}
+                  </p>
+                )}
+                <span class="inline-flex w-fit rounded-full bg-on-tertiary-container px-5 py-3 font-bold text-white">
+                  View Gallery
+                </span>
+              </div>
+            </a>
+          </section>
+        )}
+
+        <section class="mx-auto max-w-container-max px-margin-mobile py-section-padding md:px-margin-desktop">
+          <div class="grid grid-cols-1 gap-gutter lg:grid-cols-12">
+            <aside class="lg:col-span-3">
+              <div class="sticky top-28 rounded-3xl border border-outline-variant/20 bg-surface-container-low p-8">
+                <h2 class="mb-6 font-headline-md text-headline-md text-primary">Other Trips</h2>
+                {newTrips.length > 0 && (
+                  <div class="mb-8">
+                    <h3 class="mb-4 font-bold text-on-tertiary-container">New Trips</h3>
+                    <div class="space-y-4">
+                      {newTrips.map((item) => (
+                        <a class="block transition-opacity hover:opacity-80" href={item.path}>
+                          <p class="font-bold text-primary">{item.title}</p>
+                          <p class="text-sm text-on-surface-variant">{item.dateLabel}</p>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {upcomingTrips.length > 0 && (
+                  <div>
+                    <h3 class="mb-4 font-bold text-on-tertiary-container">Upcoming Trips</h3>
+                    <div class="space-y-4">
+                      {upcomingTrips.map((item) => (
+                        <a class="block transition-opacity hover:opacity-80" href={item.path}>
+                          <p class="font-bold text-primary">{item.title}</p>
+                          <p class="text-sm text-on-surface-variant">{item.dateLabel}</p>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </aside>
+
+            <article class="rounded-3xl border border-secondary-fixed bg-white p-8 shadow-sm lg:col-span-6 md:p-12">
+              <div class="mb-8 flex items-center gap-3 text-primary">
+                <span class="material-symbols-outlined">calendar_today</span>
+                <span class="font-bold">{trip.dateLabel}</span>
+              </div>
+              {(trip.days || trip.nights) && (
+                <p class="mb-8 text-body-md text-on-surface-variant">
+                  {trip.days || 0} Days / {trip.nights || 0} Nights
+                </p>
+              )}
+              {(trip.countries.length > 0 || trip.stays.length > 0 || trip.tripStyleLabel) && (
+                <div class="mb-8 space-y-3 rounded-2xl bg-surface-container-low p-6">
+                  {trip.countries.length > 0 && (
+                    <p class="text-body-md text-on-surface-variant">
+                      <strong class="text-primary">Countries:</strong> {trip.countries.join(", ")}
+                    </p>
+                  )}
+                  {trip.stays.length > 0 && (
+                    <p class="text-body-md text-on-surface-variant">
+                      <strong class="text-primary">Stay:</strong> {trip.stays.join(", ")}
+                    </p>
+                  )}
+                  {trip.tripStyleLabel && (
+                    <p class="text-body-md text-on-surface-variant">
+                      <strong class="text-primary">Trip Style:</strong> {trip.tripStyleLabel}
+                    </p>
+                  )}
+                </div>
+              )}
+              <div class="space-y-6 leading-relaxed text-on-surface-variant">
+                {trip.overview && (
+                  <div
+                    class="[&>p]:mb-4 [&>p]:font-body-md [&>p]:text-body-md [&_a]:text-on-tertiary-container [&_a]:underline"
+                    set:html={trip.overview}
+                  ></div>
+                )}
+                {trip.packageIncludes && (
+                  <section>
+                    <h2 class="mb-4 font-headline-md text-headline-md text-primary">
+                      Our Package Includes
+                    </h2>
+                    <div
+                      class="[&>p]:mb-4 [&>p]:font-body-md [&>p]:text-body-md [&_a]:text-on-tertiary-container [&_a]:underline [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6"
+                      set:html={trip.packageIncludes}
+                    ></div>
+                  </section>
+                )}
+                {trip.notIncluded && (
+                  <section>
+                    <h2 class="mb-4 font-headline-md text-headline-md text-primary">Not Included</h2>
+                    <div
+                      class="[&>p]:mb-4 [&>p]:font-body-md [&>p]:text-body-md [&_a]:text-on-tertiary-container [&_a]:underline [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6"
+                      set:html={trip.notIncluded}
+                    ></div>
+                  </section>
+                )}
+                {trip.flights && (
+                  <section>
+                    <h2 class="mb-4 font-headline-md text-headline-md text-primary">Flights</h2>
+                    <div
+                      class="[&>p]:mb-4 [&>p]:font-body-md [&>p]:text-body-md [&_a]:text-on-tertiary-container [&_a]:underline [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6"
+                      set:html={trip.flights}
+                    ></div>
+                  </section>
+                )}
+                {trip.deposit && (
+                  <section>
+                    <h2 class="mb-4 font-headline-md text-headline-md text-primary">Deposit</h2>
+                    <div
+                      class="[&>p]:mb-4 [&>p]:font-body-md [&>p]:text-body-md [&_a]:text-on-tertiary-container [&_a]:underline [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6"
+                      set:html={trip.deposit}
+                    ></div>
+                  </section>
+                )}
+              </div>
+            </article>
+
+            <aside class="lg:col-span-3">
+              <div class="sticky top-28 rounded-3xl bg-secondary-container p-8">
+                <h2 class="mb-4 font-headline-md text-headline-md text-primary">Contact Us</h2>
+                <p class="mb-8 text-body-md text-on-surface-variant">
+                  Reach out for cabins, experience requirements, pricing, and itinerary fit.
+                </p>
+                {trip.pricingOptions && trip.pricingOptions.length > 0 && (
+                  <div class="mb-8 space-y-4">
+                    {trip.pricingOptions.map((price) => (
+                      <div class="rounded-2xl bg-white/70 p-4">
+                        <p class="font-bold text-primary">{price.label}</p>
+                        <p class="text-on-tertiary-container">${price.amount}</p>
+                        {price.note && (
+                          <div
+                            class="mt-1 text-sm text-on-surface-variant [&_a]:text-on-tertiary-container [&_a]:underline"
+                            set:html={price.note}
+                          ></div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <a
+                  class="block w-full rounded-full bg-on-tertiary-container px-6 py-4 text-center font-bold text-white transition-opacity hover:opacity-90"
+                  href={trip.bookingHref}
+                >
+                  Contact Us
+                </a>
+              </div>
+            </aside>
+          </div>
+        </section>
+      </>
+    ) : (
+      <section class="mx-auto max-w-container-max px-margin-mobile py-24 md:px-margin-desktop">
+        <h1 class="mb-4 font-display-lg text-display-lg text-primary">Trip not found</h1>
+        <a class="font-bold text-on-tertiary-container hover:underline" href="/trips">
+          Back to all trips
+        </a>
+      </section>
+    )}
+  </main>
+  <Footer active="trips" />
+</Layout>

@@ -34,7 +34,7 @@ const [pageContent, trips] = await Promise.all([getTripsPageContent(), getTrips(
               <p class="text-secondary mb-2">{trip.countries.join(", ")}</p>
               <p class="text-on-tertiary-container font-bold mb-4">{trip.dateLabel}</p>
               <p class="font-body-md text-body-md text-secondary mb-6">{trip.summary}</p>
-              <a class="block w-full py-3 rounded-lg border border-primary text-primary font-bold group-hover:bg-primary group-hover:text-white transition-all text-center" href={`/trips/${trip.slug}`}>Details &amp; Booking</a>
+              <a class="block w-full py-3 rounded-lg border border-primary text-primary font-bold group-hover:bg-primary group-hover:text-white transition-all text-center" href={trip.path}>Details &amp; Booking</a>
             </div>
           </article>
         ))}

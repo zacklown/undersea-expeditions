@@ -1,9 +1,13 @@
 import type { CollectionConfig } from "payload";
+import { isAuthenticated } from "../access/isAuthenticated";
 
 export const Regions: CollectionConfig = {
   slug: "regions",
   access: {
+    create: isAuthenticated,
+    delete: isAuthenticated,
     read: () => true,
+    update: isAuthenticated,
   },
   admin: {
     defaultColumns: ["name", "slug", "updatedAt"],

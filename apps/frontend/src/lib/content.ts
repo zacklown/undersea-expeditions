@@ -20,10 +20,41 @@ export type Trip = {
   groupTypeLabel?: string;
   id: number | string;
   isNew?: boolean;
+  legacyUrl?: string;
+  mapPin?: {
+    color:
+      | "amber"
+      | "apricot"
+      | "aqua"
+      | "berry"
+      | "blush"
+      | "brick"
+      | "bronze"
+      | "coral"
+      | "crimson"
+      | "deep-blue"
+      | "emerald"
+      | "forest"
+      | "gold"
+      | "hot-pink"
+      | "indigo"
+      | "lavender"
+      | "lemon"
+      | "mint"
+      | "ocean"
+      | "orchid"
+      | "peacock"
+      | "plum"
+      | "seafoam"
+      | "terracotta";
+    showOnHomepage?: boolean;
+    xPercent: number;
+    yPercent: number;
+  };
   nights?: number;
-  notIncluded?: string[];
+  notIncluded?: string;
   overview?: string;
-  packageIncludes?: string[];
+  packageIncludes?: string;
   pricingOptions?: Array<{
     amount: number;
     label: string;
@@ -37,11 +68,13 @@ export type Trip = {
     slug: string;
     title: string;
   };
+  path: string;
   slug: string;
   stays: string[];
   summary: string;
   summaryHtml?: string;
   title: string;
+  tripYear: number;
   tripStyle?: "liveaboard" | "land-resort";
   tripStyleLabel?: string;
 };
@@ -186,12 +219,16 @@ const fallbackTrips: Trip[] = [
     countries: ["Saba"],
     dateLabel: "October 17-24, 2026",
     id: "trip-saba",
+    legacyUrl: "/gay-scuba-trips/saba.html",
+    mapPin: { color: "gold", showOnHomepage: true, xPercent: 28.4, yPercent: 43.5 },
+    path: "/2026/lgbtq-scuba-saba",
     regionLabel: "SABA",
     stays: ["Juliana's Hotel"],
     slug: "lgbtq-scuba-saba",
     summary:
       "Join us for an exclusive week in the Unspoiled Queen of the Caribbean, with Sea & Learn programming and a warm, community-first atmosphere.",
     title: "LGBTQ+ Scuba Saba",
+    tripYear: 2026,
     tripStyle: "land-resort",
   },
   {
@@ -206,12 +243,15 @@ const fallbackTrips: Trip[] = [
     countries: ["Egypt"],
     dateLabel: "October 11-18, 2026",
     id: "trip-red-sea",
+    mapPin: { color: "coral", showOnHomepage: true, xPercent: 58.5, yPercent: 46.2 },
+    path: "/2026/marsa-shagra-dive-village",
     regionLabel: "RED SEA",
     stays: ["Marsa Shagra Dive Village"],
     slug: "marsa-shagra-dive-village",
     summary:
       "Explore the legendary Red Sea for women only, featuring pristine house reefs and world-class hospitality.",
     title: "Marsa Shagra Dive Village",
+    tripYear: 2026,
     tripStyle: "land-resort",
   },
   {
@@ -226,12 +266,15 @@ const fallbackTrips: Trip[] = [
     countries: ["Mexico"],
     dateLabel: "November 21-28, 2026",
     id: "trip-la-paz",
+    mapPin: { color: "seafoam", showOnHomepage: true, xPercent: 18.3, yPercent: 44.8 },
+    path: "/2026/la-paz-baja-california",
     regionLabel: "MEXICO",
     stays: ["La Paz Resort"],
     slug: "la-paz-baja-california",
     summary:
       'Dive the Sea of Cortez, the "world\'s aquarium," for sea lion encounters and whale shark sightings.',
     title: "La Paz, Baja California",
+    tripYear: 2026,
     tripStyle: "land-resort",
   },
   {
@@ -246,12 +289,16 @@ const fallbackTrips: Trip[] = [
     countries: ["Maldives"],
     dateLabel: "February 17-27, 2027",
     id: "trip-maldives",
+    legacyUrl: "/gay-scuba-trips/maldives.html",
+    mapPin: { color: "deep-blue", showOnHomepage: true, xPercent: 68.7, yPercent: 58.6 },
+    path: "/2027/magic-of-the-maldives",
     regionLabel: "MALDIVES",
     stays: ["Luxury Liveaboard"],
     slug: "magic-of-the-maldives",
     summary:
       "A luxury liveaboard expedition through the central atolls, seeking mantas and breathtaking reefs.",
     title: "Magic of the Maldives",
+    tripYear: 2027,
     tripStyle: "liveaboard",
   },
 ];
@@ -512,6 +559,48 @@ function formatTripDateLabel(tripStart?: string, tripEnd?: string, fallback?: st
   })}`;
 }
 
+function normalizeLegacyUrl(value?: string | null) {
+  if (!value) return "";
+
+  const trimmed = value.trim();
+
+  if (!trimmed) return "";
+
+  if (/^https?:\/\//i.test(trimmed)) {
+    try {
+      return new URL(trimmed).pathname || "";
+    } catch {
+      return "";
+    }
+  }
+
+  if (/^[a-z0-9.-]+\//i.test(trimmed) && !trimmed.startsWith("/")) {
+    return `/${trimmed.replace(/^[a-z]+:\/\//i, "")}`;
+  }
+
+  return trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
+}
+
+function inferTripYear(tripYear?: number, tripStart?: string, fallback?: number) {
+  if (typeof tripYear === "number" && Number.isFinite(tripYear)) {
+    return tripYear;
+  }
+
+  if (tripStart) {
+    const start = new Date(tripStart);
+
+    if (!Number.isNaN(start.getTime())) {
+      return start.getUTCFullYear();
+    }
+  }
+
+  return fallback || new Date().getUTCFullYear();
+}
+
+export function getTripPath(trip: Pick<Trip, "slug" | "tripYear">) {
+  return `/${trip.tripYear}/${trip.slug}`;
+}
+
 async function fetchCMS<T>(path: string) {
   try {
     const response = await fetch(`${cmsApiUrl}${path}`, {
@@ -540,6 +629,21 @@ function normalizeTrip(doc: any, fallback?: Trip): Trip | null {
   const stays =
     doc.stays?.map((item: any) => (typeof item === "object" ? item?.name : "")).filter(Boolean) ||
     (fallback?.stays?.length ? fallback.stays : []);
+  const tripYear = inferTripYear(doc.tripYear, doc.tripStart, fallback?.tripYear);
+  const xPercent = Number(doc.mapPin?.xPercent);
+  const yPercent = Number(doc.mapPin?.yPercent);
+  const mapPin =
+    doc.mapPin?.showOnHomepage && Number.isFinite(xPercent) && Number.isFinite(yPercent)
+      ? {
+          color: doc.mapPin?.color || fallback?.mapPin?.color || "amber",
+          showOnHomepage: true,
+          xPercent,
+          yPercent,
+        }
+      : fallback?.mapPin?.showOnHomepage
+        ? fallback.mapPin
+        : undefined;
+  const path = getTripPath({ slug: doc.slug, tripYear });
 
   return {
     bookingHref: doc.bookingHref || fallback?.bookingHref || "/contact",
@@ -554,14 +658,12 @@ function normalizeTrip(doc: any, fallback?: Trip): Trip | null {
     groupTypeLabel: getGroupTypeLabel(doc.gender || fallback?.gender),
     id: doc.id || fallback?.id || doc.slug,
     isNew: typeof doc.isNew === "boolean" ? doc.isNew : fallback?.isNew,
+    legacyUrl: normalizeLegacyUrl(doc.legacyUrl || fallback?.legacyUrl),
+    mapPin,
     nights: doc.nights || fallback?.nights,
-    notIncluded:
-      doc.contentSections?.notIncluded?.map((item: any) => item.item).filter(Boolean) ||
-      fallback?.notIncluded,
+    notIncluded: renderRichText(doc.contentSections?.notIncluded) || fallback?.notIncluded,
     overview: renderRichText(doc.contentSections?.overview) || fallback?.overview,
-    packageIncludes:
-      doc.contentSections?.packageIncludes?.map((item: any) => item.item).filter(Boolean) ||
-      fallback?.packageIncludes,
+    packageIncludes: renderRichText(doc.contentSections?.packageIncludes) || fallback?.packageIncludes,
     pricingOptions:
       doc.pricingOptions?.map((item: any) => ({
         amount: item.amount,
@@ -579,11 +681,13 @@ function normalizeTrip(doc: any, fallback?: Trip): Trip | null {
             title: doc.gallery.title,
           }
         : fallback?.relatedGallery,
+    path,
     slug: doc.slug,
     stays,
     summary: stripHtml(renderRichText(doc.summary)) || fallback?.summary || "",
     summaryHtml: renderRichText(doc.summary) || fallback?.summaryHtml,
     title: doc.title,
+    tripYear,
     tripStyle: doc.tripStyle || fallback?.tripStyle,
     tripStyleLabel: getTripStyleLabel(doc.tripStyle || fallback?.tripStyle),
   };
@@ -744,6 +848,18 @@ export async function getTrips(): Promise<Trip[]> {
   const docs = response?.docs?.map((doc, index) => normalizeTrip(doc, fallbackTrips[index]))?.filter(Boolean);
 
   return docs?.length ? (docs as Trip[]) : fallbackTrips;
+}
+
+export async function getTripByYearAndSlug(year: string | number, slug: string): Promise<Trip | null> {
+  const tripYear = Number(year);
+  const response = await fetchCMS<CollectionResponse<any>>(
+    `/trips?depth=2&limit=1&where[and][0][slug][equals]=${encodeURIComponent(slug)}&where[and][1][tripYear][equals]=${encodeURIComponent(String(tripYear))}`,
+  );
+
+  return normalizeTrip(
+    response?.docs?.[0],
+    fallbackTrips.find((trip) => trip.slug === slug && trip.tripYear === tripYear),
+  );
 }
 
 export async function getTripBySlug(slug: string): Promise<Trip | null> {

@@ -1,6 +1,7 @@
 ---
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
+import HomeTripMap from "../components/HomeTripMap.astro";
 import Layout from "../layouts/Layout.astro";
 import { getHomePageContent, getSiteSettings, getTrips } from "../lib/content";
 
@@ -31,6 +32,8 @@ const upcomingTrips = trips.slice(0, 3);
       </div>
     </section>
 
+    <HomeTripMap trips={trips} />
+
     <section class="py-section-padding px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter items-center bg-secondary-container rounded-3xl overflow-hidden shadow-2xl">
         <div class="p-12 md:p-16">
@@ -44,7 +47,7 @@ const upcomingTrips = trips.slice(0, 3);
           <p class="font-body-lg text-body-lg text-secondary mb-10 leading-relaxed">
             {featuredTrip.summary}
           </p>
-          <a class="inline-block border-2 border-primary text-primary px-8 py-3 rounded-lg font-bold hover:bg-primary hover:text-white transition-all font-headline-md" href={`/trips/${featuredTrip.slug}`}>{featuredTrip.bookingLabel}</a>
+          <a class="inline-block border-2 border-primary text-primary px-8 py-3 rounded-lg font-bold hover:bg-primary hover:text-white transition-all font-headline-md" href={featuredTrip.path}>{featuredTrip.bookingLabel}</a>
         </div>
         <div class="h-full min-h-[400px] relative">
           <img alt={featuredTrip.coverImage.alt || featuredTrip.title} class="absolute inset-0 w-full h-full object-cover" src={featuredTrip.coverImage.url} />
@@ -77,7 +80,7 @@ const upcomingTrips = trips.slice(0, 3);
                 <h3 class="font-headline-md text-headline-md text-primary mb-2">{trip.title}</h3>
                 <p class="text-on-tertiary-container font-bold mb-4">{trip.dateLabel}</p>
                 <p class="font-body-md text-body-md text-secondary mb-6">{trip.summary}</p>
-                <a class="block w-full py-3 rounded-lg border border-primary text-primary font-bold group-hover:bg-primary group-hover:text-white transition-all text-center" href={`/trips/${trip.slug}`}>Details &amp; Booking</a>
+                <a class="block w-full py-3 rounded-lg border border-primary text-primary font-bold group-hover:bg-primary group-hover:text-white transition-all text-center" href={trip.path}>Details &amp; Booking</a>
               </div>
             </article>
           ))}

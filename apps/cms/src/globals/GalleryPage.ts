@@ -1,9 +1,11 @@
 import type { GlobalConfig } from "payload";
+import { isAuthenticated } from "../access/isAuthenticated";
 
 export const GalleryPage: GlobalConfig = {
   slug: "gallery-page",
   access: {
     read: () => true,
+    update: isAuthenticated,
   },
   admin: {
     group: "Pages",

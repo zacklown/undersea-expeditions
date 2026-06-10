@@ -1,9 +1,40 @@
 import type { CollectionConfig } from "payload";
+import { isAuthenticated } from "../access/isAuthenticated";
+
+const mapPinColorOptions = [
+  { label: "Amber", value: "amber" },
+  { label: "Apricot", value: "apricot" },
+  { label: "Aqua", value: "aqua" },
+  { label: "Berry", value: "berry" },
+  { label: "Blush", value: "blush" },
+  { label: "Brick", value: "brick" },
+  { label: "Bronze", value: "bronze" },
+  { label: "Coral", value: "coral" },
+  { label: "Crimson", value: "crimson" },
+  { label: "Deep Blue", value: "deep-blue" },
+  { label: "Emerald", value: "emerald" },
+  { label: "Forest", value: "forest" },
+  { label: "Gold", value: "gold" },
+  { label: "Hot Pink", value: "hot-pink" },
+  { label: "Indigo", value: "indigo" },
+  { label: "Lavender", value: "lavender" },
+  { label: "Lemon", value: "lemon" },
+  { label: "Mint", value: "mint" },
+  { label: "Ocean", value: "ocean" },
+  { label: "Orchid", value: "orchid" },
+  { label: "Peacock", value: "peacock" },
+  { label: "Plum", value: "plum" },
+  { label: "Seafoam", value: "seafoam" },
+  { label: "Terracotta", value: "terracotta" },
+];
 
 export const Trips: CollectionConfig = {
   slug: "trips",
   access: {
+    create: isAuthenticated,
+    delete: isAuthenticated,
     read: () => true,
+    update: isAuthenticated,
   },
   admin: {
     defaultColumns: ["title", "tripStart", "tripStyle", "gender", "isNew", "updatedAt"],
@@ -25,6 +56,15 @@ export const Trips: CollectionConfig = {
       index: true,
       required: true,
       unique: true,
+    },
+    {
+      name: "legacyUrl",
+      label: "Legacy URL",
+      type: "text",
+      admin: {
+        description:
+          "Optional old UnderseaX URL to redirect, such as /gay-scuba-trips/havana.html or the full old URL.",
+      },
     },
     {
       type: "row",
@@ -51,6 +91,75 @@ export const Trips: CollectionConfig = {
           relationTo: "stays",
           required: true,
           type: "relationship",
+        },
+      ],
+    },
+    {
+      name: "mapPin",
+      label: "Homepage Map Pin",
+      type: "group",
+      admin: {
+        description: "Place a clickable destination pin on the homepage map for this trip.",
+      },
+      fields: [
+        {
+          name: "picker",
+          type: "ui",
+          admin: {
+            components: {
+              Field: {
+                path: "./src/components/TripMapPicker#TripMapPickerField",
+                clientProps: {
+                  colorPath: "mapPin.color",
+                  showOnHomepagePath: "mapPin.showOnHomepage",
+                  imageSrc: "/MapChart_Map.png",
+                  xPath: "mapPin.xPercent",
+                  yPath: "mapPin.yPercent",
+                },
+              },
+            },
+          },
+        },
+        {
+          type: "row",
+          fields: [
+            {
+              name: "showOnHomepage",
+              label: "Show Pin On Homepage",
+              type: "checkbox",
+              defaultValue: false,
+            },
+            {
+              name: "xPercent",
+              label: "Pin X Position (%)",
+              type: "number",
+              admin: {
+                description: "0 is the far left of the map and 100 is the far right.",
+                step: 0.1,
+              },
+              max: 100,
+              min: 0,
+            },
+            {
+              name: "yPercent",
+              label: "Pin Y Position (%)",
+              type: "number",
+              admin: {
+                description: "0 is the top of the map and 100 is the bottom.",
+                step: 0.1,
+              },
+              max: 100,
+              min: 0,
+            },
+            {
+              name: "color",
+              label: "Pin Color",
+              type: "select",
+              defaultValue: "amber",
+              options: mapPinColorOptions,
+              required: true,
+            },
+          ],
         },
       ],
     },
@@ -84,6 +193,15 @@ export const Trips: CollectionConfig = {
     {
       type: "row",
       fields: [
+        {
+          name: "tripYear",
+          label: "Trip Year",
+          type: "number",
+          admin: {
+            description: "Used in the trip URL, for example /2027/maldives.",
+          },
+          min: 2024,
+        },
         {
           name: "tripStart",
           required: true,
@@ -141,25 +259,19 @@ export const Trips: CollectionConfig = {
         },
         {
           name: "packageIncludes",
-          type: "array",
-          fields: [
-            {
-              name: "item",
-              required: true,
-              type: "text",
-            },
-          ],
+          label: "Package Includes",
+          admin: {
+            description: "Formatted package inclusions shown on the trip detail page.",
+          },
+          type: "richText",
         },
         {
           name: "notIncluded",
-          type: "array",
-          fields: [
-            {
-              name: "item",
-              required: true,
-              type: "text",
-            },
-          ],
+          label: "Not Included",
+          admin: {
+            description: "Formatted exclusions shown on the trip detail page.",
+          },
+          type: "richText",
         },
         {
           name: "flights",
