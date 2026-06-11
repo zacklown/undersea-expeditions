@@ -34,7 +34,7 @@ npm run generate:importmap
 
 The Payload admin will be available at `http://localhost:3001/admin`.
 
-The repo-local Postgres is exposed on `127.0.0.1:55433` and uses a repo-specific user/password to avoid colliding with any other local Postgres instance.
+The repo-local Postgres is exposed on `127.0.0.1:55632` and uses a repo-specific user/password to avoid colliding with any other local Postgres instance.
 
 ## Frontend connection
 

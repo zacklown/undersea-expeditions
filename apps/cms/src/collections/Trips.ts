@@ -37,7 +37,7 @@ export const Trips: CollectionConfig = {
     update: isAuthenticated,
   },
   admin: {
-    defaultColumns: ["title", "tripStart", "tripStyle", "gender", "isNew", "updatedAt"],
+    defaultColumns: ["title", "tripStart", "featuredOnHomepage", "tripStyle", "gender", "isNew", "updatedAt"],
     group: "Content",
     useAsTitle: "title",
   },
@@ -214,6 +214,15 @@ export const Trips: CollectionConfig = {
         },
         {
           name: "isNew",
+          defaultValue: false,
+          type: "checkbox",
+        },
+        {
+          name: "featuredOnHomepage",
+          label: "Feature On Homepage",
+          admin: {
+            description: "Include this trip in the homepage Featured Trips carousel.",
+          },
           defaultValue: false,
           type: "checkbox",
         },

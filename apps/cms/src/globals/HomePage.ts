@@ -16,18 +16,22 @@ export const HomePage: GlobalConfig = {
       type: "group",
       fields: [
         {
-          name: "eyebrow",
-          type: "text",
-        },
-        {
           name: "title",
+          label: "Fallback Title",
           type: "text",
-          required: true,
+          admin: {
+            description: "Shown only if no logo overlay image is uploaded.",
+          },
         },
         {
           name: "description",
           type: "textarea",
-          required: true,
+        },
+        {
+          name: "logo",
+          label: "Hero Logo Overlay",
+          relationTo: "media",
+          type: "upload",
         },
         {
           name: "image",
@@ -56,30 +60,17 @@ export const HomePage: GlobalConfig = {
             {
               name: "secondaryCtaLabel",
               type: "text",
-              required: true,
             },
             {
               name: "secondaryCtaHref",
               type: "text",
-              required: true,
             },
           ],
         },
       ],
     },
     {
-      name: "featuredIntro",
-      type: "group",
-      fields: [
-        {
-          name: "eyebrow",
-          type: "text",
-          required: true,
-        },
-      ],
-    },
-    {
-      name: "tripsIntro",
+      name: "mapSection",
       type: "group",
       fields: [
         {
@@ -90,7 +81,36 @@ export const HomePage: GlobalConfig = {
         {
           name: "description",
           type: "textarea",
+        },
+        {
+          type: "row",
+          fields: [
+            {
+              name: "buttonLabel",
+              type: "text",
+              required: true,
+            },
+            {
+              name: "buttonHref",
+              type: "text",
+              required: true,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: "featuredTrips",
+      type: "group",
+      fields: [
+        {
+          name: "title",
+          type: "text",
           required: true,
+        },
+        {
+          name: "description",
+          type: "textarea",
         },
       ],
     },
@@ -126,29 +146,12 @@ export const HomePage: GlobalConfig = {
           type: "row",
           fields: [
             {
-              name: "statOneTitle",
+              name: "buttonLabel",
               type: "text",
-              required: true,
             },
             {
-              name: "statOneBody",
+              name: "buttonHref",
               type: "text",
-              required: true,
-            },
-          ],
-        },
-        {
-          type: "row",
-          fields: [
-            {
-              name: "statTwoTitle",
-              type: "text",
-              required: true,
-            },
-            {
-              name: "statTwoBody",
-              type: "text",
-              required: true,
             },
           ],
         },
@@ -182,26 +185,6 @@ export const HomePage: GlobalConfig = {
               required: true,
             },
           ],
-        },
-        {
-          type: "row",
-          fields: [
-            {
-              name: "newsletterPlaceholder",
-              type: "text",
-              required: true,
-            },
-            {
-              name: "newsletterButtonLabel",
-              type: "text",
-              required: true,
-            },
-          ],
-        },
-        {
-          name: "newsletterHelperText",
-          type: "textarea",
-          required: true,
         },
       ],
     },

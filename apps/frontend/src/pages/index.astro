@@ -1,4 +1,5 @@
 ---
+import FeaturedTripsCarousel from "../components/FeaturedTripsCarousel.astro";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 import HomeTripMap from "../components/HomeTripMap.astro";
@@ -10,86 +11,56 @@ const [homePage, siteSettings, trips] = await Promise.all([
   getSiteSettings(),
   getTrips(),
 ]);
-const featuredTrip = trips[0];
-const upcomingTrips = trips.slice(0, 3);
+const featuredTrips = trips.filter((trip) => trip.featuredOnHomepage);
+const homepageFeaturedTrips = (featuredTrips.length > 0 ? featuredTrips : trips).slice(0, Math.max(featuredTrips.length, 3));
 ---
 
 <Layout title="Undersea Expeditions | LGBTQ+ Scuba Dive Travel Experts">
   <Header active="home" />
   <main>
-    <section class="relative h-[819px] flex items-center overflow-hidden">
+    <section class="relative flex min-h-[720px] items-center overflow-hidden py-24 md:min-h-[780px] md:py-28">
       <img alt={homePage.hero.image.alt || homePage.hero.title} class="absolute inset-0 w-full h-full object-cover" src={homePage.hero.image.url} />
       <div class="absolute inset-0 bg-gradient-to-r from-primary/60 to-transparent"></div>
       <div class="relative z-10 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
-        <div class="max-w-2xl">
-          <h1 class="font-display-lg text-display-lg text-white mb-6">{homePage.hero.title}</h1>
-          <p class="font-body-lg text-body-lg text-white/90 mb-8 max-w-lg">{homePage.hero.description}</p>
+        <div class="max-w-[52rem]">
+          {homePage.hero.logo ? (
+            <img
+              alt={homePage.hero.logo.alt || homePage.hero.title || "Undersea Expeditions"}
+              class="mb-5 max-h-56 w-auto max-w-full object-contain md:mb-6 md:max-h-72 lg:max-h-80"
+              src={homePage.hero.logo.url}
+            />
+          ) : (
+            <h1 class="mb-5 font-display-lg text-display-lg text-white md:mb-6">{homePage.hero.title}</h1>
+          )}
+          {homePage.hero.description && (
+            <p class="mb-7 max-w-2xl font-body-lg text-body-lg text-white/90 md:mb-8">{homePage.hero.description}</p>
+          )}
           <div class="flex flex-col sm:flex-row gap-4">
+            {homePage.hero.secondaryCtaLabel && homePage.hero.secondaryCtaHref && (
+              <a class="bg-white/10 backdrop-blur-md border border-white text-white px-8 py-4 rounded-lg font-bold hover:bg-white/20 transition-colors text-center" href={homePage.hero.secondaryCtaHref}>{homePage.hero.secondaryCtaLabel}</a>
+            )}
             <a class="bg-[#C5A059] text-white px-8 py-4 rounded-lg font-bold shadow-lg hover:bg-on-tertiary-container transition-colors text-center" href={homePage.hero.primaryCtaHref}>{homePage.hero.primaryCtaLabel}</a>
-            <a class="bg-white/10 backdrop-blur-md border border-white text-white px-8 py-4 rounded-lg font-bold hover:bg-white/20 transition-colors text-center" href={homePage.hero.secondaryCtaHref}>{homePage.hero.secondaryCtaLabel}</a>
           </div>
         </div>
       </div>
     </section>
 
-    <HomeTripMap trips={trips} />
+    <HomeTripMap
+      buttonHref={homePage.mapSection.buttonHref}
+      buttonLabel={homePage.mapSection.buttonLabel}
+      description={homePage.mapSection.description}
+      title={homePage.mapSection.title}
+      trips={trips}
+    />
 
-    <section class="py-section-padding px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter items-center bg-secondary-container rounded-3xl overflow-hidden shadow-2xl">
-        <div class="p-12 md:p-16">
-          <div class="inline-block bg-on-tertiary-container text-white px-4 py-1 rounded-full text-label-sm font-label-sm mb-6">{homePage.featuredIntro.eyebrow}</div>
-          <h2 class="font-headline-lg text-headline-lg text-primary mb-4">{featuredTrip.title}</h2>
-          <p class="font-headline-md text-headline-md text-on-tertiary-container mb-6">{featuredTrip.countries.join(", ")}</p>
-          <div class="flex items-center gap-3 text-primary mb-8">
-            <span class="material-symbols-outlined">calendar_today</span>
-            <span class="font-bold">{featuredTrip.dateLabel}</span>
-          </div>
-          <p class="font-body-lg text-body-lg text-secondary mb-10 leading-relaxed">
-            {featuredTrip.summary}
-          </p>
-          <a class="inline-block border-2 border-primary text-primary px-8 py-3 rounded-lg font-bold hover:bg-primary hover:text-white transition-all font-headline-md" href={featuredTrip.path}>{featuredTrip.bookingLabel}</a>
-        </div>
-        <div class="h-full min-h-[400px] relative">
-          <img alt={featuredTrip.coverImage.alt || featuredTrip.title} class="absolute inset-0 w-full h-full object-cover" src={featuredTrip.coverImage.url} />
-        </div>
-      </div>
-    </section>
+    <FeaturedTripsCarousel
+      description={homePage.featuredTrips.description}
+      title={homePage.featuredTrips.title}
+      trips={homepageFeaturedTrips}
+    />
 
-    <section class="py-section-padding bg-surface-container-low">
-      <div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
-        <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
-          <div>
-            <h2 class="font-headline-lg text-headline-lg text-primary">{homePage.tripsIntro.title}</h2>
-            <p class="font-body-lg text-body-lg text-secondary mt-2">{homePage.tripsIntro.description}</p>
-          </div>
-          <a class="text-on-tertiary-container font-bold flex items-center gap-2 hover:underline" href="/trips">
-            View All Trips <span class="material-symbols-outlined">arrow_forward</span>
-          </a>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {upcomingTrips.map((trip) => (
-            <article class="group relative bg-white rounded-2xl overflow-hidden border border-secondary-fixed shadow-sm hover:shadow-xl transition-shadow">
-              <div class="aspect-[4/3] relative overflow-hidden">
-                <img alt={trip.coverImage.alt || trip.title} class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src={trip.coverImage.url} />
-                <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded text-label-sm font-label-sm text-primary">{trip.regionLabel}</div>
-                {trip.isNew && (
-                  <div class="absolute top-4 right-4 bg-[#C5A059] px-3 py-1 rounded text-label-sm font-label-sm text-white">New</div>
-                )}
-              </div>
-              <div class="p-6">
-                <h3 class="font-headline-md text-headline-md text-primary mb-2">{trip.title}</h3>
-                <p class="text-on-tertiary-container font-bold mb-4">{trip.dateLabel}</p>
-                <p class="font-body-md text-body-md text-secondary mb-6">{trip.summary}</p>
-                <a class="block w-full py-3 rounded-lg border border-primary text-primary font-bold group-hover:bg-primary group-hover:text-white transition-all text-center" href={trip.path}>Details &amp; Booking</a>
-              </div>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <section class="py-section-padding px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto overflow-hidden">
-      <div class="flex flex-col md:flex-row items-center gap-16">
+    <section class="mx-auto max-w-container-max overflow-hidden px-margin-mobile py-16 md:px-margin-desktop md:py-20">
+      <div class="flex flex-col items-center gap-10 md:flex-row md:gap-12">
         <div class="w-full md:w-1/2 relative">
           <div class="relative z-10 rounded-2xl overflow-hidden shadow-2xl">
             <img alt={homePage.story.image.alt || homePage.story.title} class="w-full aspect-square object-cover" src={homePage.story.image.url} />
@@ -98,35 +69,27 @@ const upcomingTrips = trips.slice(0, 3);
           <div class="absolute -top-8 -left-8 w-32 h-32 border-4 border-on-tertiary-container rounded-lg -z-10"></div>
         </div>
         <div class="w-full md:w-1/2">
-          <h2 class="font-headline-lg text-headline-lg text-primary mb-6">{homePage.story.title}</h2>
+          <h2 class="mb-5 font-headline-lg text-headline-lg text-primary md:mb-6">{homePage.story.title}</h2>
           {homePage.story.body.map((paragraph, index) => (
-            <p class:list={["font-body-lg text-body-lg text-secondary leading-relaxed", index === 0 ? "mb-6" : "mb-8"]}>{paragraph}</p>
+            <p class:list={["font-body-lg text-body-lg text-secondary leading-relaxed", index === 0 ? "mb-5" : "mb-6"]}>{paragraph}</p>
           ))}
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div class="flex items-start gap-4">
-              <span class="material-symbols-outlined text-on-tertiary-container text-3xl">diversity_3</span>
-              <div>
-                <h4 class="font-bold text-primary">{homePage.story.statOneTitle}</h4>
-                <p class="text-label-sm font-label-sm text-secondary">{homePage.story.statOneBody}</p>
-              </div>
-            </div>
-            <div class="flex items-start gap-4">
-              <span class="material-symbols-outlined text-on-tertiary-container text-3xl">travel_explore</span>
-              <div>
-                <h4 class="font-bold text-primary">{homePage.story.statTwoTitle}</h4>
-                <p class="text-label-sm font-label-sm text-secondary">{homePage.story.statTwoBody}</p>
-              </div>
-            </div>
-          </div>
+          {homePage.story.buttonLabel && homePage.story.buttonHref && (
+            <a
+              class="inline-flex items-center justify-center rounded-lg border border-primary px-6 py-3 font-bold text-primary transition-all hover:bg-primary hover:text-white"
+              href={homePage.story.buttonHref}
+            >
+              {homePage.story.buttonLabel}
+            </a>
+          )}
         </div>
       </div>
     </section>
 
-    <section class="py-section-padding bg-primary text-white text-center">
+    <section class="bg-primary py-16 text-center text-white md:py-20">
       <div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
-        <h2 class="font-headline-lg text-headline-lg mb-8 text-white">Ready to Dive In?</h2>
-        <p class="font-body-lg text-body-lg mb-12 opacity-90 max-w-2xl mx-auto">{homePage.cta.description}</p>
-        <div class="flex flex-col md:flex-row justify-center items-center gap-12 mb-16">
+        <h2 class="mb-6 font-headline-lg text-headline-lg text-white md:mb-7">{homePage.cta.title}</h2>
+        <p class="mx-auto mb-10 max-w-2xl font-body-lg text-body-lg opacity-90 md:mb-12">{homePage.cta.description}</p>
+        <div class="mb-4 flex flex-col items-center justify-center gap-10 md:mb-0 md:flex-row md:gap-12">
           <div class="flex flex-col items-center">
             <span class="material-symbols-outlined text-4xl mb-4 text-[#C5A059]">call</span>
             <p class="text-label-sm font-label-sm opacity-70 mb-1">{homePage.cta.phoneLabel}</p>
@@ -138,14 +101,6 @@ const upcomingTrips = trips.slice(0, 3);
             <p class="text-label-sm font-label-sm opacity-70 mb-1">{homePage.cta.emailLabel}</p>
             <a class="font-headline-md text-headline-md hover:text-[#C5A059] transition-colors" href={`mailto:${siteSettings.contact.email}`}>{siteSettings.contact.email}</a>
           </div>
-        </div>
-        <div class="glass-card p-8 rounded-2xl max-w-3xl mx-auto inline-block border border-white/20">
-          <p class="font-body-md text-primary mb-4 font-bold">{homePage.cta.title}</p>
-          <form class="flex flex-col md:flex-row gap-4">
-            <input class="bg-surface border-none rounded-lg px-6 py-3 text-primary flex-grow focus:ring-2 focus:ring-[#C5A059]" placeholder={homePage.cta.newsletterPlaceholder} type="email" />
-            <button class="bg-primary text-white px-8 py-3 rounded-lg font-bold hover:bg-on-primary-fixed transition-all" type="submit">{homePage.cta.newsletterButtonLabel}</button>
-          </form>
-          <p class="text-xs text-secondary mt-4">{homePage.cta.newsletterHelperText}</p>
         </div>
       </div>
     </section>

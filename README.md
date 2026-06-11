@@ -13,7 +13,7 @@ Services:
 
 - Frontend: `http://localhost:4321`
 - CMS admin: `http://localhost:3001/admin`
-- Postgres: `127.0.0.1:55433`
+- Postgres: `127.0.0.1:55632`
 
 To reset the database volume:
 

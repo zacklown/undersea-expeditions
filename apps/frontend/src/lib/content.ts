@@ -15,6 +15,7 @@ export type Trip = {
   dateLabel: string;
   days?: number;
   deposit?: string;
+  featuredOnHomepage?: boolean;
   flights?: string;
   gender?: "male" | "female" | "mixed";
   groupTypeLabel?: string;
@@ -74,6 +75,8 @@ export type Trip = {
   summary: string;
   summaryHtml?: string;
   title: string;
+  tripEnd?: string;
+  tripStart?: string;
   tripYear: number;
   tripStyle?: "liveaboard" | "land-resort";
   tripStyleLabel?: string;
@@ -128,36 +131,34 @@ export type HomePageContent = {
   cta: {
     description: string;
     emailLabel: string;
-    newsletterButtonLabel: string;
-    newsletterHelperText: string;
-    newsletterPlaceholder: string;
     phoneLabel: string;
     title: string;
   };
-  featuredIntro: {
-    eyebrow: string;
+  featuredTrips: {
+    description?: string;
+    title: string;
   };
   hero: {
-    description: string;
-    eyebrow?: string;
+    description?: string;
     image: CMSMedia;
+    logo?: CMSMedia;
     primaryCtaHref: string;
     primaryCtaLabel: string;
-    secondaryCtaHref: string;
-    secondaryCtaLabel: string;
+    secondaryCtaHref?: string;
+    secondaryCtaLabel?: string;
+    title?: string;
+  };
+  mapSection: {
+    buttonHref: string;
+    buttonLabel: string;
+    description?: string;
     title: string;
   };
   story: {
     body: string[];
+    buttonHref?: string;
+    buttonLabel?: string;
     image: CMSMedia;
-    statOneBody: string;
-    statOneTitle: string;
-    statTwoBody: string;
-    statTwoTitle: string;
-    title: string;
-  };
-  tripsIntro: {
-    description: string;
     title: string;
   };
 };
@@ -218,6 +219,7 @@ const fallbackTrips: Trip[] = [
     coverImage: { alt: "Saba Expedition", url: featuredTripImage },
     countries: ["Saba"],
     dateLabel: "October 17-24, 2026",
+    featuredOnHomepage: true,
     id: "trip-saba",
     legacyUrl: "/gay-scuba-trips/saba.html",
     mapPin: { color: "gold", showOnHomepage: true, xPercent: 28.4, yPercent: 43.5 },
@@ -228,6 +230,8 @@ const fallbackTrips: Trip[] = [
     summary:
       "Join us for an exclusive week in the Unspoiled Queen of the Caribbean, with Sea & Learn programming and a warm, community-first atmosphere.",
     title: "LGBTQ+ Scuba Saba",
+    tripEnd: "2026-10-24T00:00:00.000Z",
+    tripStart: "2026-10-17T00:00:00.000Z",
     tripYear: 2026,
     tripStyle: "land-resort",
   },
@@ -242,6 +246,7 @@ const fallbackTrips: Trip[] = [
     },
     countries: ["Egypt"],
     dateLabel: "October 11-18, 2026",
+    featuredOnHomepage: true,
     id: "trip-red-sea",
     mapPin: { color: "coral", showOnHomepage: true, xPercent: 58.5, yPercent: 46.2 },
     path: "/2026/marsa-shagra-dive-village",
@@ -251,6 +256,8 @@ const fallbackTrips: Trip[] = [
     summary:
       "Explore the legendary Red Sea for women only, featuring pristine house reefs and world-class hospitality.",
     title: "Marsa Shagra Dive Village",
+    tripEnd: "2026-10-18T00:00:00.000Z",
+    tripStart: "2026-10-11T00:00:00.000Z",
     tripYear: 2026,
     tripStyle: "land-resort",
   },
@@ -265,6 +272,7 @@ const fallbackTrips: Trip[] = [
     },
     countries: ["Mexico"],
     dateLabel: "November 21-28, 2026",
+    featuredOnHomepage: true,
     id: "trip-la-paz",
     mapPin: { color: "seafoam", showOnHomepage: true, xPercent: 18.3, yPercent: 44.8 },
     path: "/2026/la-paz-baja-california",
@@ -274,6 +282,8 @@ const fallbackTrips: Trip[] = [
     summary:
       'Dive the Sea of Cortez, the "world\'s aquarium," for sea lion encounters and whale shark sightings.',
     title: "La Paz, Baja California",
+    tripEnd: "2026-11-28T00:00:00.000Z",
+    tripStart: "2026-11-21T00:00:00.000Z",
     tripYear: 2026,
     tripStyle: "land-resort",
   },
@@ -288,6 +298,7 @@ const fallbackTrips: Trip[] = [
     },
     countries: ["Maldives"],
     dateLabel: "February 17-27, 2027",
+    featuredOnHomepage: true,
     id: "trip-maldives",
     legacyUrl: "/gay-scuba-trips/maldives.html",
     mapPin: { color: "deep-blue", showOnHomepage: true, xPercent: 68.7, yPercent: 58.6 },
@@ -298,6 +309,8 @@ const fallbackTrips: Trip[] = [
     summary:
       "A luxury liveaboard expedition through the central atolls, seeking mantas and breathtaking reefs.",
     title: "Magic of the Maldives",
+    tripEnd: "2027-02-27T00:00:00.000Z",
+    tripStart: "2027-02-17T00:00:00.000Z",
     tripYear: 2027,
     tripStyle: "liveaboard",
   },
@@ -400,40 +413,39 @@ const fallbackHomePage: HomePageContent = {
     description:
       "Our experts are ready to help you plan your next underwater adventure. Reach out today for specialized trip details and availability.",
     emailLabel: "EMAIL OUR TEAM",
-    newsletterButtonLabel: "Sign Me Up",
-    newsletterHelperText:
-      "We respect your privacy - no sharing of your e-mail address with outside parties.",
-    newsletterPlaceholder: "Your email address",
     phoneLabel: "CALL US TOLL-FREE",
     title: "Ready to Dive In?",
   },
-  featuredIntro: {
-    eyebrow: "FEATURED EXPEDITION",
+  featuredTrips: {
+    description: "A rotating look at the departures we want front and center right now.",
+    title: "Featured Trips",
   },
   hero: {
     description: fallbackSiteSettings.tagline,
     image: { alt: "Experience the freedom of the deep", url: homeHeroImage },
+    logo: undefined,
     primaryCtaHref: "/trips",
     primaryCtaLabel: "Book Your Journey",
     secondaryCtaHref: "/gallery",
     secondaryCtaLabel: "Explore Gallery",
     title: "Experience the Freedom of the Deep",
   },
+  mapSection: {
+    buttonHref: "/trips",
+    buttonLabel: "Browse All Trips",
+    description:
+      "Each pin links directly to a trip page, so you can jump from the map into dates, itinerary, and booking details.",
+    title: "Explore Where The Next Expeditions Go",
+  },
   story: {
     body: [
       "Scuba diving is more fun when it's shared with friends. Friends who share our values, humor, and lifestyle. New friends are what we make on our Undersea Expeditions, exploring the world and having a great time doing it.",
       "We dive the clear, warm waters of our planet's most exciting and exotic locations in the company of friends. We offer trips for all levels of divers, from instruction for new divers to advanced destinations for the experienced.",
     ],
+    buttonHref: "/about",
+    buttonLabel: "About Us",
     image: { alt: "Community of divers", url: storyImage },
-    statOneBody: "A welcoming space for all.",
-    statOneTitle: "Inclusive Community",
-    statTwoBody: "30+ years of dive expertise.",
-    statTwoTitle: "Expert Guides",
     title: "Dive with Friends, Explore the World",
-  },
-  tripsIntro: {
-    description: "Discover our upcoming curated global expeditions.",
-    title: "2026 & 2027 Vacations",
   },
 };
 
@@ -653,6 +665,10 @@ function normalizeTrip(doc: any, fallback?: Trip): Trip | null {
     dateLabel: formatTripDateLabel(doc.tripStart, doc.tripEnd, doc.dateLabel || fallback?.dateLabel),
     days: doc.days || fallback?.days,
     deposit: renderRichText(doc.contentSections?.deposit) || fallback?.deposit,
+    featuredOnHomepage:
+      typeof doc.featuredOnHomepage === "boolean"
+        ? doc.featuredOnHomepage
+        : fallback?.featuredOnHomepage,
     flights: renderRichText(doc.contentSections?.flights) || fallback?.flights,
     gender: doc.gender || fallback?.gender,
     groupTypeLabel: getGroupTypeLabel(doc.gender || fallback?.gender),
@@ -687,6 +703,8 @@ function normalizeTrip(doc: any, fallback?: Trip): Trip | null {
     summary: stripHtml(renderRichText(doc.summary)) || fallback?.summary || "",
     summaryHtml: renderRichText(doc.summary) || fallback?.summaryHtml,
     title: doc.title,
+    tripEnd: doc.tripEnd || fallback?.tripEnd,
+    tripStart: doc.tripStart || fallback?.tripStart,
     tripYear,
     tripStyle: doc.tripStyle || fallback?.tripStyle,
     tripStyleLabel: getTripStyleLabel(doc.tripStyle || fallback?.tripStyle),
@@ -749,43 +767,40 @@ export async function getHomePageContent(): Promise<HomePageContent> {
     cta: {
       description: global.cta?.description || fallbackHomePage.cta.description,
       emailLabel: global.cta?.emailLabel || fallbackHomePage.cta.emailLabel,
-      newsletterButtonLabel:
-        global.cta?.newsletterButtonLabel || fallbackHomePage.cta.newsletterButtonLabel,
-      newsletterHelperText:
-        global.cta?.newsletterHelperText || fallbackHomePage.cta.newsletterHelperText,
-      newsletterPlaceholder:
-        global.cta?.newsletterPlaceholder || fallbackHomePage.cta.newsletterPlaceholder,
       phoneLabel: global.cta?.phoneLabel || fallbackHomePage.cta.phoneLabel,
       title: global.cta?.title || fallbackHomePage.cta.title,
     },
-    featuredIntro: {
-      eyebrow: global.featuredIntro?.eyebrow || fallbackHomePage.featuredIntro.eyebrow,
+    featuredTrips: {
+      description:
+        global.featuredTrips?.description || fallbackHomePage.featuredTrips.description,
+      title: global.featuredTrips?.title || fallbackHomePage.featuredTrips.title,
     },
     hero: {
       description: global.hero?.description || fallbackHomePage.hero.description,
-      eyebrow: global.hero?.eyebrow || fallbackHomePage.hero.eyebrow,
       image: mapMedia(global.hero?.image, fallbackHomePage.hero.image),
+      logo: global.hero?.logo?.url
+        ? mapMedia(global.hero.logo, { alt: fallbackHomePage.hero.title, url: "" })
+        : undefined,
       primaryCtaHref: global.hero?.primaryCtaHref || fallbackHomePage.hero.primaryCtaHref,
       primaryCtaLabel: global.hero?.primaryCtaLabel || fallbackHomePage.hero.primaryCtaLabel,
       secondaryCtaHref: global.hero?.secondaryCtaHref || fallbackHomePage.hero.secondaryCtaHref,
-      secondaryCtaLabel:
-        global.hero?.secondaryCtaLabel || fallbackHomePage.hero.secondaryCtaLabel,
+      secondaryCtaLabel: global.hero?.secondaryCtaLabel || fallbackHomePage.hero.secondaryCtaLabel,
       title: global.hero?.title || fallbackHomePage.hero.title,
+    },
+    mapSection: {
+      buttonHref: global.mapSection?.buttonHref || fallbackHomePage.mapSection.buttonHref,
+      buttonLabel: global.mapSection?.buttonLabel || fallbackHomePage.mapSection.buttonLabel,
+      description: global.mapSection?.description || fallbackHomePage.mapSection.description,
+      title: global.mapSection?.title || fallbackHomePage.mapSection.title,
     },
     story: {
       body:
         global.story?.body?.map((item: any) => item.paragraph).filter(Boolean) ||
         fallbackHomePage.story.body,
+      buttonHref: global.story?.buttonHref || fallbackHomePage.story.buttonHref,
+      buttonLabel: global.story?.buttonLabel || fallbackHomePage.story.buttonLabel,
       image: mapMedia(global.story?.image, fallbackHomePage.story.image),
-      statOneBody: global.story?.statOneBody || fallbackHomePage.story.statOneBody,
-      statOneTitle: global.story?.statOneTitle || fallbackHomePage.story.statOneTitle,
-      statTwoBody: global.story?.statTwoBody || fallbackHomePage.story.statTwoBody,
-      statTwoTitle: global.story?.statTwoTitle || fallbackHomePage.story.statTwoTitle,
       title: global.story?.title || fallbackHomePage.story.title,
-    },
-    tripsIntro: {
-      description: global.tripsIntro?.description || fallbackHomePage.tripsIntro.description,
-      title: global.tripsIntro?.title || fallbackHomePage.tripsIntro.title,
     },
   };
 }

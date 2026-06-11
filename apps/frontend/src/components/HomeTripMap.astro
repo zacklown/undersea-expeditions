@@ -2,7 +2,13 @@
 import mapImage from "../assets/MapChart_Map.png";
 import type { Trip } from "../lib/content";
 
-const { trips } = Astro.props as { trips: Trip[] };
+const { buttonHref, buttonLabel, description, title, trips } = Astro.props as {
+  buttonHref: string;
+  buttonLabel: string;
+  description?: string;
+  title: string;
+  trips: Trip[];
+};
 
 const colorMap: Record<string, string> = {
   amber: "#D88906",
@@ -41,80 +47,62 @@ const pinnedTrips = trips.filter(
 
 {
   pinnedTrips.length > 0 && (
-    <section class="bg-[#F5FBFD] py-section-padding">
+    <section class="bg-[#F5FBFD] py-16 md:py-20">
       <div class="mx-auto max-w-container-max px-margin-mobile md:px-margin-desktop">
-        <div class="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <div class="max-w-2xl">
-            <p class="mb-3 text-label-sm font-label-sm uppercase tracking-[0.18em] text-on-tertiary-container">
-              Destination Map
-            </p>
-            <h2 class="font-headline-lg text-headline-lg text-primary">
-              Explore Where The Next Expeditions Go
-            </h2>
+        <div class="mb-7 max-w-3xl md:mb-8">
+          <h2 class="font-headline-lg text-headline-lg text-primary">
+            {title}
+          </h2>
+          {description && (
             <p class="mt-3 text-body-lg text-secondary">
-              Each pin links directly to a trip page, so you can jump from the map into dates,
-              itinerary, and booking details.
+              {description}
             </p>
-          </div>
-          <a class="font-bold text-on-tertiary-container hover:underline" href="/trips">
-            Browse all departures
-          </a>
+          )}
         </div>
 
         <div class="overflow-hidden rounded-[32px] border border-secondary-fixed/60 bg-white shadow-[0_30px_80px_rgba(4,44,72,0.10)]">
-          <div class="grid gap-0 lg:grid-cols-[minmax(0,1fr)_320px]">
-            <div class="relative">
-              <img
-                alt="Undersea Expeditions destination map"
-                class="block h-auto w-full"
-                src={mapImage.src}
-              />
-              {pinnedTrips.map((trip) => (
-                <a
-                  aria-label={`View trip: ${trip.title}`}
-                  class="group absolute"
-                  href={trip.path}
-                  style={`left:${trip.mapPin!.xPercent}%;top:${trip.mapPin!.yPercent}%;transform:translate(-50%,-100%);`}
-                  title={trip.title}
+          <div
+            class="relative w-full bg-[#EAF4F8]"
+            style={`aspect-ratio:${mapImage.width}/${mapImage.height};`}
+          >
+            <img
+              alt="Undersea Expeditions destination map"
+              class="block h-full w-full object-contain"
+              src={mapImage.src}
+            />
+            {pinnedTrips.map((trip) => (
+              <a
+                aria-label={`View trip: ${trip.title}`}
+                class="group absolute"
+                href={trip.path}
+                style={`left:${trip.mapPin!.xPercent}%;top:${trip.mapPin!.yPercent}%;transform:translate(-50%,-100%);`}
+                title={trip.title}
+              >
+                <span
+                  class="relative flex h-6 w-6 items-center justify-center rounded-full border-2 border-white shadow-[0_12px_24px_rgba(4,44,72,0.20)] transition-transform duration-200 group-hover:scale-110 md:h-8 md:w-8"
+                  style={`background:${colorMap[trip.mapPin!.color] || colorMap.gold};`}
                 >
+                  <span class="h-2 w-2 rounded-full bg-white md:h-2.5 md:w-2.5"></span>
                   <span
-                    class="relative flex h-7 w-7 items-center justify-center rounded-full border-2 border-white shadow-[0_12px_24px_rgba(4,44,72,0.20)] transition-transform duration-200 group-hover:scale-110"
+                    class="absolute left-1/2 top-full h-3 w-3 -translate-x-1/2 -translate-y-[55%] rotate-45 border-r-2 border-b-2 border-white md:h-3.5 md:w-3.5"
                     style={`background:${colorMap[trip.mapPin!.color] || colorMap.gold};`}
-                  >
-                    <span class="h-2.5 w-2.5 rounded-full bg-white"></span>
-                    <span
-                      class="absolute left-1/2 top-full h-3 w-3 -translate-x-1/2 -translate-y-[55%] rotate-45 border-r-2 border-b-2 border-white"
-                      style={`background:${colorMap[trip.mapPin!.color] || colorMap.gold};`}
-                    ></span>
-                  </span>
-                  <span class="pointer-events-none absolute left-1/2 top-[-0.75rem] hidden -translate-x-1/2 whitespace-nowrap rounded-full bg-primary px-3 py-1 text-xs font-bold text-white shadow-lg group-hover:block">
-                    {trip.title}
-                  </span>
-                </a>
-              ))}
-            </div>
-
-            <div class="border-t border-secondary-fixed/50 bg-[#FBF8F1] p-6 lg:border-t-0 lg:border-l">
-              <h3 class="mb-4 font-headline-md text-headline-md text-primary">Pinned Trips</h3>
-              <div class="space-y-3">
-                {pinnedTrips.map((trip) => (
-                  <a
-                    class="flex items-start gap-3 rounded-2xl border border-transparent bg-white/80 px-4 py-3 transition-colors hover:border-secondary-fixed hover:bg-white"
-                    href={trip.path}
-                  >
-                    <span
-                      class="mt-1 inline-block h-3 w-3 rounded-full"
-                      style={`background:${colorMap[trip.mapPin!.color] || colorMap.gold};`}
-                    ></span>
-                    <span>
-                      <span class="block font-bold text-primary">{trip.title}</span>
-                      <span class="block text-sm text-secondary">{trip.dateLabel}</span>
-                    </span>
-                  </a>
-                ))}
-              </div>
-            </div>
+                  ></span>
+                </span>
+                <span class="pointer-events-none absolute left-1/2 top-[-0.75rem] hidden -translate-x-1/2 whitespace-nowrap rounded-full bg-primary px-3 py-1 text-xs font-bold text-white shadow-lg group-hover:block">
+                  {trip.title}
+                </span>
+              </a>
+            ))}
           </div>
+        </div>
+
+        <div class="mt-6 flex justify-center md:mt-7">
+          <a
+            class="inline-flex items-center justify-center rounded-lg bg-[#C5A059] px-8 py-4 font-bold text-white shadow-lg transition-colors hover:bg-on-tertiary-container"
+            href={buttonHref}
+          >
+            {buttonLabel}
+          </a>
         </div>
       </div>
     </section>

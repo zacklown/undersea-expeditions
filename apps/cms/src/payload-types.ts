@@ -305,6 +305,10 @@ export interface Trip {
   tripStart: string;
   tripEnd: string;
   isNew?: boolean | null;
+  /**
+   * Include this trip in the homepage Featured Trips carousel.
+   */
+  featuredOnHomepage?: boolean | null;
   days: number;
   nights: number;
   /**
@@ -686,6 +690,7 @@ export interface TripsSelect<T extends boolean = true> {
   tripStart?: T;
   tripEnd?: T;
   isNew?: T;
+  featuredOnHomepage?: T;
   days?: T;
   nights?: T;
   summary?: T;
@@ -829,21 +834,27 @@ export interface SiteSetting {
 export interface HomePage {
   id: number;
   hero: {
-    eyebrow?: string | null;
-    title: string;
-    description: string;
+    /**
+     * Shown only if no logo overlay image is uploaded.
+     */
+    title?: string | null;
+    description?: string | null;
+    logo?: (number | null) | Media;
     image: number | Media;
     primaryCtaLabel: string;
     primaryCtaHref: string;
-    secondaryCtaLabel: string;
-    secondaryCtaHref: string;
+    secondaryCtaLabel?: string | null;
+    secondaryCtaHref?: string | null;
   };
-  featuredIntro: {
-    eyebrow: string;
-  };
-  tripsIntro: {
+  mapSection: {
     title: string;
-    description: string;
+    description?: string | null;
+    buttonLabel: string;
+    buttonHref: string;
+  };
+  featuredTrips: {
+    title: string;
+    description?: string | null;
   };
   story: {
     title: string;
@@ -852,19 +863,14 @@ export interface HomePage {
       id?: string | null;
     }[];
     image: number | Media;
-    statOneTitle: string;
-    statOneBody: string;
-    statTwoTitle: string;
-    statTwoBody: string;
+    buttonLabel?: string | null;
+    buttonHref?: string | null;
   };
   cta: {
     title: string;
     description: string;
     phoneLabel: string;
     emailLabel: string;
-    newsletterPlaceholder: string;
-    newsletterButtonLabel: string;
-    newsletterHelperText: string;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -970,21 +976,24 @@ export interface HomePageSelect<T extends boolean = true> {
   hero?:
     | T
     | {
-        eyebrow?: T;
         title?: T;
         description?: T;
+        logo?: T;
         image?: T;
         primaryCtaLabel?: T;
         primaryCtaHref?: T;
         secondaryCtaLabel?: T;
         secondaryCtaHref?: T;
       };
-  featuredIntro?:
+  mapSection?:
     | T
     | {
-        eyebrow?: T;
+        title?: T;
+        description?: T;
+        buttonLabel?: T;
+        buttonHref?: T;
       };
-  tripsIntro?:
+  featuredTrips?:
     | T
     | {
         title?: T;
@@ -1001,10 +1010,8 @@ export interface HomePageSelect<T extends boolean = true> {
               id?: T;
             };
         image?: T;
-        statOneTitle?: T;
-        statOneBody?: T;
-        statTwoTitle?: T;
-        statTwoBody?: T;
+        buttonLabel?: T;
+        buttonHref?: T;
       };
   cta?:
     | T
@@ -1013,9 +1020,6 @@ export interface HomePageSelect<T extends boolean = true> {
         description?: T;
         phoneLabel?: T;
         emailLabel?: T;
-        newsletterPlaceholder?: T;
-        newsletterButtonLabel?: T;
-        newsletterHelperText?: T;
       };
   updatedAt?: T;
   createdAt?: T;

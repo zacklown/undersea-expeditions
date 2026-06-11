@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: undersea_cms_dev_password
       POSTGRES_USER: undersea_cms
     ports:
-      - "55433:5432"
+      - "55632:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
 

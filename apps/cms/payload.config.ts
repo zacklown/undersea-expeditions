@@ -20,18 +20,45 @@ import { GalleryPage } from "./src/globals/GalleryPage";
 import { HomePage } from "./src/globals/HomePage";
 import { SiteSettings } from "./src/globals/SiteSettings";
 import { TripsPage } from "./src/globals/TripsPage";
+import { migrations } from "./src/migrations";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 const isProduction = process.env.NODE_ENV === "production";
-const serverURL = process.env.SERVER_URL || "http://localhost:3001";
-const frontendURL = process.env.FRONTEND_URL || "http://localhost:4321";
+
+function normalizeOrigin(value?: string | null) {
+  if (!value) return "";
+
+  const trimmed = value.trim();
+
+  if (!trimmed) return "";
+
+  if (/^https?:\/\//i.test(trimmed)) {
+    return trimmed.replace(/\/+$/, "");
+  }
+
+  return `https://${trimmed.replace(/\/+$/, "")}`;
+}
+
+const inferredVercelURL = normalizeOrigin(
+  process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL,
+);
+const serverURL = normalizeOrigin(process.env.SERVER_URL) || inferredVercelURL || "http://localhost:3001";
+const frontendURL =
+  normalizeOrigin(process.env.FRONTEND_URL) || normalizeOrigin(process.env.NEXT_PUBLIC_SITE_URL) || "http://localhost:4321";
 const extraAllowedOrigins = (process.env.PAYLOAD_PUBLIC_ORIGINS || "")
   .split(",")
-  .map((origin) => origin.trim())
+  .map((origin) => normalizeOrigin(origin))
   .filter(Boolean);
 const allowedOrigins = Array.from(
-  new Set([serverURL, frontendURL, "http://localhost:3001", "http://127.0.0.1:3001", ...extraAllowedOrigins]),
+  new Set([
+    serverURL,
+    frontendURL,
+    inferredVercelURL,
+    "http://localhost:3001",
+    "http://127.0.0.1:3001",
+    ...extraAllowedOrigins,
+  ]),
 );
 const databaseURL =
   process.env.DATABASE_URL ||
@@ -54,8 +81,10 @@ export default buildConfig({
   csrf: allowedOrigins,
   db: postgresAdapter({
     pool: {
-      connectionString: databaseURL || "postgresql://undersea_cms:undersea_cms_dev_password@127.0.0.1:55433/undersea_payload",
+      connectionString: databaseURL || "postgresql://undersea_cms:undersea_cms_dev_password@127.0.0.1:55632/undersea_payload",
     },
+    prodMigrations: migrations,
+    push: false,
   }),
   editor: lexicalEditor(),
   globals: [SiteSettings, HomePage, TripsPage, GalleryPage, FAQPage, ContactPage],
