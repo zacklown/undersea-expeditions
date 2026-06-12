@@ -1,4 +1,5 @@
 import { renderRichText } from "./richText";
+import underseaLogo from "../assets/underseax-logo.png";
 
 const DEFAULT_CMS_API_URL = "http://127.0.0.1:3001/api";
 
@@ -8,6 +9,7 @@ export type CMSMedia = {
 };
 
 export type Trip = {
+  bannerImage: CMSMedia;
   bookingHref: string;
   bookingLabel: string;
   coverImage: CMSMedia;
@@ -20,6 +22,7 @@ export type Trip = {
   gender?: "male" | "female" | "mixed";
   groupTypeLabel?: string;
   id: number | string;
+  insuranceImage?: CMSMedia;
   isNew?: boolean;
   legacyUrl?: string;
   mapPin?: {
@@ -120,6 +123,12 @@ export type SiteSettings = {
     tollFreePhone: string;
   };
   footerBlurb: string;
+  insurance: {
+    buyButtonHref: string;
+    buyButtonLabel: string;
+    defaultImage: CMSMedia;
+    logo: CMSMedia;
+  };
   socialLinks: Array<{
     label: string;
     url: string;
@@ -212,6 +221,7 @@ const contactImage =
 
 const fallbackTrips: Trip[] = [
   {
+    bannerImage: { alt: "Saba Expedition", url: featuredTripImage },
     bookingHref: "/contact",
     bookingLabel: "Reserve Your Spot",
     overview:
@@ -221,6 +231,7 @@ const fallbackTrips: Trip[] = [
     dateLabel: "October 17-24, 2026",
     featuredOnHomepage: true,
     id: "trip-saba",
+    insuranceImage: undefined,
     legacyUrl: "/gay-scuba-trips/saba.html",
     mapPin: { color: "gold", showOnHomepage: true, xPercent: 28.4, yPercent: 43.5 },
     path: "/2026/lgbtq-scuba-saba",
@@ -236,6 +247,10 @@ const fallbackTrips: Trip[] = [
     tripStyle: "land-resort",
   },
   {
+    bannerImage: {
+      alt: "Red Sea",
+      url: "https://lh3.googleusercontent.com/aida-public/AB6AXuDlPUIVi1CcXvmr1q1Ys3FSJDneOpJbw_vknGnvYLDjj5r0aS7pVnaXuyyNVGbewNztVq_aTE8ks2XwtpKRawDB8NomyfkLWQLPJYl8JaY-SauTrkHM09YZPOhcHwr9EBnfG4tRk7jWtS4cEBBG1FMvsnFTf6lXoqlfaQGa6ImzuoOIQewVeF7ln_qVYA6G9xkfUGGfv34b55xt-zjBIzLBX-R4NqBrQVQ-2TIWvLvyaZhBNIq2vEwJw7ciZS-fiAPkJy3p7quyf8wW",
+    },
     bookingHref: "/contact",
     bookingLabel: "Details & Booking",
     overview:
@@ -248,6 +263,7 @@ const fallbackTrips: Trip[] = [
     dateLabel: "October 11-18, 2026",
     featuredOnHomepage: true,
     id: "trip-red-sea",
+    insuranceImage: undefined,
     mapPin: { color: "coral", showOnHomepage: true, xPercent: 58.5, yPercent: 46.2 },
     path: "/2026/marsa-shagra-dive-village",
     regionLabel: "RED SEA",
@@ -262,6 +278,10 @@ const fallbackTrips: Trip[] = [
     tripStyle: "land-resort",
   },
   {
+    bannerImage: {
+      alt: "La Paz",
+      url: "https://lh3.googleusercontent.com/aida-public/AB6AXuC56og5pfXNSCbdx3GnLnULIShYtyXbrXCmLdEW9jvVauWpnaLN-tNjFT6A8-m4mU8WxCarO9ptWp6SV5hh6sVBdxcfSTKWBZANeBjfvZTVOkidc3agefFe--3L3ZqEq0A_DeVMBuhwrOqk8WXXqQtOlHnq5wfMPw4md9h_IE2hIh4SsnvnHcgy82g-jAqhBkwJYAFHDNplfOuB8J4P3OL0C61MBeisbu2_FM4pBRK9nDd5RO5OnlgaHby-eUHRkTggbFfrU5QQINu8",
+    },
     bookingHref: "/contact",
     bookingLabel: "Details & Booking",
     overview:
@@ -274,6 +294,7 @@ const fallbackTrips: Trip[] = [
     dateLabel: "November 21-28, 2026",
     featuredOnHomepage: true,
     id: "trip-la-paz",
+    insuranceImage: undefined,
     mapPin: { color: "seafoam", showOnHomepage: true, xPercent: 18.3, yPercent: 44.8 },
     path: "/2026/la-paz-baja-california",
     regionLabel: "MEXICO",
@@ -288,6 +309,10 @@ const fallbackTrips: Trip[] = [
     tripStyle: "land-resort",
   },
   {
+    bannerImage: {
+      alt: "Maldives",
+      url: "https://lh3.googleusercontent.com/aida-public/AB6AXuBycCrQqKtoSOqz6jXNXXD37n9FYxOosdJSN_Ai2pQI1kapCZjwJyd-CChOg6a6lMURhqXmAcfbC-9vRWs3IPdIRa_z_MEeZ7JWrTCDuryIWDwiLM_D3lZe3hOUmITbyVZbugpCsrzRBm1uWa8M1UgiakpZeb2eU8M5cVbE8NrbMyWnVZfZ8BN9p65avRT2JR1MScukUTi8XsNmDsMBHp0clenKkKpF3l4c6Ftz7Fd_bJKbGAT6APHDpapGzLWRhSXMCkj8hiXcpHGo",
+    },
     bookingHref: "/contact",
     bookingLabel: "Details & Booking",
     overview:
@@ -300,6 +325,7 @@ const fallbackTrips: Trip[] = [
     dateLabel: "February 17-27, 2027",
     featuredOnHomepage: true,
     id: "trip-maldives",
+    insuranceImage: undefined,
     legacyUrl: "/gay-scuba-trips/maldives.html",
     mapPin: { color: "deep-blue", showOnHomepage: true, xPercent: 68.7, yPercent: 58.6 },
     path: "/2027/magic-of-the-maldives",
@@ -401,6 +427,12 @@ const fallbackSiteSettings: SiteSettings = {
   },
   footerBlurb:
     "Gay and Lesbian Scuba Dive Travel Experts since 1991. Leading the world in community-focused aquatic adventures.",
+  insurance: {
+    buyButtonHref: "/contact",
+    buyButtonLabel: "Buy Insurance",
+    defaultImage: { alt: "Travel insurance planning", url: featuredTripImage },
+    logo: { alt: "Insurance logo", url: underseaLogo.src },
+  },
   socialLinks: [
     { label: "Facebook", url: "https://facebook.com" },
     { label: "Instagram", url: "https://instagram.com" },
@@ -658,6 +690,7 @@ function normalizeTrip(doc: any, fallback?: Trip): Trip | null {
   const path = getTripPath({ slug: doc.slug, tripYear });
 
   return {
+    bannerImage: mapMedia(doc.bannerImage, fallback?.bannerImage || fallback?.coverImage || fallbackTrips[0].coverImage),
     bookingHref: doc.bookingHref || fallback?.bookingHref || "/contact",
     bookingLabel: doc.bookingLabel || fallback?.bookingLabel || "Contact Us",
     coverImage: mapMedia(doc.coverImage, fallback?.coverImage || fallbackTrips[0].coverImage),
@@ -673,6 +706,9 @@ function normalizeTrip(doc: any, fallback?: Trip): Trip | null {
     gender: doc.gender || fallback?.gender,
     groupTypeLabel: getGroupTypeLabel(doc.gender || fallback?.gender),
     id: doc.id || fallback?.id || doc.slug,
+    insuranceImage: doc.insuranceImage?.url
+      ? mapMedia(doc.insuranceImage, fallback?.insuranceImage || fallback?.coverImage || fallbackTrips[0].coverImage)
+      : fallback?.insuranceImage,
     isNew: typeof doc.isNew === "boolean" ? doc.isNew : fallback?.isNew,
     legacyUrl: normalizeLegacyUrl(doc.legacyUrl || fallback?.legacyUrl),
     mapPin,
@@ -749,6 +785,18 @@ export async function getSiteSettings(): Promise<SiteSettings> {
       tollFreePhone: global.contact?.tollFreePhone || fallbackSiteSettings.contact.tollFreePhone,
     },
     footerBlurb: global.footerBlurb || fallbackSiteSettings.footerBlurb,
+    insurance: {
+      buyButtonHref:
+        global.insurance?.buyButtonHref || fallbackSiteSettings.insurance.buyButtonHref,
+      buyButtonLabel:
+        global.insurance?.buyButtonLabel || fallbackSiteSettings.insurance.buyButtonLabel,
+      defaultImage: global.insurance?.defaultImage?.url
+        ? mapMedia(global.insurance.defaultImage, fallbackSiteSettings.insurance.defaultImage)
+        : fallbackSiteSettings.insurance.defaultImage,
+      logo: global.insurance?.logo?.url
+        ? mapMedia(global.insurance.logo, fallbackSiteSettings.insurance.logo)
+        : fallbackSiteSettings.insurance.logo,
+    },
     socialLinks:
       global.socialLinks?.map((item: any) => ({
         label: item.label,
@@ -868,12 +916,19 @@ export async function getTrips(): Promise<Trip[]> {
 export async function getTripByYearAndSlug(year: string | number, slug: string): Promise<Trip | null> {
   const tripYear = Number(year);
   const response = await fetchCMS<CollectionResponse<any>>(
-    `/trips?depth=2&limit=1&where[and][0][slug][equals]=${encodeURIComponent(slug)}&where[and][1][tripYear][equals]=${encodeURIComponent(String(tripYear))}`,
+    `/trips?depth=2&limit=10&where[slug][equals]=${encodeURIComponent(slug)}`,
   );
+  const fallback = fallbackTrips.find((trip) => trip.slug === slug && trip.tripYear === tripYear);
+  const normalizedTrips =
+    response?.docs
+      ?.map((doc) => normalizeTrip(doc, fallback))
+      .filter((trip): trip is Trip => Boolean(trip)) || [];
 
-  return normalizeTrip(
-    response?.docs?.[0],
-    fallbackTrips.find((trip) => trip.slug === slug && trip.tripYear === tripYear),
+  return (
+    normalizedTrips.find((trip) => trip.tripYear === tripYear) ||
+    normalizedTrips[0] ||
+    fallback ||
+    null
   );
 }
 

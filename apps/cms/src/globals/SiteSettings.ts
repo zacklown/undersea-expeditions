@@ -95,5 +95,46 @@ export const SiteSettings: GlobalConfig = {
         },
       ],
     },
+    {
+      name: "insurance",
+      label: "Travel Insurance",
+      type: "group",
+      fields: [
+        {
+          type: "row",
+          fields: [
+            {
+              name: "logo",
+              label: "Insurance Logo",
+              relationTo: "media",
+              type: "upload",
+            },
+            {
+              name: "defaultImage",
+              label: "Default Panel Image",
+              relationTo: "media",
+              type: "upload",
+            },
+          ],
+        },
+        {
+          type: "row",
+          fields: [
+            {
+              name: "buyButtonLabel",
+              type: "text",
+              defaultValue: "Buy Insurance",
+              required: true,
+            },
+            {
+              name: "buyButtonHref",
+              type: "text",
+              defaultValue: "/contact",
+              required: true,
+            },
+          ],
+        },
+      ],
+    },
   ],
 };

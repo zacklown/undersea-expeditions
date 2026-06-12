@@ -29,7 +29,6 @@ export const Media: CollectionConfig = {
         width: 1280,
       },
     ],
-    mimeTypes: ["image/*"],
     staticDir: "media",
   },
 };

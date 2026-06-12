@@ -5,6 +5,7 @@ import * as migration_20260610_172500_add_trip_year_legacy_url_and_homepage_pin_
 import * as migration_20260610_175900_convert_trip_includes_to_richtext from './20260610_175900_convert_trip_includes_to_richtext';
 import * as migration_20260610_201500_refresh_homepage_content_model from './20260610_201500_refresh_homepage_content_model';
 import * as migration_20260610_203500_relax_legacy_home_page_constraints from './20260610_203500_relax_legacy_home_page_constraints';
+import * as migration_20260611_220000_add_trip_banner_and_insurance_fields from './20260611_220000_add_trip_banner_and_insurance_fields';
 
 export const migrations = [
   {
@@ -41,5 +42,10 @@ export const migrations = [
     up: migration_20260610_203500_relax_legacy_home_page_constraints.up,
     down: migration_20260610_203500_relax_legacy_home_page_constraints.down,
     name: '20260610_203500_relax_legacy_home_page_constraints'
+  },
+  {
+    up: migration_20260611_220000_add_trip_banner_and_insurance_fields.up,
+    down: migration_20260611_220000_add_trip_banner_and_insurance_fields.down,
+    name: '20260611_220000_add_trip_banner_and_insurance_fields'
   },
 ];

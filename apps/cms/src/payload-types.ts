@@ -329,6 +329,14 @@ export interface Trip {
     };
     [k: string]: unknown;
   };
+  /**
+   * Displayed inside the main trip information panel.
+   */
+  coverImage: number | Media;
+  /**
+   * Optional image shown in the top page banner. Falls back to the main image.
+   */
+  bannerImage?: (number | null) | Media;
   contentSections?: {
     /**
      * Main formatted description for the trip detail page.
@@ -437,13 +445,16 @@ export interface Trip {
         id?: string | null;
       }[]
     | null;
-  coverImage: number | Media;
   /**
    * Optional gallery preview shown near the top of the trip page.
    */
   gallery?: (number | null) | Gallery;
   bookingLabel: string;
   bookingHref: string;
+  /**
+   * Optional trip-specific image for the insurance panel. Falls back to the site-wide default image.
+   */
+  insuranceImage?: (number | null) | Media;
   updatedAt: string;
   createdAt: string;
 }
@@ -694,6 +705,8 @@ export interface TripsSelect<T extends boolean = true> {
   days?: T;
   nights?: T;
   summary?: T;
+  coverImage?: T;
+  bannerImage?: T;
   contentSections?:
     | T
     | {
@@ -711,10 +724,10 @@ export interface TripsSelect<T extends boolean = true> {
         note?: T;
         id?: T;
       };
-  coverImage?: T;
   gallery?: T;
   bookingLabel?: T;
   bookingHref?: T;
+  insuranceImage?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -824,6 +837,12 @@ export interface SiteSetting {
         id?: string | null;
       }[]
     | null;
+  insurance: {
+    logo?: (number | null) | Media;
+    defaultImage?: (number | null) | Media;
+    buyButtonLabel: string;
+    buyButtonHref: string;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -963,6 +982,14 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         label?: T;
         url?: T;
         id?: T;
+      };
+  insurance?:
+    | T
+    | {
+        logo?: T;
+        defaultImage?: T;
+        buyButtonLabel?: T;
+        buyButtonHref?: T;
       };
   updatedAt?: T;
   createdAt?: T;

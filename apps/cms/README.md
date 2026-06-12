@@ -1,8 +1,11 @@
 # Undersea Expeditions CMS
 
-Payload runs here as a separate Next.js app and now uses PostgreSQL.
+Payload runs here as a separate Next.js app with PostgreSQL.
 
-In production, uploaded media can be stored in Vercel Blob by setting `BLOB_READ_WRITE_TOKEN`. The CMS is configured to use the official Payload Vercel Blob adapter for the `media` collection when `NODE_ENV=production`.
+Upload storage behavior:
+
+- Local development stores media on disk in `apps/cms/media`.
+- Production stores media in Vercel Blob and requires `BLOB_READ_WRITE_TOKEN`.
 
 ## Local setup
 
@@ -25,9 +28,9 @@ npm install
 npm run dev
 ```
 
-If the Payload admin schema or editor setup changes, the CMS now regenerates its Payload types and admin import map automatically before `dev`, `build`, and `start`.
+Payload regenerates types and the admin import map before `dev`, `build`, and `start`.
 
-Manual recovery commands, if you ever need them:
+If you need to refresh them manually:
 
 ```bash
 npm run generate:types
@@ -37,6 +40,10 @@ npm run generate:importmap
 The Payload admin will be available at `http://localhost:3001/admin`.
 
 The repo-local Postgres is exposed on `127.0.0.1:55632` and uses a repo-specific user/password to avoid colliding with any other local Postgres instance.
+
+## Production
+
+Set `BLOB_READ_WRITE_TOKEN` in the CMS environment before a Vercel production deploy. The app now fails fast for that deployment path if the variable is missing.
 
 ## Frontend connection
 

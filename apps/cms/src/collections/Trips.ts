@@ -255,6 +255,25 @@ export const Trips: CollectionConfig = {
       type: "richText",
     },
     {
+      name: "coverImage",
+      label: "Main Image",
+      admin: {
+        description: "Displayed inside the main trip information panel.",
+      },
+      relationTo: "media",
+      required: true,
+      type: "upload",
+    },
+    {
+      name: "bannerImage",
+      label: "Banner Image",
+      admin: {
+        description: "Optional image shown in the top page banner. Falls back to the main image.",
+      },
+      relationTo: "media",
+      type: "upload",
+    },
+    {
       name: "contentSections",
       type: "group",
       fields: [
@@ -318,12 +337,6 @@ export const Trips: CollectionConfig = {
       ],
     },
     {
-      name: "coverImage",
-      relationTo: "media",
-      required: true,
-      type: "upload",
-    },
-    {
       name: "gallery",
       label: "Featured Gallery",
       relationTo: "galleries",
@@ -348,6 +361,15 @@ export const Trips: CollectionConfig = {
           required: true,
         },
       ],
+    },
+    {
+      name: "insuranceImage",
+      label: "Insurance Panel Image",
+      admin: {
+        description: "Optional trip-specific image for the insurance panel. Falls back to the site-wide default image.",
+      },
+      relationTo: "media",
+      type: "upload",
     },
   ],
 };
