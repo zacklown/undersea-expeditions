@@ -78,10 +78,10 @@ if (isProduction && blobToken) {
 
   plugins.push(
     vercelBlobStorage({
+      addRandomSuffix: true,
       collections: {
         media: true,
       },
-      clientUploads: true,
       token: blobToken,
     }),
   );
