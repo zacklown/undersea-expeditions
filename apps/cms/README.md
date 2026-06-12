@@ -2,6 +2,8 @@
 
 Payload runs here as a separate Next.js app and now uses PostgreSQL.
 
+In production, uploaded media can be stored in Vercel Blob by setting `BLOB_READ_WRITE_TOKEN`. The CMS is configured to use the official Payload Vercel Blob adapter for the `media` collection when `NODE_ENV=production`.
+
 ## Local setup
 
 1. Copy `.env.example` to `.env`.

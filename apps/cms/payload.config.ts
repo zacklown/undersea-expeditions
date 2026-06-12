@@ -3,6 +3,7 @@ import { fileURLToPath } from "node:url";
 
 import { postgresAdapter } from "@payloadcms/db-postgres";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
+import { vercelBlobStorage } from "@payloadcms/storage-vercel-blob";
 import { buildConfig } from "payload";
 import sharp from "sharp";
 
@@ -88,6 +89,17 @@ export default buildConfig({
   }),
   editor: lexicalEditor(),
   globals: [SiteSettings, HomePage, TripsPage, GalleryPage, FAQPage, ContactPage],
+  plugins: [
+    vercelBlobStorage({
+      collections: {
+        media: true,
+      },
+      // Client uploads avoid Vercel's server request size limit for larger images.
+      clientUploads: true,
+      enabled: isProduction,
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+    }),
+  ],
   routes: {
     admin: "/admin",
     api: "/api",
