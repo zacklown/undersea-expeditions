@@ -446,9 +446,19 @@ export interface Trip {
       }[]
     | null;
   /**
-   * Optional gallery preview shown near the top of the trip page.
+   * Add Instagram or Facebook post URLs to show embedded social posts on the trip page.
    */
-  gallery?: (number | null) | Gallery;
+  socialEmbeds?:
+    | {
+        platform: 'instagram' | 'facebook';
+        title?: string | null;
+        /**
+         * Paste the full Instagram or Facebook post URL. The frontend converts it into an embed automatically.
+         */
+        postUrl: string;
+        id?: string | null;
+      }[]
+    | null;
   bookingLabel: string;
   bookingHref: string;
   /**
@@ -724,7 +734,14 @@ export interface TripsSelect<T extends boolean = true> {
         note?: T;
         id?: T;
       };
-  gallery?: T;
+  socialEmbeds?:
+    | T
+    | {
+        platform?: T;
+        title?: T;
+        postUrl?: T;
+        id?: T;
+      };
   bookingLabel?: T;
   bookingHref?: T;
   insuranceImage?: T;

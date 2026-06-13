@@ -45,18 +45,18 @@ const homepageFeaturedTrips = (featuredTrips.length > 0 ? featuredTrips : trips)
       </div>
     </section>
 
-    <HomeTripMap
-      buttonHref={homePage.mapSection.buttonHref}
-      buttonLabel={homePage.mapSection.buttonLabel}
-      description={homePage.mapSection.description}
-      title={homePage.mapSection.title}
-      trips={trips}
-    />
-
     <FeaturedTripsCarousel
       description={homePage.featuredTrips.description}
       title={homePage.featuredTrips.title}
       trips={homepageFeaturedTrips}
+    />
+
+    <HomeTripMap
+      buttonHref={homePage.mapSection.buttonHref}
+      buttonLabel="See More Trips"
+      description={homePage.mapSection.description}
+      title={homePage.mapSection.title}
+      trips={trips}
     />
 
     <section class="mx-auto max-w-container-max overflow-hidden px-margin-mobile py-16 md:px-margin-desktop md:py-20">

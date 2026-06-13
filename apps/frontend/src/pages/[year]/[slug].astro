@@ -22,6 +22,35 @@ const upcomingTrips = otherTrips.filter((item) => !item.featuredOnHomepage).slic
 const stayIcon = trip?.tripStyle === "liveaboard" ? "directions_boat" : "hotel";
 const stayLabel = trip?.stays?.join(", ") || "";
 const insuranceImage = trip?.insuranceImage || siteSettings.insurance.defaultImage || trip?.coverImage;
+const socialEmbeds =
+  trip?.socialEmbeds
+    ?.map((embed) => {
+      if (!embed?.postUrl) return null;
+
+      try {
+        const url = new URL(embed.postUrl);
+        const pathname = url.pathname.endsWith("/") ? url.pathname : `${url.pathname}/`;
+
+        if (embed.platform === "instagram") {
+          return {
+            ...embed,
+            embedUrl: `https://www.instagram.com${pathname}embed/captioned/`,
+          };
+        }
+
+        if (embed.platform === "facebook") {
+          return {
+            ...embed,
+            embedUrl: `https://www.facebook.com/plugins/post.php?href=${encodeURIComponent(embed.postUrl)}&show_text=true&width=500`,
+          };
+        }
+      } catch {
+        return null;
+      }
+
+      return null;
+    })
+    .filter(Boolean) || [];
 ---
 
 <Layout title={`${trip?.title || "Trip"} | Undersea Expeditions`}>
@@ -63,45 +92,52 @@ const insuranceImage = trip?.insuranceImage || siteSettings.insurance.defaultIma
           </div>
         </section>
 
-        {trip.relatedGallery && (
+        {socialEmbeds.length > 0 && (
           <section class="relative z-20 mx-auto -mt-10 mb-12 max-w-container-max px-margin-mobile md:px-margin-desktop">
-            <a
-              class="grid overflow-hidden rounded-3xl border border-primary/15 bg-white/95 shadow-xl backdrop-blur-md transition-transform hover:-translate-y-1 md:grid-cols-[1.2fr_0.8fr]"
-              href={`/gallery/${trip.relatedGallery.slug}`}
-            >
-              <div class="relative min-h-[260px]">
-                <img
-                  alt={trip.relatedGallery.coverImage.alt || trip.relatedGallery.title}
-                  class="absolute inset-0 h-full w-full object-cover"
-                  src={trip.relatedGallery.coverImage.url}
-                />
-                <div class="absolute inset-0 bg-gradient-to-t from-primary via-primary/35 to-transparent"></div>
-                <div class="absolute inset-x-0 bottom-0 p-8 text-white">
-                  <p class="mb-2 font-label-sm text-label-sm uppercase tracking-[0.16em] text-white/75">
-                    Featured Gallery
-                  </p>
-                  <h2 class="font-headline-md text-headline-md">
-                    {trip.relatedGallery.overlayText || trip.relatedGallery.title}
-                  </h2>
-                </div>
-              </div>
-              <div class="flex flex-col justify-center p-8">
+            <div class="rounded-3xl border border-primary/15 bg-white/95 p-8 shadow-xl backdrop-blur-md">
+              <div class="mb-6 max-w-2xl">
                 <p class="mb-2 font-label-sm text-label-sm uppercase tracking-[0.16em] text-on-tertiary-container">
-                  Explore Photos
+                  Trip Social Posts
                 </p>
-                <h3 class="mb-4 font-headline-md text-headline-md text-primary">
-                  {trip.relatedGallery.title}
-                </h3>
-                {trip.relatedGallery.excerpt && (
-                  <p class="mb-6 text-body-md text-on-surface-variant">
-                    {trip.relatedGallery.excerpt}
-                  </p>
-                )}
-                <span class="inline-flex w-fit rounded-full bg-on-tertiary-container px-5 py-3 font-bold text-white">
-                  View Gallery
-                </span>
+                <h2 class="font-headline-md text-headline-md text-primary">See this trip on social</h2>
               </div>
-            </a>
+              <div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
+                {socialEmbeds.map((embed) => (
+                  <article class="overflow-hidden rounded-3xl border border-outline-variant/20 bg-surface-container-low p-4">
+                    <div class="mb-4 flex items-center justify-between gap-4 px-2 pt-2">
+                      <div>
+                        <p class="font-label-sm text-label-sm uppercase tracking-[0.16em] text-on-tertiary-container">
+                          {embed.platform}
+                        </p>
+                        {embed.title && (
+                          <h3 class="mt-1 font-bold text-primary">{embed.title}</h3>
+                        )}
+                      </div>
+                      <a
+                        class="text-sm font-bold text-on-tertiary-container hover:underline"
+                        href={embed.postUrl}
+                        rel="noreferrer"
+                        target="_blank"
+                      >
+                        Open Post
+                      </a>
+                    </div>
+                    <div class="overflow-hidden rounded-[24px] bg-white">
+                      <iframe
+                        title={embed.title || `${embed.platform} post`}
+                        src={embed.embedUrl}
+                        class="w-full"
+                        height={embed.platform === "facebook" ? "640" : "720"}
+                        style="border:none;overflow:hidden;"
+                        scrolling="no"
+                        frameborder="0"
+                        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                      ></iframe>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
           </section>
         )}
 

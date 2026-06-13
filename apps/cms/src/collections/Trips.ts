@@ -337,13 +337,46 @@ export const Trips: CollectionConfig = {
       ],
     },
     {
-      name: "gallery",
-      label: "Featured Gallery",
-      relationTo: "galleries",
-      type: "relationship",
+      name: "socialEmbeds",
+      label: "Embedded Social Posts",
+      type: "array",
       admin: {
-        description: "Optional gallery preview shown near the top of the trip page.",
+        description:
+          "Add Instagram or Facebook post URLs to show embedded social posts on the trip page.",
       },
+      fields: [
+        {
+          type: "row",
+          fields: [
+            {
+              name: "platform",
+              label: "Platform",
+              type: "select",
+              defaultValue: "instagram",
+              options: [
+                { label: "Instagram", value: "instagram" },
+                { label: "Facebook", value: "facebook" },
+              ],
+              required: true,
+            },
+            {
+              name: "title",
+              label: "Optional Title",
+              type: "text",
+            },
+          ],
+        },
+        {
+          name: "postUrl",
+          label: "Post URL",
+          type: "text",
+          required: true,
+          admin: {
+            description:
+              "Paste the full Instagram or Facebook post URL. The frontend converts it into an embed automatically.",
+          },
+        },
+      ],
     },
     {
       type: "row",

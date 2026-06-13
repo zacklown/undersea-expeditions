@@ -4,41 +4,160 @@ import Header from "../components/Header.astro";
 import Layout from "../layouts/Layout.astro";
 import { getGalleries, getGalleryPageContent } from "../lib/content";
 
-const [pageContent, galleries] = await Promise.all([getGalleryPageContent(), getGalleries()]);
+const [pageContent, galleries] = await Promise.all([
+  getGalleryPageContent(),
+  getGalleries(),
+]);
+
+const instagramUrl = "https://www.instagram.com/gayscuba/?hl=en";
+const facebookUrl = "https://www.facebook.com/GayScuba/";
+const socialCards = [
+  {
+    description: "Behind-the-scenes moments, trip highlights, and underwater snapshots from the road.",
+    eyebrow: "Instagram",
+    href: instagramUrl,
+    label: "Instagram",
+  },
+  {
+    description: "Announcements, traveler updates, and community check-ins from Undersea Expeditions.",
+    eyebrow: "Facebook",
+    href: facebookUrl,
+    label: "Facebook",
+  },
+];
+
+const featuredMoments = galleries
+  .flatMap((gallery) =>
+    gallery.images.slice(0, 3).map((item, index) => ({
+      caption: item.caption || gallery.title,
+      image: item.image,
+      platform: index % 2 === 0 ? socialCards[0] : socialCards[1],
+      title: gallery.overlayText || gallery.title,
+    })),
+  )
+  .slice(0, 6);
 ---
 
-<Layout title="Gallery | Undersea Expeditions">
+<Layout title="Socials | Undersea Expeditions">
   <Header active="gallery" />
   <main>
     <section class="py-24 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
-      <div class="max-w-xl">
-        <h1 class="font-display-lg text-display-lg text-primary mb-6">{pageContent.title}</h1>
+      <div class="max-w-3xl">
+        <p class="mb-3 font-label-sm text-label-sm uppercase tracking-[0.18em] text-on-tertiary-container">
+          Socials
+        </p>
+        <h1 class="font-display-lg text-display-lg text-primary mb-6">
+          {pageContent.title.replace(/gallery/gi, "Socials")}
+        </h1>
         <p class="font-body-lg text-body-lg text-on-surface-variant">
-          {pageContent.description}
+          {pageContent.description.replace(/gallery/gi, "social channels")}
         </p>
       </div>
     </section>
-    <section class="pb-section-padding px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
-      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-        {galleries.map((gallery) => (
-          <a class="group block" href={`/gallery/${gallery.slug}`}>
+
+    <section class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+      <div class="grid grid-cols-1 gap-8 xl:grid-cols-2">
+        <article class="overflow-hidden rounded-[32px] border border-secondary-fixed/60 bg-white shadow-[0_24px_70px_rgba(4,44,72,0.10)]">
+          <div class="border-b border-outline-variant/20 px-8 py-6">
+            <p class="mb-2 font-label-sm text-label-sm uppercase tracking-[0.18em] text-on-tertiary-container">
+              Facebook
+            </p>
+            <h2 class="font-headline-md text-headline-md text-primary">Gay Scuba on Facebook</h2>
+            <p class="mt-3 text-body-md text-on-surface-variant">
+              Announcements, traveler updates, and community check-ins from Undersea Expeditions.
+            </p>
+          </div>
+          <div class="px-4 py-5 md:px-8 md:py-7">
+            <div class="overflow-hidden rounded-3xl border border-outline-variant/20 bg-surface-container-low p-3">
+              <iframe
+                title="Gay Scuba Facebook feed"
+                src={`https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(facebookUrl)}&tabs=timeline&width=500&height=720&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true`}
+                width="500"
+                height="720"
+                style="border:none;overflow:hidden;width:100%;"
+                scrolling="no"
+                frameborder="0"
+                allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+              ></iframe>
+            </div>
+            <a
+              class="mt-5 inline-flex items-center justify-center rounded-full bg-on-tertiary-container px-6 py-3 font-bold text-white transition-opacity hover:opacity-90"
+              href={facebookUrl}
+              rel="noreferrer"
+              target="_blank"
+            >
+              Open Facebook
+            </a>
+          </div>
+        </article>
+
+        <article class="overflow-hidden rounded-[32px] border border-secondary-fixed/60 bg-white shadow-[0_24px_70px_rgba(4,44,72,0.10)]">
+          <div class="border-b border-outline-variant/20 px-8 py-6">
+            <p class="mb-2 font-label-sm text-label-sm uppercase tracking-[0.18em] text-on-tertiary-container">
+              Instagram
+            </p>
+            <h2 class="font-headline-md text-headline-md text-primary">Gay Scuba on Instagram</h2>
+            <p class="mt-3 text-body-md text-on-surface-variant">
+              Behind-the-scenes moments, trip highlights, and underwater snapshots from the road.
+            </p>
+          </div>
+          <div class="px-4 py-5 md:px-8 md:py-7">
+            <div class="rounded-3xl border border-outline-variant/20 bg-surface-container-low p-6">
+              <blockquote
+                class="instagram-media mx-auto !min-w-0 !w-full !max-w-full"
+                data-instgrm-permalink={instagramUrl}
+                data-instgrm-version="14"
+                style="background:#FFF;border:0;border-radius:24px;box-shadow:none;margin:0 auto;max-width:540px;padding:0;width:100%;"
+              >
+                <div class="flex min-h-[26rem] flex-col items-center justify-center rounded-[20px] border border-dashed border-outline-variant/30 bg-white px-8 py-10 text-center">
+                  <p class="mb-3 font-headline-md text-headline-md text-primary">Instagram Profile</p>
+                  <p class="max-w-md text-body-md text-on-surface-variant">
+                    Visit our Instagram for trip highlights, diver photos, and updates from Gay Scuba.
+                  </p>
+                </div>
+              </blockquote>
+            </div>
+            <a
+              class="mt-5 inline-flex items-center justify-center rounded-full bg-on-tertiary-container px-6 py-3 font-bold text-white transition-opacity hover:opacity-90"
+              href={instagramUrl}
+              rel="noreferrer"
+              target="_blank"
+            >
+              Open Instagram
+            </a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="pb-section-padding pt-14 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+      <div class="mb-8 max-w-2xl">
+        <h2 class="font-headline-lg text-headline-lg text-primary">Latest Social Moments</h2>
+        <p class="mt-3 text-body-lg text-on-surface-variant">
+          A quick look at the trips, travelers, and underwater moments we’re sharing across Instagram and Facebook.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
+        {featuredMoments.map((moment) => (
+          <a class="group block" href={moment.platform.href} rel="noreferrer" target="_blank">
             <article class="overflow-hidden rounded-3xl bg-white border border-secondary-fixed shadow-sm hover:shadow-xl transition-shadow">
               <div class="relative aspect-[4/3] overflow-hidden">
                 <img
-                  alt={gallery.coverImage.alt || gallery.title}
+                  alt={moment.image.alt || moment.title}
                   class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  src={gallery.coverImage.url}
+                  src={moment.image.url}
                 />
                 <div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent"></div>
                 <div class="absolute inset-x-0 bottom-0 p-6">
                   <p class="text-white/75 text-label-sm uppercase tracking-[0.18em] mb-2">
-                    {gallery.overlayText}
+                    {moment.platform.eyebrow}
                   </p>
-                  <h2 class="font-headline-md text-headline-md text-white">{gallery.title}</h2>
+                  <h2 class="font-headline-md text-headline-md text-white">{moment.title}</h2>
                 </div>
               </div>
               <div class="p-6">
-                <p class="text-body-md text-on-surface-variant">{gallery.excerpt}</p>
+                <p class="text-body-md text-on-surface-variant">{moment.caption}</p>
               </div>
             </article>
           </a>
@@ -48,3 +167,5 @@ const [pageContent, galleries] = await Promise.all([getGalleryPageContent(), get
   </main>
   <Footer active="gallery" />
 </Layout>
+
+<script async src="https://www.instagram.com/embed.js"></script>

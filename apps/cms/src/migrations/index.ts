@@ -6,6 +6,7 @@ import * as migration_20260610_175900_convert_trip_includes_to_richtext from './
 import * as migration_20260610_201500_refresh_homepage_content_model from './20260610_201500_refresh_homepage_content_model';
 import * as migration_20260610_203500_relax_legacy_home_page_constraints from './20260610_203500_relax_legacy_home_page_constraints';
 import * as migration_20260611_220000_add_trip_banner_and_insurance_fields from './20260611_220000_add_trip_banner_and_insurance_fields';
+import * as migration_20260613_101500_replace_trip_gallery_with_social_embeds from './20260613_101500_replace_trip_gallery_with_social_embeds';
 
 export const migrations = [
   {
@@ -47,5 +48,10 @@ export const migrations = [
     up: migration_20260611_220000_add_trip_banner_and_insurance_fields.up,
     down: migration_20260611_220000_add_trip_banner_and_insurance_fields.down,
     name: '20260611_220000_add_trip_banner_and_insurance_fields'
+  },
+  {
+    up: migration_20260613_101500_replace_trip_gallery_with_social_embeds.up,
+    down: migration_20260613_101500_replace_trip_gallery_with_social_embeds.down,
+    name: '20260613_101500_replace_trip_gallery_with_social_embeds'
   },
 ];

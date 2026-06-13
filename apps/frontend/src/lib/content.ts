@@ -65,15 +65,13 @@ export type Trip = {
     note?: string;
   }>;
   regionLabel: string;
-  relatedGallery?: {
-    coverImage: CMSMedia;
-    excerpt?: string;
-    overlayText?: string;
-    slug: string;
-    title: string;
-  };
   path: string;
   slug: string;
+  socialEmbeds?: Array<{
+    platform: "facebook" | "instagram";
+    postUrl: string;
+    title?: string;
+  }>;
   stays: string[];
   summary: string;
   summaryHtml?: string;
@@ -442,8 +440,8 @@ const fallbackSiteSettings: SiteSettings = {
     logo: { alt: "Insurance logo", url: underseaLogo.src },
   },
   socialLinks: [
-    { label: "Facebook", url: "https://facebook.com" },
-    { label: "Instagram", url: "https://instagram.com" },
+    { label: "Facebook", url: "https://www.facebook.com/GayScuba/" },
+    { label: "Instagram", url: "https://www.instagram.com/gayscuba/?hl=en" },
   ],
   tagline: "World-class diving and community-driven travel for the LGBTQ+ community since 1991.",
 };
@@ -467,12 +465,12 @@ const fallbackHomePage: HomePageContent = {
     primaryCtaHref: "/trips",
     primaryCtaLabel: "Book Your Journey",
     secondaryCtaHref: "/gallery",
-    secondaryCtaLabel: "Explore Gallery",
+    secondaryCtaLabel: "Explore Socials",
     title: "Experience the Freedom of the Deep",
   },
   mapSection: {
     buttonHref: "/trips",
-    buttonLabel: "Browse All Trips",
+    buttonLabel: "See More Trips",
     description:
       "Each pin links directly to a trip page, so you can jump from the map into dates, itinerary, and booking details.",
     title: "Explore Where The Next Expeditions Go",
@@ -497,8 +495,8 @@ const fallbackTripsPage: TripsPageContent = {
 
 const fallbackGalleryPage: GalleryPageContent = {
   description:
-    "A glimpse into the life aquatic with Undersea Expeditions. These are more than just photos; they're memories of freedom and discovery.",
-  title: "Capturing the Magic",
+    "Follow the latest trip moments, traveler updates, and underwater highlights across our social channels.",
+  title: "Dive Into Socials",
 };
 
 const fallbackFAQPage: FAQPageContent = {
@@ -747,18 +745,23 @@ function normalizeTrip(doc: any, fallback?: Trip): Trip | null {
         note: renderRichText(item.note),
       })) || fallback?.pricingOptions,
     regionLabel,
-    relatedGallery:
-      typeof doc.gallery === "object" && doc.gallery?.slug && doc.gallery?.title
-        ? {
-            coverImage: mapMedia(doc.gallery.coverImage, fallbackGalleries[0].coverImage),
-            excerpt: doc.gallery.excerpt || "",
-            overlayText: doc.gallery.overlayText || doc.gallery.title,
-            slug: doc.gallery.slug,
-            title: doc.gallery.title,
-          }
-        : fallback?.relatedGallery,
     path,
     slug: doc.slug,
+    socialEmbeds:
+      doc.socialEmbeds
+        ?.map((item: any) => {
+          const platform = item?.platform === "facebook" ? "facebook" : item?.platform === "instagram" ? "instagram" : null;
+          const postUrl = typeof item?.postUrl === "string" ? item.postUrl.trim() : "";
+
+          if (!platform || !postUrl) return null;
+
+          return {
+            platform,
+            postUrl,
+            title: item?.title || undefined,
+          };
+        })
+        .filter(Boolean) || fallback?.socialEmbeds,
     stays,
     summary: stripHtml(renderRichText(doc.summary)) || fallback?.summary || "",
     summaryHtml: renderRichText(doc.summary) || fallback?.summaryHtml,

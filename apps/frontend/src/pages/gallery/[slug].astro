@@ -16,7 +16,7 @@ const { slug } = Astro.params;
 const gallery = slug ? await getGalleryBySlug(slug) : null;
 ---
 
-<Layout title={`${gallery?.title || "Gallery"} | Undersea Expeditions`}>
+<Layout title={`${gallery?.title || "Social Story"} | Undersea Expeditions`}>
   <Header active="gallery" />
   <main>
     {gallery ? (
@@ -60,9 +60,9 @@ const gallery = slug ? await getGalleryBySlug(slug) : null;
       </>
     ) : (
       <section class="py-24 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
-        <h1 class="font-display-lg text-display-lg text-primary mb-4">Gallery not found</h1>
+        <h1 class="font-display-lg text-display-lg text-primary mb-4">Social story not found</h1>
         <a class="text-on-tertiary-container font-bold hover:underline" href="/gallery">
-          Back to all galleries
+          Back to socials
         </a>
       </section>
     )}
