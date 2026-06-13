@@ -209,6 +209,14 @@ const cmsPublicOrigin = (
   import.meta.env.PUBLIC_PAYLOAD_API_URL ||
   DEFAULT_CMS_API_URL
 ).replace(/\/api\/?$/, "");
+const isVercelProductionBuild =
+  process.env.VERCEL === "1" && process.env.VERCEL_ENV === "production";
+
+if (isVercelProductionBuild && cmsApiUrl === DEFAULT_CMS_API_URL) {
+  throw new Error(
+    "Frontend build is missing a production CMS API URL. Set PUBLIC_PAYLOAD_API_URL to your CMS /api endpoint on Vercel.",
+  );
+}
 
 const homeHeroImage =
   "https://lh3.googleusercontent.com/aida-public/AB6AXuA4SJlxoT5Jt-S5PRXOoSfDzJQgeMe0CnJkrJJRMVkTUJyJComrz9sj-P3DR4urnTSc6npm43IUFY8NXu6rtN8ocICycAOJ5hi9TKKDYBhltyTJw2YME6ZlIaCP8C3aQxK6kXs19uc31q_tpsef3HMdkAU1FhA7QoUoCp_rDXp46MUxB4GSzoGR2khvsk-H1qrcNpyCfegDbbTgEzlNkGu3wz46EfvdLutcDndUft4-Oxqg_2yitMvw0YEO5NUk8B5FdmSDJklO41xG";
@@ -646,15 +654,31 @@ export function getTripPath(trip: Pick<Trip, "slug" | "tripYear">) {
 }
 
 async function fetchCMS<T>(path: string) {
+  const requestUrl = `${cmsApiUrl}${path}`;
+
   try {
-    const response = await fetch(`${cmsApiUrl}${path}`, {
+    const response = await fetch(requestUrl, {
       headers: { Accept: "application/json" },
     });
 
-    if (!response.ok) return null;
+    if (!response.ok) {
+      if (isVercelProductionBuild) {
+        throw new Error(
+          `CMS request failed during Vercel production build: ${response.status} ${response.statusText} for ${requestUrl}`,
+        );
+      }
+
+      console.warn(`[content] CMS request failed: ${response.status} ${response.statusText} for ${requestUrl}`);
+      return null;
+    }
 
     return (await response.json()) as T;
-  } catch {
+  } catch (error) {
+    if (isVercelProductionBuild) {
+      throw new Error(`CMS request error during Vercel production build for ${requestUrl}: ${String(error)}`);
+    }
+
+    console.warn(`[content] CMS request error for ${requestUrl}:`, error);
     return null;
   }
 }
