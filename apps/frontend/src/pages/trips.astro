@@ -253,9 +253,6 @@ const yearCalendars = visibleYears.map((year) => {
                       type="button"
                     >
                       <span class="font-bold uppercase tracking-[0.1em]">{group.region.label}</span>
-                      <span class="text-xs font-bold uppercase tracking-[0.14em] text-on-tertiary-container">
-                        All locations
-                      </span>
                     </button>
 
                     <div class="mt-1 space-y-1">
@@ -593,13 +590,6 @@ const yearCalendars = visibleYears.map((year) => {
       button.classList.toggle("bg-primary", allSelected);
       button.classList.toggle("text-white", allSelected);
       button.classList.toggle("bg-secondary-container", !allSelected);
-
-      const helperText = button.querySelector("span:last-child");
-      if (helperText instanceof HTMLElement) {
-        helperText.classList.toggle("text-white/80", allSelected);
-        helperText.classList.toggle("text-on-tertiary-container", !allSelected);
-        helperText.textContent = allSelected ? "Clear region" : "All locations";
-      }
     });
 
     if (!(locationTriggerLabel instanceof HTMLElement)) return;
