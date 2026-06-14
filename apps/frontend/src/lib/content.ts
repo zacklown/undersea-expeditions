@@ -83,21 +83,6 @@ export type Trip = {
   tripStyleLabel?: string;
 };
 
-export type GalleryImage = {
-  caption?: string;
-  image: CMSMedia;
-};
-
-export type Gallery = {
-  coverImage: CMSMedia;
-  excerpt: string;
-  id: number | string;
-  images: GalleryImage[];
-  overlayText: string;
-  slug: string;
-  title: string;
-};
-
 export type FAQ = {
   answer: string;
   category?: string;
@@ -175,8 +160,31 @@ export type TripsPageContent = {
   title: string;
 };
 
-export type GalleryPageContent = {
+export type SocialLinkCard = {
+  buttonLabel?: string;
   description: string;
+  eyebrow?: string;
+  href?: string;
+  title: string;
+};
+
+export type SocialMomentTile = {
+  buttonLabel?: string;
+  description: string;
+  eyebrow?: string;
+  href?: string;
+  image?: CMSMedia;
+  title: string;
+};
+
+export type SocialsPageContent = {
+  description: string;
+  latestSocialMoments: {
+    description: string;
+    tiles: SocialMomentTile[];
+    title: string;
+  };
+  socialLinks: SocialLinkCard[];
   title: string;
 };
 
@@ -191,6 +199,37 @@ export type ContactPageContent = {
   imageText: string;
   intro: string;
   privacyNote: string;
+  title: string;
+};
+
+export type AboutStaffMember = {
+  bio?: string;
+  image?: CMSMedia;
+  name: string;
+  role?: string;
+};
+
+export type AboutPageContent = {
+  body?: string;
+  pressSection: {
+    description: string;
+    items: Array<{
+      ctaLabel?: string;
+      description?: string;
+      externalUrl?: string;
+      pdf?: CMSMedia;
+      title: string;
+    }>;
+    title: string;
+  };
+  staffSection: {
+    description: string;
+    officeStaff: AboutStaffMember[];
+    officeTitle: string;
+    title: string;
+    tripLeaders: AboutStaffMember[];
+    tripLeadersTitle: string;
+  };
   title: string;
 };
 
@@ -348,50 +387,6 @@ const fallbackTrips: Trip[] = [
   },
 ];
 
-const fallbackGalleries: Gallery[] = [
-  {
-    coverImage: {
-      alt: "Travelers on yacht deck",
-      url: "https://lh3.googleusercontent.com/aida-public/AB6AXuBYz-A_ur5AOab3Z-oL6KSdxUlPQOC0awWQLwhO5kqZK1UDl010zUBFT59fcxkYjkXkKUq0c8CGIiFlT3-jePnNHEvmxLNb_ZN1b4f2YaHXI6Xhkou_N_z6QObjB-GUs_ige8bdusl9tprc0TCFg_PYpbI0tkN3E8gtQ-BzyLn2ssQU2OHHqRY6RSbQQiQSRh3GPv-FHVznRtFJeUaJ734izKC-66-d-3-LI2kwPxU-GrF32IFhciQydfVakL5ZuuYqojlJyrhKFTp2",
-    },
-    excerpt: "Aboard moments, reef encounters, and the social side of life at sea in the Maldives.",
-    id: "gallery-maldives",
-    images: [
-      {
-        caption: "On deck between dives",
-        image: {
-          alt: "Travelers on yacht deck",
-          url: "https://lh3.googleusercontent.com/aida-public/AB6AXuBYz-A_ur5AOab3Z-oL6KSdxUlPQOC0awWQLwhO5kqZK1UDl010zUBFT59fcxkYjkXkKUq0c8CGIiFlT3-jePnNHEvmxLNb_ZN1b4f2YaHXI6Xhkou_N_z6QObjB-GUs_ige8bdusl9tprc0TCFg_PYpbI0tkN3E8gtQ-BzyLn2ssQU2OHHqRY6RSbQQiQSRh3GPv-FHVznRtFJeUaJ734izKC-66-d-3-LI2kwPxU-GrF32IFhciQydfVakL5ZuuYqojlJyrhKFTp2",
-        },
-      },
-      {
-        caption: "Vibrant coral detail",
-        image: {
-          alt: "Vibrant coral detail",
-          url: "https://lh3.googleusercontent.com/aida-public/AB6AXuBtXG5a_JwFt4BPq8cqmrG3pvmOO9DZpvPrFfx7-B9O5EeqWQ-K8nMhmuyGBO6KcUb1SVnFtvJx89b5OHjoUHTrcVZSj7g0YSQUiTPE_oNRWm1LgC4mdk3DcpOQOsgt8qjqB74NT5LpwBcCmqxNT-HWmfzXpObkj-PckIQmwdnbySAcAPAUcTcwkvHLECYtpSAZ6M2CyyumQFgSeeyBEhvVVboLezvZYeHI9cMgh_k8MJjOGMLtZmisccfKXKEPB_nKdWzZfeG-KDhr",
-        },
-      },
-      {
-        caption: "Divers exploring the reef",
-        image: {
-          alt: "Divers exploring a reef",
-          url: "https://lh3.googleusercontent.com/aida-public/AB6AXuAbhQM8shZzX_biIIIYFX_v7DJrfoP66BEdKVEb_7KVSVV4A36ze4iFO_A09fyxvu9bDfWMnF8cwD2dyZWdaAqAavDxdKbuJAJEa9yibT56ly6evCMvZIZ52Z5hSPaeuhHMe_zh1QR9DnLY2IOtWQjzfJ38pLz556agiyB2zKRvhTK2sT9fwLsDwy2PH31knIv5VScCFCQoeY9qRsPzE5Ia3jrmuNlnlpMVuEjffaSkNcY5VEPKXv13z1ouKHKi0ir6TR7s9I36ijkl",
-        },
-      },
-      {
-        caption: "Sunset pride moment",
-        image: {
-          alt: "Pride flag at sunset over water",
-          url: "https://lh3.googleusercontent.com/aida-public/AB6AXuAATrLLmvo1tyj38AWl7Dki6EIDzFgsUBh3ads1MkLTXC6bWKA46N9hFcNI6qjVWH45pnj43otOrPeniN6cDgotqFYSxsGt0DDNPGaRwW0sacKoafTVG_2vHpOr56kxxJCsvNah1iu0QhdxmLJqvLGAm2phyeRsrEhLFCJjZhlKRt9rps_F5XsUznESxVoit5uGhoN8Cy_S9z_jJHFT2r0ssTIhBjzswRZmAKx-yojULnkUxmQTDp0wyHgWyg9s6tL_ZLLBha0cU4li",
-        },
-      },
-    ],
-    overlayText: "On Deck in the Maldives",
-    slug: "maldives-liveaboard",
-    title: "Maldives Liveaboard",
-  },
-];
-
 const fallbackFaqs: FAQ[] = [
   {
     answer:
@@ -464,7 +459,7 @@ const fallbackHomePage: HomePageContent = {
     logo: undefined,
     primaryCtaHref: "/trips",
     primaryCtaLabel: "Book Your Journey",
-    secondaryCtaHref: "/gallery",
+    secondaryCtaHref: "/socials",
     secondaryCtaLabel: "Explore Socials",
     title: "Experience the Freedom of the Deep",
   },
@@ -493,9 +488,65 @@ const fallbackTripsPage: TripsPageContent = {
   title: "2026 & 2027 Vacations",
 };
 
-const fallbackGalleryPage: GalleryPageContent = {
+const fallbackSocialsPage: SocialsPageContent = {
   description:
     "Follow the latest trip moments, traveler updates, and underwater highlights across our social channels.",
+  latestSocialMoments: {
+    description:
+      "A quick look at the trips, travelers, and underwater moments we are sharing across Instagram and Facebook.",
+    tiles: [
+      {
+        buttonLabel: "Open Instagram",
+        description: "Behind-the-scenes moments, trip highlights, and underwater snapshots from the road.",
+        eyebrow: "Instagram",
+        href: "https://www.instagram.com/gayscuba/?hl=en",
+        image: {
+          alt: "Travelers on yacht deck",
+          url: "https://lh3.googleusercontent.com/aida-public/AB6AXuBYz-A_ur5AOab3Z-oL6KSdxUlPQOC0awWQLwhO5kqZK1UDl010zUBFT59fcxkYjkXkKUq0c8CGIiFlT3-jePnNHEvmxLNb_ZN1b4f2YaHXI6Xhkou_N_z6QObjB-GUs_ige8bdusl9tprc0TCFg_PYpbI0tkN3E8gtQ-BzyLn2ssQU2OHHqRY6RSbQQiQSRh3GPv-FHVznRtFJeUaJ734izKC-66-d-3-LI2kwPxU-GrF32IFhciQydfVakL5ZuuYqojlJyrhKFTp2",
+        },
+        title: "On Deck in the Maldives",
+      },
+      {
+        buttonLabel: "Open Facebook",
+        description: "Announcements, traveler updates, and community check-ins from Undersea Expeditions.",
+        eyebrow: "Facebook",
+        href: "https://www.facebook.com/GayScuba/",
+        image: {
+          alt: "Vibrant coral detail",
+          url: "https://lh3.googleusercontent.com/aida-public/AB6AXuBtXG5a_JwFt4BPq8cqmrG3pvmOO9DZpvPrFfx7-B9O5EeqWQ-K8nMhmuyGBO6KcUb1SVnFtvJx89b5OHjoUHTrcVZSj7g0YSQUiTPE_oNRWm1LgC4mdk3DcpOQOsgt8qjqB74NT5LpwBcCmqxNT-HWmfzXpObkj-PckIQmwdnbySAcAPAUcTcwkvHLECYtpSAZ6M2CyyumQFgSeeyBEhvVVboLezvZYeHI9cMgh_k8MJjOGMLtZmisccfKXKEPB_nKdWzZfeG-KDhr",
+        },
+        title: "Reef Highlights",
+      },
+      {
+        buttonLabel: "Open Instagram",
+        description: "Divers, reef scenes, and trip energy from recent expeditions.",
+        eyebrow: "Instagram",
+        href: "https://www.instagram.com/gayscuba/?hl=en",
+        image: {
+          alt: "Divers exploring the reef",
+          url: "https://lh3.googleusercontent.com/aida-public/AB6AXuAbhQM8shZzX_biIIIYFX_v7DJrfoP66BEdKVEb_7KVSVV4A36ze4iFO_A09fyxvu9bDfWMnF8cwD2dyZWdaAqAavDxdKbuJAJEa9yibT56ly6evCMvZIZ52Z5hSPaeuhHMe_zh1QR9DnLY2IOtWQjzfJ38pLz556agiyB2zKRvhTK2sT9fwLsDwy2PH31knIv5VScCFCQoeY9qRsPzE5Ia3jrmuNlnlpMVuEjffaSkNcY5VEPKXv13z1ouKHKi0ir6TR7s9I36ijkl",
+        },
+        title: "Underwater Moments",
+      },
+    ],
+    title: "Latest Social Moments",
+  },
+  socialLinks: [
+    {
+      buttonLabel: "Open Instagram",
+      description: "Behind-the-scenes moments, trip highlights, and underwater snapshots from the road.",
+      eyebrow: "Instagram",
+      href: "https://www.instagram.com/gayscuba/?hl=en",
+      title: "Gay Scuba on Instagram",
+    },
+    {
+      buttonLabel: "Open Facebook",
+      description: "Announcements, traveler updates, and community check-ins from Undersea Expeditions.",
+      eyebrow: "Facebook",
+      href: "https://www.facebook.com/GayScuba/",
+      title: "Gay Scuba on Facebook",
+    },
+  ],
   title: "Dive Into Socials",
 };
 
@@ -531,6 +582,53 @@ const fallbackContactPage: ContactPageContent = {
   title: "Start Your Next Adventure",
 };
 
+const fallbackAboutPage: AboutPageContent = {
+  body: renderRichText({
+    root: {
+      children: [
+        {
+          children: [{ text: "A Legacy of Connection", type: "text" }],
+          tag: "h2",
+          type: "heading",
+        },
+        {
+          children: [
+            {
+              text: "Founded in 1991, Undersea Expeditions was built to create world-class scuba travel in a space that celebrates community, friendship, and the joy of exploring together.",
+              type: "text",
+            },
+          ],
+          type: "paragraph",
+        },
+        {
+          children: [
+            {
+              text: "From first descents to advanced destinations, we design trips for divers who want strong logistics underwater and a welcoming group on deck.",
+              type: "text",
+            },
+          ],
+          type: "paragraph",
+        },
+      ],
+      type: "root",
+    },
+  }),
+  pressSection: {
+    description: "",
+    items: [],
+    title: "Press",
+  },
+  staffSection: {
+    description: "",
+    officeStaff: [],
+    officeTitle: "Office",
+    title: "Meet the Team",
+    tripLeaders: [],
+    tripLeadersTitle: "Trip Leaders",
+  },
+  title: "Gay and Lesbian Scuba Dive Travel Experts",
+};
+
 function resolveMediaUrl(url?: string | null) {
   if (!url) return "";
   if (/^https?:\/\//.test(url)) return url;
@@ -543,6 +641,19 @@ function mapMedia(value: any, fallback: CMSMedia): CMSMedia {
   return {
     alt: value.alt || fallback.alt,
     url: resolveMediaUrl(value.url) || fallback.url,
+  };
+}
+
+function mapOptionalMedia(value: any): CMSMedia | undefined {
+  if (!value || typeof value !== "object") return undefined;
+
+  const url = resolveMediaUrl(value.url);
+
+  if (!url) return undefined;
+
+  return {
+    alt: value.alt || undefined,
+    url,
   };
 }
 
@@ -774,21 +885,19 @@ function normalizeTrip(doc: any, fallback?: Trip): Trip | null {
   };
 }
 
-function normalizeGallery(doc: any, fallback?: Gallery): Gallery | null {
-  if (!doc?.slug || !doc?.title) return fallback || null;
+function normalizeAboutStaffMember(doc: any): AboutStaffMember | null {
+  const name = typeof doc?.name === "string" ? doc.name.trim() : "";
+  const role = typeof doc?.role === "string" ? doc.role.trim() : "";
+  const bio = renderRichText(doc?.bio) || "";
+  const image = mapOptionalMedia(doc?.image);
+
+  if (!name && !role && !bio && !image) return null;
 
   return {
-    coverImage: mapMedia(doc.coverImage, fallback?.coverImage || fallbackGalleries[0].coverImage),
-    excerpt: doc.excerpt || fallback?.excerpt || "",
-    id: doc.id || fallback?.id || doc.slug,
-    images:
-      doc.images?.map((item: any) => ({
-        caption: item.caption,
-        image: mapMedia(item.image, fallback?.coverImage || fallbackGalleries[0].coverImage),
-      })) || fallback?.images || [],
-    overlayText: doc.overlayText || fallback?.overlayText || doc.title,
-    slug: doc.slug,
-    title: doc.title,
+    bio: bio || undefined,
+    image,
+    name: name || role || "Team Member",
+    role: role || undefined,
   };
 }
 
@@ -891,14 +1000,55 @@ export async function getTripsPageContent(): Promise<TripsPageContent> {
   };
 }
 
-export async function getGalleryPageContent(): Promise<GalleryPageContent> {
-  const global = await fetchCMS<any>("/globals/gallery-page");
+export async function getSocialsPageContent(): Promise<SocialsPageContent> {
+  const global = await fetchCMS<any>("/globals/socials-page?depth=2");
 
-  if (!global) return fallbackGalleryPage;
+  if (!global) return fallbackSocialsPage;
 
   return {
-    description: global.description || fallbackGalleryPage.description,
-    title: global.title || fallbackGalleryPage.title,
+    description: global.description || fallbackSocialsPage.description,
+    latestSocialMoments: {
+      description:
+        global.latestSocialMoments?.description ||
+        fallbackSocialsPage.latestSocialMoments.description,
+      tiles:
+        global.latestSocialMoments?.tiles
+          ?.map((item: any) => {
+            const title = typeof item?.title === "string" ? item.title : "";
+            const description =
+              typeof item?.description === "string" ? item.description : "";
+            const image = mapOptionalMedia(item?.image);
+
+            if (!title && !description && !image && !item?.href) return null;
+
+            return {
+              buttonLabel: item?.buttonLabel || undefined,
+              description,
+              eyebrow: item?.eyebrow || undefined,
+              href: item?.href || undefined,
+              image,
+              title: title || description || "Social Moment",
+            };
+          })
+          .filter(Boolean) || fallbackSocialsPage.latestSocialMoments.tiles,
+      title: global.latestSocialMoments?.title || fallbackSocialsPage.latestSocialMoments.title,
+    },
+    socialLinks:
+      global.socialLinks?.map((item: any) => {
+        const title = typeof item?.title === "string" ? item.title : "";
+        const description = typeof item?.description === "string" ? item.description : "";
+
+        if (!title && !description && !item?.href) return null;
+
+        return {
+          buttonLabel: item?.buttonLabel || undefined,
+          description,
+          eyebrow: item?.eyebrow || undefined,
+          href: item?.href || undefined,
+          title: title || description || "Social Link",
+        };
+      }).filter(Boolean) || fallbackSocialsPage.socialLinks,
+    title: global.title || fallbackSocialsPage.title,
   };
 }
 
@@ -930,6 +1080,59 @@ export async function getContactPageContent(): Promise<ContactPageContent> {
     intro: global.intro || fallbackContactPage.intro,
     privacyNote: global.privacyNote || fallbackContactPage.privacyNote,
     title: global.title || fallbackContactPage.title,
+  };
+}
+
+export async function getAboutPageContent(): Promise<AboutPageContent> {
+  const global = await fetchCMS<any>("/globals/about-page?depth=2");
+
+  if (!global) return fallbackAboutPage;
+
+  return {
+    body: renderRichText(global.body) || fallbackAboutPage.body,
+    pressSection: {
+      description: global.pressSection?.description || fallbackAboutPage.pressSection.description,
+      items:
+        global.pressSection?.items
+          ?.map((item: any) => {
+            const title = typeof item?.title === "string" ? item.title.trim() : "";
+            const description =
+              typeof item?.description === "string" ? item.description.trim() : "";
+            const pdf = mapOptionalMedia(item?.pdf);
+            const externalUrl =
+              typeof item?.externalUrl === "string" ? item.externalUrl.trim() : "";
+
+            if (!title && !description && !pdf && !externalUrl) return null;
+
+            return {
+              ctaLabel: item?.ctaLabel || undefined,
+              description: description || undefined,
+              externalUrl: externalUrl || undefined,
+              pdf,
+              title: title || description || "Press Item",
+            };
+          })
+          .filter(Boolean) || fallbackAboutPage.pressSection.items,
+      title: global.pressSection?.title || fallbackAboutPage.pressSection.title,
+    },
+    staffSection: {
+      description: global.staffSection?.description || fallbackAboutPage.staffSection.description,
+      officeStaff:
+        global.staffSection?.officeStaff
+          ?.map((item: any) => normalizeAboutStaffMember(item))
+          .filter(Boolean) || fallbackAboutPage.staffSection.officeStaff,
+      officeTitle:
+        global.staffSection?.officeTitle || fallbackAboutPage.staffSection.officeTitle,
+      title: global.staffSection?.title || fallbackAboutPage.staffSection.title,
+      tripLeaders:
+        global.staffSection?.tripLeaders
+          ?.map((item: any) => normalizeAboutStaffMember(item))
+          .filter(Boolean) || fallbackAboutPage.staffSection.tripLeaders,
+      tripLeadersTitle:
+        global.staffSection?.tripLeadersTitle ||
+        fallbackAboutPage.staffSection.tripLeadersTitle,
+    },
+    title: global.title || fallbackAboutPage.title,
   };
 }
 
@@ -965,26 +1168,6 @@ export async function getTripBySlug(slug: string): Promise<Trip | null> {
   );
 
   return normalizeTrip(response?.docs?.[0], fallbackTrips.find((trip) => trip.slug === slug));
-}
-
-export async function getGalleries(): Promise<Gallery[]> {
-  const response = await fetchCMS<CollectionResponse<any>>(
-    "/galleries?depth=2&limit=100&sort=sortOrder",
-  );
-  const docs = response?.docs?.map((doc, index) => normalizeGallery(doc, fallbackGalleries[index]))?.filter(Boolean);
-
-  return docs?.length ? (docs as Gallery[]) : fallbackGalleries;
-}
-
-export async function getGalleryBySlug(slug: string): Promise<Gallery | null> {
-  const response = await fetchCMS<CollectionResponse<any>>(
-    `/galleries?depth=2&limit=1&where[slug][equals]=${encodeURIComponent(slug)}`,
-  );
-
-  return normalizeGallery(
-    response?.docs?.[0],
-    fallbackGalleries.find((gallery) => gallery.slug === slug),
-  );
 }
 
 export async function getFAQs(): Promise<FAQ[]> {

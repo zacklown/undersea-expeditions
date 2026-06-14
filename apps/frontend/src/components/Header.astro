@@ -2,7 +2,7 @@
 import logo from "../assets/underseax-logo.png";
 
 interface Props {
-  active?: "home" | "trips" | "about" | "gallery" | "faq" | "contact";
+  active?: "home" | "trips" | "about" | "socials" | "faq" | "contact";
 }
 
 const { active = "home" } = Astro.props;
@@ -11,7 +11,7 @@ const navItems = [
   { key: "home", label: "Home", href: "/" },
   { key: "trips", label: "Trips", href: "/trips" },
   { key: "about", label: "About", href: "/about" },
-  { key: "gallery", label: "Socials", href: "/gallery" },
+  { key: "socials", label: "Socials", href: "/socials" },
   { key: "faq", label: "FAQ", href: "/faq" },
 ];
 ---

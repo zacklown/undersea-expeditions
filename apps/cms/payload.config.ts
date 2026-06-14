@@ -8,17 +8,17 @@ import sharp from "sharp";
 
 import { Countries } from "./src/collections/Countries";
 import { FAQs } from "./src/collections/FAQs";
-import { Galleries } from "./src/collections/Galleries";
 import { Media } from "./src/collections/Media";
 import { Regions } from "./src/collections/Regions";
 import { Stays } from "./src/collections/Stays";
 import { Trips } from "./src/collections/Trips";
 import { Users } from "./src/collections/Users";
+import { AboutPage } from "./src/globals/AboutPage";
 import { ContactPage } from "./src/globals/ContactPage";
 import { FAQPage } from "./src/globals/FAQPage";
-import { GalleryPage } from "./src/globals/GalleryPage";
 import { HomePage } from "./src/globals/HomePage";
 import { SiteSettings } from "./src/globals/SiteSettings";
+import { SocialsPage } from "./src/globals/SocialsPage";
 import { TripsPage } from "./src/globals/TripsPage";
 import { migrations } from "./src/migrations";
 
@@ -106,7 +106,7 @@ export default buildConfig({
     },
     user: Users.slug,
   },
-  collections: [Users, Media, Regions, Countries, Stays, Trips, Galleries, FAQs],
+  collections: [Users, Media, Regions, Countries, Stays, Trips, FAQs],
   cors: allowedOrigins,
   csrf: allowedOrigins,
   db: postgresAdapter({
@@ -117,7 +117,7 @@ export default buildConfig({
     push: false,
   }),
   editor: lexicalEditor(),
-  globals: [SiteSettings, HomePage, TripsPage, GalleryPage, FAQPage, ContactPage],
+  globals: [SiteSettings, HomePage, TripsPage, SocialsPage, FAQPage, ContactPage, AboutPage],
   plugins,
   routes: {
     admin: "/admin",

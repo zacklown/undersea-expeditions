@@ -73,7 +73,6 @@ export interface Config {
     countries: Country;
     stays: Stay;
     trips: Trip;
-    galleries: Gallery;
     faqs: Faq;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -88,7 +87,6 @@ export interface Config {
     countries: CountriesSelect<false> | CountriesSelect<true>;
     stays: StaysSelect<false> | StaysSelect<true>;
     trips: TripsSelect<false> | TripsSelect<true>;
-    galleries: GalleriesSelect<false> | GalleriesSelect<true>;
     faqs: FaqsSelect<false> | FaqsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -103,17 +101,19 @@ export interface Config {
     'site-settings': SiteSetting;
     'home-page': HomePage;
     'trips-page': TripsPage;
-    'gallery-page': GalleryPage;
+    'socials-page': SocialsPage;
     'faq-page': FaqPage;
     'contact-page': ContactPage;
+    'about-page': AboutPage;
   };
   globalsSelect: {
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
     'home-page': HomePageSelect<false> | HomePageSelect<true>;
     'trips-page': TripsPageSelect<false> | TripsPageSelect<true>;
-    'gallery-page': GalleryPageSelect<false> | GalleryPageSelect<true>;
+    'socials-page': SocialsPageSelect<false> | SocialsPageSelect<true>;
     'faq-page': FaqPageSelect<false> | FaqPageSelect<true>;
     'contact-page': ContactPageSelect<false> | ContactPageSelect<true>;
+    'about-page': AboutPageSelect<false> | AboutPageSelect<true>;
   };
   locale: null;
   widgets: {
@@ -470,29 +470,6 @@ export interface Trip {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "galleries".
- */
-export interface Gallery {
-  id: number;
-  title: string;
-  /**
-   * Use lowercase kebab-case. Example: maldives-liveaboard
-   */
-  slug: string;
-  overlayText: string;
-  sortOrder?: number | null;
-  excerpt: string;
-  coverImage: number | Media;
-  images: {
-    image: number | Media;
-    caption?: string | null;
-    id?: string | null;
-  }[];
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "faqs".
  */
 export interface Faq {
@@ -551,10 +528,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'trips';
         value: number | Trip;
-      } | null)
-    | ({
-        relationTo: 'galleries';
-        value: number | Gallery;
       } | null)
     | ({
         relationTo: 'faqs';
@@ -750,27 +723,6 @@ export interface TripsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "galleries_select".
- */
-export interface GalleriesSelect<T extends boolean = true> {
-  title?: T;
-  slug?: T;
-  overlayText?: T;
-  sortOrder?: T;
-  excerpt?: T;
-  coverImage?: T;
-  images?:
-    | T
-    | {
-        image?: T;
-        caption?: T;
-        id?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "faqs_select".
  */
 export interface FaqsSelect<T extends boolean = true> {
@@ -924,12 +876,37 @@ export interface TripsPage {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "gallery-page".
+ * via the `definition` "socials-page".
  */
-export interface GalleryPage {
+export interface SocialsPage {
   id: number;
-  title: string;
-  description: string;
+  title?: string | null;
+  description?: string | null;
+  socialLinks?:
+    | {
+        eyebrow?: string | null;
+        title?: string | null;
+        description?: string | null;
+        buttonLabel?: string | null;
+        href?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  latestSocialMoments?: {
+    title?: string | null;
+    description?: string | null;
+    tiles?:
+      | {
+          eyebrow?: string | null;
+          title?: string | null;
+          description?: string | null;
+          image?: (number | null) | Media;
+          buttonLabel?: string | null;
+          href?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -963,6 +940,97 @@ export interface ContactPage {
   image: number | Media;
   imageText: string;
   privacyNote: string;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about-page".
+ */
+export interface AboutPage {
+  id: number;
+  title?: string | null;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  staffSection?: {
+    title?: string | null;
+    description?: string | null;
+    officeTitle?: string | null;
+    officeStaff?:
+      | {
+          name?: string | null;
+          role?: string | null;
+          image?: (number | null) | Media;
+          bio?: {
+            root: {
+              type: string;
+              children: {
+                type: any;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
+            [k: string]: unknown;
+          } | null;
+          id?: string | null;
+        }[]
+      | null;
+    tripLeadersTitle?: string | null;
+    tripLeaders?:
+      | {
+          name?: string | null;
+          role?: string | null;
+          image?: (number | null) | Media;
+          bio?: {
+            root: {
+              type: string;
+              children: {
+                type: any;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
+            [k: string]: unknown;
+          } | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  pressSection?: {
+    title?: string | null;
+    description?: string | null;
+    items?:
+      | {
+          title?: string | null;
+          ctaLabel?: string | null;
+          description?: string | null;
+          pdf?: (number | null) | Media;
+          externalUrl?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1082,11 +1150,38 @@ export interface TripsPageSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "gallery-page_select".
+ * via the `definition` "socials-page_select".
  */
-export interface GalleryPageSelect<T extends boolean = true> {
+export interface SocialsPageSelect<T extends boolean = true> {
   title?: T;
   description?: T;
+  socialLinks?:
+    | T
+    | {
+        eyebrow?: T;
+        title?: T;
+        description?: T;
+        buttonLabel?: T;
+        href?: T;
+        id?: T;
+      };
+  latestSocialMoments?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        tiles?:
+          | T
+          | {
+              eyebrow?: T;
+              title?: T;
+              description?: T;
+              image?: T;
+              buttonLabel?: T;
+              href?: T;
+              id?: T;
+            };
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -1120,6 +1215,59 @@ export interface ContactPageSelect<T extends boolean = true> {
   image?: T;
   imageText?: T;
   privacyNote?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about-page_select".
+ */
+export interface AboutPageSelect<T extends boolean = true> {
+  title?: T;
+  body?: T;
+  staffSection?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        officeTitle?: T;
+        officeStaff?:
+          | T
+          | {
+              name?: T;
+              role?: T;
+              image?: T;
+              bio?: T;
+              id?: T;
+            };
+        tripLeadersTitle?: T;
+        tripLeaders?:
+          | T
+          | {
+              name?: T;
+              role?: T;
+              image?: T;
+              bio?: T;
+              id?: T;
+            };
+      };
+  pressSection?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        items?:
+          | T
+          | {
+              title?: T;
+              ctaLabel?: T;
+              description?: T;
+              pdf?: T;
+              externalUrl?: T;
+              id?: T;
+            };
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
