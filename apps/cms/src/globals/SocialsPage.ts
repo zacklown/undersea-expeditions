@@ -59,22 +59,33 @@ export const SocialsPage: GlobalConfig = {
     },
     {
       name: "latestSocialMoments",
+      label: "Other Social Posts",
       type: "group",
       fields: [
         {
           name: "title",
+          admin: {
+            condition: () => false,
+          },
           type: "text",
         },
         {
           name: "description",
+          admin: {
+            condition: () => false,
+          },
           type: "textarea",
         },
         {
           name: "tiles",
+          label: "Posts",
           type: "array",
           fields: [
             {
               type: "row",
+              admin: {
+                condition: () => false,
+              },
               fields: [
                 {
                   name: "eyebrow",
@@ -88,9 +99,15 @@ export const SocialsPage: GlobalConfig = {
             },
             {
               name: "description",
+              admin: {
+                condition: () => false,
+              },
               type: "textarea",
             },
             {
+              admin: {
+                condition: () => false,
+              },
               name: "image",
               relationTo: "media",
               type: "upload",
@@ -100,11 +117,17 @@ export const SocialsPage: GlobalConfig = {
               fields: [
                 {
                   name: "buttonLabel",
+                  admin: {
+                    condition: () => false,
+                  },
                   type: "text",
                 },
                 {
                   name: "href",
-                  label: "Tile Link URL",
+                  admin: {
+                    description: "Use an Instagram or Facebook post URL to render the embed.",
+                  },
+                  label: "Post URL",
                   type: "text",
                 },
               ],

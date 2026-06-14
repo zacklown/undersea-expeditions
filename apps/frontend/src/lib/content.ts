@@ -169,20 +169,13 @@ export type SocialLinkCard = {
 };
 
 export type SocialMomentTile = {
-  buttonLabel?: string;
-  description: string;
-  eyebrow?: string;
-  href?: string;
-  image?: CMSMedia;
-  title: string;
+  href: string;
 };
 
 export type SocialsPageContent = {
   description: string;
   latestSocialMoments: {
-    description: string;
     tiles: SocialMomentTile[];
-    title: string;
   };
   socialLinks: SocialLinkCard[];
   title: string;
@@ -484,44 +477,7 @@ const fallbackSocialsPage: SocialsPageContent = {
   description:
     "Follow the latest trip moments, traveler updates, and underwater highlights across our social channels.",
   latestSocialMoments: {
-    description:
-      "A quick look at the trips, travelers, and underwater moments we are sharing across Instagram and Facebook.",
-    tiles: [
-      {
-        buttonLabel: "Open Instagram",
-        description: "Behind-the-scenes moments, trip highlights, and underwater snapshots from the road.",
-        eyebrow: "Instagram",
-        href: "https://www.instagram.com/gayscuba/?hl=en",
-        image: {
-          alt: "Travelers on yacht deck",
-          url: "https://lh3.googleusercontent.com/aida-public/AB6AXuBYz-A_ur5AOab3Z-oL6KSdxUlPQOC0awWQLwhO5kqZK1UDl010zUBFT59fcxkYjkXkKUq0c8CGIiFlT3-jePnNHEvmxLNb_ZN1b4f2YaHXI6Xhkou_N_z6QObjB-GUs_ige8bdusl9tprc0TCFg_PYpbI0tkN3E8gtQ-BzyLn2ssQU2OHHqRY6RSbQQiQSRh3GPv-FHVznRtFJeUaJ734izKC-66-d-3-LI2kwPxU-GrF32IFhciQydfVakL5ZuuYqojlJyrhKFTp2",
-        },
-        title: "On Deck in the Maldives",
-      },
-      {
-        buttonLabel: "Open Facebook",
-        description: "Announcements, traveler updates, and community check-ins from Undersea Expeditions.",
-        eyebrow: "Facebook",
-        href: "https://www.facebook.com/GayScuba/",
-        image: {
-          alt: "Vibrant coral detail",
-          url: "https://lh3.googleusercontent.com/aida-public/AB6AXuBtXG5a_JwFt4BPq8cqmrG3pvmOO9DZpvPrFfx7-B9O5EeqWQ-K8nMhmuyGBO6KcUb1SVnFtvJx89b5OHjoUHTrcVZSj7g0YSQUiTPE_oNRWm1LgC4mdk3DcpOQOsgt8qjqB74NT5LpwBcCmqxNT-HWmfzXpObkj-PckIQmwdnbySAcAPAUcTcwkvHLECYtpSAZ6M2CyyumQFgSeeyBEhvVVboLezvZYeHI9cMgh_k8MJjOGMLtZmisccfKXKEPB_nKdWzZfeG-KDhr",
-        },
-        title: "Reef Highlights",
-      },
-      {
-        buttonLabel: "Open Instagram",
-        description: "Divers, reef scenes, and trip energy from recent expeditions.",
-        eyebrow: "Instagram",
-        href: "https://www.instagram.com/gayscuba/?hl=en",
-        image: {
-          alt: "Divers exploring the reef",
-          url: "https://lh3.googleusercontent.com/aida-public/AB6AXuAbhQM8shZzX_biIIIYFX_v7DJrfoP66BEdKVEb_7KVSVV4A36ze4iFO_A09fyxvu9bDfWMnF8cwD2dyZWdaAqAavDxdKbuJAJEa9yibT56ly6evCMvZIZ52Z5hSPaeuhHMe_zh1QR9DnLY2IOtWQjzfJ38pLz556agiyB2zKRvhTK2sT9fwLsDwy2PH31knIv5VScCFCQoeY9qRsPzE5Ia3jrmuNlnlpMVuEjffaSkNcY5VEPKXv13z1ouKHKi0ir6TR7s9I36ijkl",
-        },
-        title: "Underwater Moments",
-      },
-    ],
-    title: "Latest Social Moments",
+    tiles: [],
   },
   socialLinks: [
     {
@@ -990,30 +946,18 @@ export async function getSocialsPageContent(): Promise<SocialsPageContent> {
   return {
     description: global.description || fallbackSocialsPage.description,
     latestSocialMoments: {
-      description:
-        global.latestSocialMoments?.description ||
-        fallbackSocialsPage.latestSocialMoments.description,
       tiles:
         global.latestSocialMoments?.tiles
           ?.map((item: any) => {
-            const title = typeof item?.title === "string" ? item.title : "";
-            const description =
-              typeof item?.description === "string" ? item.description : "";
-            const image = mapOptionalMedia(item?.image);
+            const href = typeof item?.href === "string" ? item.href.trim() : "";
 
-            if (!title && !description && !image && !item?.href) return null;
+            if (!href) return null;
 
             return {
-              buttonLabel: item?.buttonLabel || undefined,
-              description,
-              eyebrow: item?.eyebrow || undefined,
-              href: item?.href || undefined,
-              image,
-              title: title || description || "Social Moment",
+              href,
             };
           })
           .filter(Boolean) || fallbackSocialsPage.latestSocialMoments.tiles,
-      title: global.latestSocialMoments?.title || fallbackSocialsPage.latestSocialMoments.title,
     },
     socialLinks:
       global.socialLinks?.map((item: any) => {

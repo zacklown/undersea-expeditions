@@ -902,6 +902,9 @@ export interface SocialsPage {
           description?: string | null;
           image?: (number | null) | Media;
           buttonLabel?: string | null;
+          /**
+           * Use an Instagram or Facebook post URL to render the embed.
+           */
           href?: string | null;
           id?: string | null;
         }[]
