@@ -46,6 +46,12 @@ export const AboutPage: GlobalConfig = {
       type: "richText",
     },
     {
+      name: "heroImage",
+      label: "Hero Image",
+      relationTo: "media",
+      type: "upload",
+    },
+    {
       name: "staffSection",
       type: "group",
       fields: [

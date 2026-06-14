@@ -968,6 +968,7 @@ export interface AboutPage {
     };
     [k: string]: unknown;
   } | null;
+  heroImage?: (number | null) | Media;
   staffSection?: {
     title?: string | null;
     description?: string | null;
@@ -1229,6 +1230,7 @@ export interface ContactPageSelect<T extends boolean = true> {
 export interface AboutPageSelect<T extends boolean = true> {
   title?: T;
   body?: T;
+  heroImage?: T;
   staffSection?:
     | T
     | {

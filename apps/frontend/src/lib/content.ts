@@ -204,6 +204,7 @@ export type AboutStaffMember = {
 
 export type AboutPageContent = {
   body?: string;
+  heroImage: CMSMedia;
   pressSection: {
     description: string;
     items: Array<{
@@ -248,6 +249,8 @@ const storyImage =
   "https://lh3.googleusercontent.com/aida-public/AB6AXuDN7sYwACIUC--LW0G4KjzZKdeS6UDelcpQOarLGy6Ovga0ffJWJsPpbKoDWjOO_wtuuKCpfprzF3bspUpZGP4V2wYhlUVnY2A3ha2CSvKiUowPWeNlL-f8S1cY886x9RAcN6zZObjb3eZMHptTqERbgVGnj6CGxVARTL7Jhrkfp1y18SKeDXhQ9-nTpNStKYHjq8ktXV0WTxefUoYmRJXK-jAF4dDCJ-w7Ok1mbm28XFq-U_v8Mq2xxDXMDwjptVNj1sBUM8ervD0M";
 const contactImage =
   "https://lh3.googleusercontent.com/aida-public/AB6AXuAtebHlrWhl-0uhXtSPKVk8B0KdaPxc0XXBMCmOUsfbtJtNam8tYjRoO5Uk8PnP1Z1XlIoOgKVgBsbr5AYD-tHhvSX6QImayLUeGm1ui1c9QLcAlPs8d5nFyUt4rLVGpTOQj5reqZ-8CgQSDzseUYdfT7g7jUjZZB57eomzycfzf7O5YdOBfDkKPt4dUw5ItU4P1QsAyww-D0Qc8fwSDkMq-44vJsVF4H5rBu2IP9BxBB7IUyc3V-985EKYcHX8Tz34I5DOy9s8eAbY";
+const aboutHeroImage =
+  "https://lh3.googleusercontent.com/aida-public/AB6AXuAf78J9Nd4mM0OC1BkmCBaQVt7kjRW-4a0kgSLfR6mbJfN-QU9ioHxsnv0hf7YbcNsYW4pJG8PSH5OFdeoSXBIzriL15402T3HhK0zaf0tOSn4RlgZPTtqRUbc5kPu6Xjbk1nJz_oUtDHmq5bXz-mI1yPx3H575mIjV7KHUJemZWtw1gX8_mZF4oVhUS0TJhwk24dLnFJAcrWQSTPcxgTA1vZ4z-v0m-NOyqJb4TiPRMQK_EmP1Tnpr_FFpJArJa74s1BgOBSPB7YeL";
 
 const fallbackTrips: Trip[] = [
   {
@@ -561,6 +564,7 @@ const fallbackAboutPage: AboutPageContent = {
       type: "root",
     },
   }),
+  heroImage: { alt: "Luxury scuba expedition at sunset", url: aboutHeroImage },
   pressSection: {
     description: "",
     items: [],
@@ -1016,6 +1020,9 @@ export async function getAboutPageContent(): Promise<AboutPageContent> {
 
   return {
     body: renderRichText(global.body) || fallbackAboutPage.body,
+    heroImage: global.heroImage?.url
+      ? mapMedia(global.heroImage, fallbackAboutPage.heroImage)
+      : fallbackAboutPage.heroImage,
     pressSection: {
       description: global.pressSection?.description || fallbackAboutPage.pressSection.description,
       items:
