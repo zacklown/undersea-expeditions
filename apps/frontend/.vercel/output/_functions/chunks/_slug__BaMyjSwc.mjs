@@ -1,8 +1,8 @@
-import { c as createComponent } from './astro-component_4tyYTbsQ.mjs';
+import { c as createComponent } from './astro-component_DQDEigrw.mjs';
 import 'piccolore';
-import { n as renderComponent, r as renderTemplate, m as maybeRenderHead, o as Fragment, h as addAttribute, u as unescapeHTML } from './entrypoint_CPaYjtce.mjs';
-import { $ as $$Layout, a as $$Header, b as $$Footer } from './Layout_COaTERnD.mjs';
-import { d as getTrips, j as getTripByYearAndSlug, c as getSiteSettings } from './content_Ce3Tp18u.mjs';
+import { n as renderComponent, r as renderTemplate, m as maybeRenderHead, o as Fragment, h as addAttribute, u as unescapeHTML } from './entrypoint_B01AMM-M.mjs';
+import { $ as $$Layout, a as $$Header, b as $$Footer } from './Layout_C9sbRN5T.mjs';
+import { d as getTrips, j as getTripByYearAndSlug, c as getSiteSettings } from './content_C5Rdr6fg.mjs';
 
 const $$slug = createComponent(async ($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$props, $$slots);

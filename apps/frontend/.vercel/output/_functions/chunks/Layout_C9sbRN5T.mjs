@@ -1,8 +1,8 @@
-import { c as createComponent } from './astro-component_4tyYTbsQ.mjs';
+import { c as createComponent } from './astro-component_DQDEigrw.mjs';
 import 'piccolore';
-import { m as maybeRenderHead, h as addAttribute, r as renderTemplate, p as renderHead, v as renderSlot } from './entrypoint_CPaYjtce.mjs';
+import { m as maybeRenderHead, h as addAttribute, r as renderTemplate, p as renderHead, v as renderSlot } from './entrypoint_B01AMM-M.mjs';
 import 'clsx';
-import { c as getSiteSettings, l as logo } from './content_Ce3Tp18u.mjs';
+import { c as getSiteSettings, l as logo } from './content_C5Rdr6fg.mjs';
 
 const $$Footer = createComponent(async ($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$props, $$slots);

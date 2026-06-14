@@ -1,10 +1,10 @@
-import { c as createComponent } from './astro-component_4tyYTbsQ.mjs';
+import { c as createComponent } from './astro-component_DQDEigrw.mjs';
 import 'piccolore';
-import { m as maybeRenderHead, h as addAttribute, r as renderTemplate, n as renderComponent } from './entrypoint_CPaYjtce.mjs';
+import { m as maybeRenderHead, h as addAttribute, r as renderTemplate, n as renderComponent } from './entrypoint_B01AMM-M.mjs';
 import 'clsx';
-import { r as renderScript } from './script_DWPeTHg-.mjs';
-import { $ as $$Layout, a as $$Header, b as $$Footer } from './Layout_COaTERnD.mjs';
-import { k as getHomePageContent, c as getSiteSettings, d as getTrips } from './content_Ce3Tp18u.mjs';
+import { r as renderScript } from './script_CM4lRrCO.mjs';
+import { $ as $$Layout, a as $$Header, b as $$Footer } from './Layout_C9sbRN5T.mjs';
+import { k as getHomePageContent, c as getSiteSettings, d as getTrips } from './content_C5Rdr6fg.mjs';
 
 const $$FeaturedTripsCarousel = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$props, $$slots);

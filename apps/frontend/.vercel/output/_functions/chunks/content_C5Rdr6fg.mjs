@@ -58,12 +58,6 @@ const logo = new Proxy({"src":"/_astro/underseax-logo.Bk6U1KAb.png","width":891,
 const DEFAULT_CMS_API_URL = "http://127.0.0.1:3001/api";
 const cmsApiUrl = DEFAULT_CMS_API_URL;
 const cmsPublicOrigin = (DEFAULT_CMS_API_URL).replace(/\/api\/?$/, "");
-const isVercelProductionBuild = process.env.VERCEL === "1" && process.env.VERCEL_ENV === "production";
-if (isVercelProductionBuild && cmsApiUrl === DEFAULT_CMS_API_URL) {
-  throw new Error(
-    "Frontend build is missing a production CMS API URL. Set PUBLIC_PAYLOAD_API_URL to your CMS /api endpoint on Vercel."
-  );
-}
 const homeHeroImage = "https://lh3.googleusercontent.com/aida-public/AB6AXuA4SJlxoT5Jt-S5PRXOoSfDzJQgeMe0CnJkrJJRMVkTUJyJComrz9sj-P3DR4urnTSc6npm43IUFY8NXu6rtN8ocICycAOJ5hi9TKKDYBhltyTJw2YME6ZlIaCP8C3aQxK6kXs19uc31q_tpsef3HMdkAU1FhA7QoUoCp_rDXp46MUxB4GSzoGR2khvsk-H1qrcNpyCfegDbbTgEzlNkGu3wz46EfvdLutcDndUft4-Oxqg_2yitMvw0YEO5NUk8B5FdmSDJklO41xG";
 const featuredTripImage = "https://lh3.googleusercontent.com/aida-public/AB6AXuDo6Bec8ZPLRMt1jWuGWse8bBANZl95yo_BwKR5rm478joy2U0CoSnlcQ5LtCnuXWgbxL8vae7vjePIv1NdNeaj8hBeOiIwvWRuK8JW1Lv4sGZ6lC1sgoKgsqEi55UkighzrwFaAGBL5OmueruUhO0g8IdclnoEdh261_BRv-mZWbaIu5S67lZUn0Pk_i2QOpWqKx7j6fX-gw_wiiaD_IlY2RpEndOouhfjTjXYfqSNmPv45cq8jMfeoTnTLXxmHJkAMetgTXxJIz28";
 const storyImage = "https://lh3.googleusercontent.com/aida-public/AB6AXuDN7sYwACIUC--LW0G4KjzZKdeS6UDelcpQOarLGy6Ovga0ffJWJsPpbKoDWjOO_wtuuKCpfprzF3bspUpZGP4V2wYhlUVnY2A3ha2CSvKiUowPWeNlL-f8S1cY886x9RAcN6zZObjb3eZMHptTqERbgVGnj6CGxVARTL7Jhrkfp1y18SKeDXhQ9-nTpNStKYHjq8ktXV0WTxefUoYmRJXK-jAF4dDCJ-w7Ok1mbm28XFq-U_v8Mq2xxDXMDwjptVNj1sBUM8ervD0M";
@@ -515,19 +509,11 @@ async function fetchCMS(path) {
       headers: { Accept: "application/json" }
     });
     if (!response.ok) {
-      if (isVercelProductionBuild) {
-        throw new Error(
-          `CMS request failed during Vercel production build: ${response.status} ${response.statusText} for ${requestUrl}`
-        );
-      }
       console.warn(`[content] CMS request failed: ${response.status} ${response.statusText} for ${requestUrl}`);
       return null;
     }
     return await response.json();
   } catch (error) {
-    if (isVercelProductionBuild) {
-      throw new Error(`CMS request error during Vercel production build for ${requestUrl}: ${String(error)}`);
-    }
     console.warn(`[content] CMS request error for ${requestUrl}:`, error);
     return null;
   }

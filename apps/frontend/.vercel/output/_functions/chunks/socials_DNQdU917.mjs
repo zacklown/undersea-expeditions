@@ -1,8 +1,8 @@
-import { c as createComponent } from './astro-component_4tyYTbsQ.mjs';
+import { c as createComponent } from './astro-component_DQDEigrw.mjs';
 import 'piccolore';
-import { n as renderComponent, r as renderTemplate, m as maybeRenderHead, h as addAttribute } from './entrypoint_CPaYjtce.mjs';
-import { $ as $$Layout, a as $$Header, b as $$Footer } from './Layout_COaTERnD.mjs';
-import { f as getSocialsPageContent } from './content_Ce3Tp18u.mjs';
+import { n as renderComponent, r as renderTemplate, m as maybeRenderHead, h as addAttribute } from './entrypoint_B01AMM-M.mjs';
+import { $ as $$Layout, a as $$Header, b as $$Footer } from './Layout_C9sbRN5T.mjs';
+import { f as getSocialsPageContent } from './content_C5Rdr6fg.mjs';
 
 const $$Socials = createComponent(async ($$result, $$props, $$slots) => {
   const pageContent = await getSocialsPageContent();

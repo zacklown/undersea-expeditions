@@ -1,9 +1,9 @@
-import { c as createComponent } from './astro-component_4tyYTbsQ.mjs';
+import { c as createComponent } from './astro-component_DQDEigrw.mjs';
 import 'piccolore';
-import { n as renderComponent, r as renderTemplate, m as maybeRenderHead, h as addAttribute } from './entrypoint_CPaYjtce.mjs';
-import { r as renderScript } from './script_DWPeTHg-.mjs';
-import { $ as $$Layout, a as $$Header, b as $$Footer } from './Layout_COaTERnD.mjs';
-import { i as getTripsPageContent, d as getTrips } from './content_Ce3Tp18u.mjs';
+import { n as renderComponent, r as renderTemplate, m as maybeRenderHead, h as addAttribute } from './entrypoint_B01AMM-M.mjs';
+import { r as renderScript } from './script_CM4lRrCO.mjs';
+import { $ as $$Layout, a as $$Header, b as $$Footer } from './Layout_C9sbRN5T.mjs';
+import { i as getTripsPageContent, d as getTrips } from './content_C5Rdr6fg.mjs';
 
 const $$Trips = createComponent(async ($$result, $$props, $$slots) => {
   const [pageContent, allTrips] = await Promise.all([getTripsPageContent(), getTrips()]);
