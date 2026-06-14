@@ -84,55 +84,6 @@ const socialEmbeds =
           </div>
         </section>
 
-        {socialEmbeds.length > 0 && (
-          <section class="relative z-20 mx-auto -mt-10 mb-12 max-w-container-max px-margin-mobile md:px-margin-desktop">
-            <div class="rounded-3xl border border-primary/15 bg-white/95 p-8 shadow-xl backdrop-blur-md">
-              <div class="mb-6 max-w-2xl">
-                <p class="mb-2 font-label-sm text-label-sm uppercase tracking-[0.16em] text-on-tertiary-container">
-                  Trip Social Posts
-                </p>
-                <h2 class="font-headline-md text-headline-md text-primary">See this trip on social</h2>
-              </div>
-              <div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
-                {socialEmbeds.map((embed) => (
-                  <article class="overflow-hidden rounded-3xl border border-outline-variant/20 bg-surface-container-low p-4">
-                    <div class="mb-4 flex items-center justify-between gap-4 px-2 pt-2">
-                      <div>
-                        <p class="font-label-sm text-label-sm uppercase tracking-[0.16em] text-on-tertiary-container">
-                          {embed.platform}
-                        </p>
-                        {embed.title && (
-                          <h3 class="mt-1 font-bold text-primary">{embed.title}</h3>
-                        )}
-                      </div>
-                      <a
-                        class="text-sm font-bold text-on-tertiary-container hover:underline"
-                        href={embed.postUrl}
-                        rel="noreferrer"
-                        target="_blank"
-                      >
-                        Open Post
-                      </a>
-                    </div>
-                    <div class="overflow-hidden rounded-[24px] bg-white">
-                      <iframe
-                        title={embed.title || `${embed.platform} post`}
-                        src={embed.embedUrl}
-                        class="w-full"
-                        height={embed.platform === "facebook" ? "640" : "720"}
-                        style="border:none;overflow:hidden;"
-                        scrolling="no"
-                        frameborder="0"
-                        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-                      ></iframe>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
         <section class="mx-auto max-w-[1520px] px-margin-mobile py-section-padding md:px-margin-desktop">
           <div class="grid grid-cols-1 gap-8 xl:grid-cols-[18rem_minmax(0,1fr)_18rem]">
             <aside class="order-2 xl:order-none xl:sticky xl:top-28 xl:self-start">
@@ -167,92 +118,141 @@ const socialEmbeds =
               </div>
             </aside>
 
-            <article class="order-1 min-w-0 rounded-3xl border border-secondary-fixed bg-white p-8 shadow-sm md:p-10 xl:order-none xl:p-12">
-              <section class="mb-10 rounded-3xl bg-surface-container-low p-6 md:p-8">
-                <div class="mb-6 flex flex-col gap-4 border-b border-outline-variant/20 pb-5 lg:flex-row lg:flex-wrap lg:items-center lg:justify-between">
-                  <div class="flex items-center gap-3 text-primary">
-                    <span class="material-symbols-outlined">calendar_today</span>
-                    <span class="font-bold">{trip.dateLabel}</span>
+            <div class="order-1 min-w-0 space-y-8 xl:order-none">
+              <article class="rounded-3xl border border-secondary-fixed bg-white p-8 shadow-sm md:p-10 xl:p-12">
+                <section class="mb-10 rounded-3xl bg-surface-container-low p-6 md:p-8">
+                  <div class="mb-6 flex flex-col gap-4 border-b border-outline-variant/20 pb-5 lg:flex-row lg:flex-wrap lg:items-center lg:justify-between">
+                    <div class="flex items-center gap-3 text-primary">
+                      <span class="material-symbols-outlined">calendar_today</span>
+                      <span class="font-bold">{trip.dateLabel}</span>
+                    </div>
+                    {stayLabel && (
+                      <div class="flex items-center gap-3 text-on-surface-variant">
+                        <span class="material-symbols-outlined text-primary">{stayIcon}</span>
+                        <span class="font-medium">{stayLabel}</span>
+                      </div>
+                    )}
+                    {(trip.days || trip.nights) && (
+                      <div class="rounded-full bg-white/80 px-4 py-2 text-sm font-semibold text-primary">
+                        {trip.days || 0} Days / {trip.nights || 0} Nights
+                      </div>
+                    )}
                   </div>
-                  {stayLabel && (
-                    <div class="flex items-center gap-3 text-on-surface-variant">
-                      <span class="material-symbols-outlined text-primary">{stayIcon}</span>
-                      <span class="font-medium">{stayLabel}</span>
-                    </div>
+
+                  <div class="text-on-surface-variant">
+                    <img
+                      alt={trip.coverImage.alt || trip.title}
+                      class="mb-6 h-72 w-full rounded-2xl object-cover shadow-sm lg:float-right lg:mb-4 lg:ml-8 lg:h-[26rem] lg:w-[22rem] xl:w-[24rem]"
+                      src={trip.coverImage.url}
+                    />
+
+                    {(trip.summaryHtml || trip.summary) && (
+                      <div
+                        class="mb-6 text-primary [&>p]:mb-4 [&>p]:font-body-lg [&>p]:text-body-lg"
+                        set:html={trip.summaryHtml || trip.summary}
+                      ></div>
+                    )}
+
+                    {trip.overview && (
+                      <div
+                        class="[&>p]:mb-4 [&>p]:font-body-md [&>p]:text-body-md [&_a]:text-on-tertiary-container [&_a]:underline [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6"
+                        set:html={trip.overview}
+                      ></div>
+                    )}
+
+                    <div class="clear-both"></div>
+                  </div>
+                </section>
+
+                <div class="space-y-6 leading-relaxed text-on-surface-variant">
+                  {trip.packageIncludes && (
+                    <section>
+                      <h2 class="mb-4 font-headline-md text-headline-md text-primary">
+                        Our Package Includes
+                      </h2>
+                      <div
+                        class="[&>p]:mb-4 [&>p]:font-body-md [&>p]:text-body-md [&_a]:text-on-tertiary-container [&_a]:underline [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6"
+                        set:html={trip.packageIncludes}
+                      ></div>
+                    </section>
                   )}
-                  {(trip.days || trip.nights) && (
-                    <div class="rounded-full bg-white/80 px-4 py-2 text-sm font-semibold text-primary">
-                      {trip.days || 0} Days / {trip.nights || 0} Nights
-                    </div>
+                  {trip.notIncluded && (
+                    <section>
+                      <h2 class="mb-4 font-headline-md text-headline-md text-primary">Not Included</h2>
+                      <div
+                        class="[&>p]:mb-4 [&>p]:font-body-md [&>p]:text-body-md [&_a]:text-on-tertiary-container [&_a]:underline [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6"
+                        set:html={trip.notIncluded}
+                      ></div>
+                    </section>
+                  )}
+                  {trip.flights && (
+                    <section>
+                      <h2 class="mb-4 font-headline-md text-headline-md text-primary">Flights</h2>
+                      <div
+                        class="[&>p]:mb-4 [&>p]:font-body-md [&>p]:text-body-md [&_a]:text-on-tertiary-container [&_a]:underline [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6"
+                        set:html={trip.flights}
+                      ></div>
+                    </section>
+                  )}
+                  {trip.deposit && (
+                    <section>
+                      <h2 class="mb-4 font-headline-md text-headline-md text-primary">Deposit</h2>
+                      <div
+                        class="[&>p]:mb-4 [&>p]:font-body-md [&>p]:text-body-md [&_a]:text-on-tertiary-container [&_a]:underline [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6"
+                        set:html={trip.deposit}
+                      ></div>
+                    </section>
                   )}
                 </div>
+              </article>
 
-                <div class="text-on-surface-variant">
-                  <img
-                    alt={trip.coverImage.alt || trip.title}
-                    class="mb-6 h-72 w-full rounded-2xl object-cover shadow-sm lg:float-right lg:mb-4 lg:ml-8 lg:h-[26rem] lg:w-[22rem] xl:w-[24rem]"
-                    src={trip.coverImage.url}
-                  />
-
-                  {(trip.summaryHtml || trip.summary) && (
-                    <div
-                      class="mb-6 text-primary [&>p]:mb-4 [&>p]:font-body-lg [&>p]:text-body-lg"
-                      set:html={trip.summaryHtml || trip.summary}
-                    ></div>
-                  )}
-
-                  {trip.overview && (
-                    <div
-                      class="[&>p]:mb-4 [&>p]:font-body-md [&>p]:text-body-md [&_a]:text-on-tertiary-container [&_a]:underline [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6"
-                      set:html={trip.overview}
-                    ></div>
-                  )}
-
-                  <div class="clear-both"></div>
-                </div>
-              </section>
-
-              <div class="space-y-6 leading-relaxed text-on-surface-variant">
-                {trip.packageIncludes && (
-                  <section>
-                    <h2 class="mb-4 font-headline-md text-headline-md text-primary">
-                      Our Package Includes
-                    </h2>
-                    <div
-                      class="[&>p]:mb-4 [&>p]:font-body-md [&>p]:text-body-md [&_a]:text-on-tertiary-container [&_a]:underline [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6"
-                      set:html={trip.packageIncludes}
-                    ></div>
-                  </section>
-                )}
-                {trip.notIncluded && (
-                  <section>
-                    <h2 class="mb-4 font-headline-md text-headline-md text-primary">Not Included</h2>
-                    <div
-                      class="[&>p]:mb-4 [&>p]:font-body-md [&>p]:text-body-md [&_a]:text-on-tertiary-container [&_a]:underline [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6"
-                      set:html={trip.notIncluded}
-                    ></div>
-                  </section>
-                )}
-                {trip.flights && (
-                  <section>
-                    <h2 class="mb-4 font-headline-md text-headline-md text-primary">Flights</h2>
-                    <div
-                      class="[&>p]:mb-4 [&>p]:font-body-md [&>p]:text-body-md [&_a]:text-on-tertiary-container [&_a]:underline [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6"
-                      set:html={trip.flights}
-                    ></div>
-                  </section>
-                )}
-                {trip.deposit && (
-                  <section>
-                    <h2 class="mb-4 font-headline-md text-headline-md text-primary">Deposit</h2>
-                    <div
-                      class="[&>p]:mb-4 [&>p]:font-body-md [&>p]:text-body-md [&_a]:text-on-tertiary-container [&_a]:underline [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6"
-                      set:html={trip.deposit}
-                    ></div>
-                  </section>
-                )}
-              </div>
-            </article>
+              {socialEmbeds.length > 0 && (
+                <section class="rounded-3xl border border-primary/15 bg-white p-8 shadow-sm md:p-10 xl:p-12">
+                  <div class="mb-6 max-w-2xl">
+                    <p class="mb-2 font-label-sm text-label-sm uppercase tracking-[0.16em] text-on-tertiary-container">
+                      Trip Social Posts
+                    </p>
+                    <h2 class="font-headline-md text-headline-md text-primary">See this trip on social</h2>
+                  </div>
+                  <div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
+                    {socialEmbeds.map((embed) => (
+                      <article class="overflow-hidden rounded-3xl border border-outline-variant/20 bg-surface-container-low p-4">
+                        <div class="mb-4 flex items-center justify-between gap-4 px-2 pt-2">
+                          <div>
+                            <p class="font-label-sm text-label-sm uppercase tracking-[0.16em] text-on-tertiary-container">
+                              {embed.platform}
+                            </p>
+                            {embed.title && (
+                              <h3 class="mt-1 font-bold text-primary">{embed.title}</h3>
+                            )}
+                          </div>
+                          <a
+                            class="text-sm font-bold text-on-tertiary-container hover:underline"
+                            href={embed.postUrl}
+                            rel="noreferrer"
+                            target="_blank"
+                          >
+                            Open Post
+                          </a>
+                        </div>
+                        <div class="overflow-hidden rounded-[24px] bg-white">
+                          <iframe
+                            title={embed.title || `${embed.platform} post`}
+                            src={embed.embedUrl}
+                            class="w-full"
+                            height={embed.platform === "facebook" ? "640" : "720"}
+                            style="border:none;overflow:hidden;"
+                            scrolling="no"
+                            frameborder="0"
+                            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                          ></iframe>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              )}
+            </div>
 
             <aside class="order-3 xl:order-none xl:sticky xl:top-28 xl:self-start">
               <div class="space-y-6">
