@@ -1,0 +1,109 @@
+---
+import FeaturedTripsCarousel from "../components/FeaturedTripsCarousel.astro";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import HomeTripMap from "../components/HomeTripMap.astro";
+import Layout from "../layouts/Layout.astro";
+import { getHomePageContent, getSiteSettings, getTrips } from "../lib/content";
+
+const [homePage, siteSettings, trips] = await Promise.all([
+  getHomePageContent(),
+  getSiteSettings(),
+  getTrips(),
+]);
+const featuredTrips = trips.filter((trip) => trip.featuredOnHomepage);
+const homepageFeaturedTrips = (featuredTrips.length > 0 ? featuredTrips : trips).slice(0, Math.max(featuredTrips.length, 3));
+---
+
+<Layout title="Undersea Expeditions | LGBTQ+ Scuba Dive Travel Experts">
+  <Header active="home" />
+  <main>
+    <section class="relative flex min-h-[720px] items-center overflow-hidden py-24 md:min-h-[780px] md:py-28">
+      <img alt={homePage.hero.image.alt || homePage.hero.title} class="absolute inset-0 w-full h-full object-cover" src={homePage.hero.image.url} />
+      <div class="absolute inset-0 bg-gradient-to-r from-primary/60 to-transparent"></div>
+      <div class="relative z-10 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
+        <div class="max-w-[52rem]">
+          {homePage.hero.logo ? (
+            <img
+              alt={homePage.hero.logo.alt || homePage.hero.title || "Undersea Expeditions"}
+              class="mb-5 max-h-56 w-auto max-w-full object-contain md:mb-6 md:max-h-72 lg:max-h-80"
+              src={homePage.hero.logo.url}
+            />
+          ) : (
+            <h1 class="mb-5 font-display-lg text-display-lg text-white md:mb-6">{homePage.hero.title}</h1>
+          )}
+          {homePage.hero.description && (
+            <p class="mb-7 max-w-2xl font-body-lg text-body-lg text-white/90 md:mb-8">{homePage.hero.description}</p>
+          )}
+          <div class="flex flex-col sm:flex-row gap-4">
+            {homePage.hero.secondaryCtaLabel && homePage.hero.secondaryCtaHref && (
+              <a class="bg-white/10 backdrop-blur-md border border-white text-white px-8 py-4 rounded-lg font-bold hover:bg-white/20 transition-colors text-center" href={homePage.hero.secondaryCtaHref}>{homePage.hero.secondaryCtaLabel}</a>
+            )}
+            <a class="bg-[#C5A059] text-white px-8 py-4 rounded-lg font-bold shadow-lg hover:bg-on-tertiary-container transition-colors text-center" href={homePage.hero.primaryCtaHref}>{homePage.hero.primaryCtaLabel}</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <FeaturedTripsCarousel
+      description={homePage.featuredTrips.description}
+      title={homePage.featuredTrips.title}
+      trips={homepageFeaturedTrips}
+    />
+
+    <HomeTripMap
+      buttonHref={homePage.mapSection.buttonHref}
+      buttonLabel="See More Trips"
+      description={homePage.mapSection.description}
+      title={homePage.mapSection.title}
+      trips={trips}
+    />
+
+    <section class="mx-auto max-w-container-max overflow-hidden px-margin-mobile py-16 md:px-margin-desktop md:py-20">
+      <div class="flex flex-col items-center gap-10 md:flex-row md:gap-12">
+        <div class="w-full md:w-1/2 relative">
+          <div class="relative z-10 rounded-2xl overflow-hidden shadow-2xl">
+            <img alt={homePage.story.image.alt || homePage.story.title} class="w-full aspect-square object-cover" src={homePage.story.image.url} />
+          </div>
+          <div class="absolute -bottom-8 -right-8 w-64 h-64 bg-secondary-container rounded-full -z-10"></div>
+          <div class="absolute -top-8 -left-8 w-32 h-32 border-4 border-on-tertiary-container rounded-lg -z-10"></div>
+        </div>
+        <div class="w-full md:w-1/2">
+          <h2 class="mb-5 font-headline-lg text-headline-lg text-primary md:mb-6">{homePage.story.title}</h2>
+          {homePage.story.body.map((paragraph, index) => (
+            <p class:list={["font-body-lg text-body-lg text-secondary leading-relaxed", index === 0 ? "mb-5" : "mb-6"]}>{paragraph}</p>
+          ))}
+          {homePage.story.buttonLabel && homePage.story.buttonHref && (
+            <a
+              class="inline-flex items-center justify-center rounded-lg border border-primary px-6 py-3 font-bold text-primary transition-all hover:bg-primary hover:text-white"
+              href={homePage.story.buttonHref}
+            >
+              {homePage.story.buttonLabel}
+            </a>
+          )}
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-primary py-16 text-center text-white md:py-20">
+      <div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+        <h2 class="mb-6 font-headline-lg text-headline-lg text-white md:mb-7">{homePage.cta.title}</h2>
+        <p class="mx-auto mb-10 max-w-2xl font-body-lg text-body-lg opacity-90 md:mb-12">{homePage.cta.description}</p>
+        <div class="mb-4 flex flex-col items-center justify-center gap-10 md:mb-0 md:flex-row md:gap-12">
+          <div class="flex flex-col items-center">
+            <span class="material-symbols-outlined text-4xl mb-4 text-[#C5A059]">call</span>
+            <p class="text-label-sm font-label-sm opacity-70 mb-1">{homePage.cta.phoneLabel}</p>
+            <a class="font-headline-md text-headline-md hover:text-[#C5A059] transition-colors" href={`tel:${siteSettings.contact.tollFreePhone}`}>{siteSettings.contact.tollFreePhone}</a>
+          </div>
+          <div class="w-px h-24 bg-white/20 hidden md:block"></div>
+          <div class="flex flex-col items-center">
+            <span class="material-symbols-outlined text-4xl mb-4 text-[#C5A059]">mail</span>
+            <p class="text-label-sm font-label-sm opacity-70 mb-1">{homePage.cta.emailLabel}</p>
+            <a class="font-headline-md text-headline-md hover:text-[#C5A059] transition-colors" href={`mailto:${siteSettings.contact.email}`}>{siteSettings.contact.email}</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer active="home" />
+</Layout>
