@@ -9,6 +9,21 @@ const hasStaffSection =
   pageContent.staffSection.officeStaff.length > 0 ||
   pageContent.staffSection.tripLeaders.length > 0;
 const hasPressSection = pageContent.pressSection.items.length > 0;
+const richTextClass =
+  "[&>h1]:mb-5 [&>h1]:font-display-lg [&>h1]:text-display-lg [&>h1]:leading-tight [&>h1]:text-primary " +
+  "[&>h2]:mb-4 [&>h2]:mt-8 [&>h2]:font-headline-lg [&>h2]:text-headline-lg [&>h2]:text-primary " +
+  "[&>h3]:mb-3 [&>h3]:mt-6 [&>h3]:font-headline-md [&>h3]:text-headline-md [&>h3]:text-primary " +
+  "[&>h4]:mb-3 [&>h4]:mt-5 [&>h4]:font-bold [&>h4]:text-primary " +
+  "[&>p]:mb-4 [&>p]:text-body-lg [&>p]:text-on-surface-variant " +
+  "[&>blockquote]:my-6 [&>blockquote]:border-l-4 [&>blockquote]:border-on-tertiary-container [&>blockquote]:pl-5 [&>blockquote]:italic [&>blockquote]:text-on-surface-variant " +
+  "[&>ol]:mb-4 [&>ol]:list-decimal [&>ol]:space-y-2 [&>ol]:pl-6 [&>ul]:mb-4 [&>ul]:list-disc [&>ul]:space-y-2 [&>ul]:pl-6 " +
+  "[&_a]:text-on-tertiary-container [&_a]:underline [&_strong]:text-primary";
+const bioRichTextClass =
+  "[&>h1]:mb-4 [&>h1]:font-headline-lg [&>h1]:text-headline-lg [&>h1]:text-primary " +
+  "[&>h2]:mb-3 [&>h2]:mt-5 [&>h2]:font-headline-md [&>h2]:text-headline-md [&>h2]:text-primary " +
+  "[&>h3]:mb-3 [&>h3]:mt-4 [&>h3]:font-bold [&>h3]:text-primary " +
+  "[&>p]:mb-4 [&>p]:text-on-surface-variant [&>ol]:mb-4 [&>ol]:list-decimal [&>ol]:space-y-2 [&>ol]:pl-6 " +
+  "[&>ul]:mb-4 [&>ul]:list-disc [&>ul]:space-y-2 [&>ul]:pl-6 [&_a]:text-on-tertiary-container [&_a]:underline [&_strong]:text-primary";
 ---
 
 <Layout
@@ -39,7 +54,7 @@ const hasPressSection = pageContent.pressSection.items.length > 0;
       <section class="py-section-padding px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
         <div class="rounded-[32px] border border-secondary-fixed/40 bg-white p-8 shadow-[0_24px_70px_rgba(4,44,72,0.10)] md:p-12">
           <div
-            class="prose prose-lg max-w-none prose-headings:text-primary prose-p:text-on-surface-variant prose-strong:text-primary prose-a:text-on-tertiary-container"
+            class:list={["max-w-none", richTextClass]}
             set:html={pageContent.body}
           />
         </div>
@@ -85,7 +100,7 @@ const hasPressSection = pageContent.pressSection.items.length > 0;
                     )}
                     {member.bio && (
                       <div
-                        class="prose mt-4 max-w-none prose-p:text-on-surface-variant prose-strong:text-primary"
+                        class:list={["mt-4 max-w-none", bioRichTextClass]}
                         set:html={member.bio}
                       />
                     )}
@@ -120,7 +135,7 @@ const hasPressSection = pageContent.pressSection.items.length > 0;
                     )}
                     {member.bio && (
                       <div
-                        class="prose mt-4 max-w-none prose-p:text-on-surface-variant prose-strong:text-primary"
+                        class:list={["mt-4 max-w-none", bioRichTextClass]}
                         set:html={member.bio}
                       />
                     )}
