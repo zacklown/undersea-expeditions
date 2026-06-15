@@ -754,14 +754,12 @@ function normalizeTrip(doc: any, fallback?: Trip): Trip | null {
   const mapPin =
     doc.mapPin?.showOnHomepage && Number.isFinite(xPercent) && Number.isFinite(yPercent)
       ? {
-          color: doc.mapPin?.color || fallback?.mapPin?.color || "amber",
+          color: doc.mapPin?.color || "amber",
           showOnHomepage: true,
           xPercent,
           yPercent,
         }
-      : fallback?.mapPin?.showOnHomepage
-        ? fallback.mapPin
-        : undefined;
+      : undefined;
   const path = getTripPath({ slug: doc.slug, tripYear });
 
   return {
