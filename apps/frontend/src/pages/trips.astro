@@ -372,35 +372,48 @@ const yearCalendars = visibleYears.map((year) => {
 
       <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3" data-trip-results>
         {trips.map((trip) => (
-          <article
-            class="group relative flex h-[39rem] flex-col overflow-hidden rounded-2xl border border-secondary-fixed bg-white shadow-sm transition-shadow hover:shadow-xl"
+          <a
+            class="group block overflow-hidden rounded-2xl border border-secondary-fixed bg-white shadow-sm transition-shadow hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4"
             data-trip-card
             data-trip-countries={trip.countries.join("|")}
             data-trip-gender={trip.gender || ""}
             data-trip-month={getMonthKey(trip.tripStart)}
             data-trip-region={trip.regionLabel}
             data-trip-year={trip.tripYear}
+            href={trip.path}
           >
-            <div class="relative h-60 overflow-hidden md:h-64">
-              <img alt={trip.coverImage.alt || trip.title} class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" src={trip.coverImage.url} />
-              <div class="absolute left-4 top-4 rounded bg-white/90 px-3 py-1 text-label-sm font-label-sm text-primary backdrop-blur-md">{trip.regionLabel}</div>
-              {trip.isNew && (
-                <div class="absolute right-4 top-4 rounded bg-[#C5A059] px-3 py-1 text-label-sm font-label-sm text-white">New</div>
-              )}
-            </div>
-            <div class="flex flex-1 flex-col p-6">
-              <h3 class="mb-2 font-headline-md text-headline-md text-primary">{trip.title}</h3>
-              <p class="mb-2 text-secondary">{trip.countries.join(", ")}</p>
-              <p class="mb-4 font-bold text-on-tertiary-container">{trip.dateLabel}</p>
-              {trip.groupTypeLabel && (
-                <p class="mb-4 text-sm font-bold uppercase tracking-[0.14em] text-on-tertiary-container">
-                  {trip.groupTypeLabel}
+            <article class="relative flex h-[39rem] flex-col">
+              <div class="relative h-60 overflow-hidden md:h-64">
+                <img alt={trip.coverImage.alt || trip.title} class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" src={trip.coverImage.url} />
+                <div class="absolute left-4 top-4 rounded bg-white/90 px-3 py-1 text-label-sm font-label-sm text-primary backdrop-blur-md">{trip.regionLabel}</div>
+                {trip.isNew && (
+                  <div class="absolute right-4 top-4 rounded bg-[#C5A059] px-3 py-1 text-label-sm font-label-sm text-white">New</div>
+                )}
+              </div>
+              <div class="flex flex-1 flex-col overflow-hidden p-6">
+                <h3 class="mb-2 min-h-[5.5rem] font-headline-md text-headline-md text-primary [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] overflow-hidden">
+                  {trip.title}
+                </h3>
+                <p class="mb-2 min-h-[3rem] text-secondary [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] overflow-hidden">
+                  {trip.countries.join(", ")}
                 </p>
-              )}
-              <p class="mb-6 font-body-md text-body-md text-secondary">{trip.summary}</p>
-              <a class="mt-auto block w-full rounded-lg border border-primary py-3 text-center font-bold text-primary transition-all group-hover:bg-primary group-hover:text-white" href={trip.path}>Details &amp; Booking</a>
-            </div>
-          </article>
+                <p class="mb-4 min-h-[3rem] font-bold text-on-tertiary-container [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] overflow-hidden">
+                  {trip.dateLabel}
+                </p>
+                {trip.groupTypeLabel && (
+                  <p class="mb-4 text-sm font-bold uppercase tracking-[0.14em] text-on-tertiary-container">
+                    {trip.groupTypeLabel}
+                  </p>
+                )}
+                <p class="mb-6 font-body-md text-body-md text-secondary [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:5] overflow-hidden">
+                  {trip.summary}
+                </p>
+                <span class="mt-auto block w-full rounded-lg border border-primary py-3 text-center font-bold text-primary transition-all group-hover:bg-primary group-hover:text-white">
+                  Contact Us
+                </span>
+              </div>
+            </article>
+          </a>
         ))}
       </div>
     </section>
