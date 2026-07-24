@@ -24,6 +24,7 @@ export type Trip = {
   id: number | string;
   insuranceImage?: CMSMedia;
   isNew?: boolean;
+  statusLabel?: string;
   legacyUrl?: string;
   mapPin?: {
     color:
@@ -616,7 +617,7 @@ function getGroupTypeLabel(gender?: "male" | "female" | "mixed") {
     case "female":
       return "Female Only Trip";
     case "mixed":
-      return "CoEd Trip";
+      return "All LGBTQ+";
     default:
       return "";
   }
@@ -633,8 +634,22 @@ function getTripStyleLabel(tripStyle?: "liveaboard" | "land-resort") {
   }
 }
 
+function decodeHtmlEntities(value: string) {
+  return value
+    .replace(/&amp;/gi, "&")
+    .replace(/&#x([0-9a-f]+);/gi, (_, code) => String.fromCodePoint(Number.parseInt(code, 16)))
+    .replace(/&#(\d+);/g, (_, code) => String.fromCodePoint(Number.parseInt(code, 10)))
+    .replace(/&quot;/gi, '"')
+    .replace(/&apos;/gi, "'")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/&nbsp;/gi, " ");
+}
+
 function stripHtml(value?: string) {
-  return value ? value.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim() : "";
+  return value
+    ? decodeHtmlEntities(value.replace(/<[^>]+>/g, "")).replace(/\s+/g, " ").trim()
+    : "";
 }
 
 function formatTripDateLabel(tripStart?: string, tripEnd?: string, fallback?: string) {
@@ -783,6 +798,10 @@ function normalizeTrip(doc: any, fallback?: Trip): Trip | null {
       ? mapMedia(doc.insuranceImage, fallback?.insuranceImage || fallback?.coverImage || fallbackTrips[0].coverImage)
       : fallback?.insuranceImage,
     isNew: typeof doc.isNew === "boolean" ? doc.isNew : fallback?.isNew,
+    statusLabel:
+      typeof doc.statusLabel === "string" && doc.statusLabel.trim()
+        ? doc.statusLabel.trim().slice(0, 16)
+        : fallback?.statusLabel,
     legacyUrl: normalizeLegacyUrl(doc.legacyUrl || fallback?.legacyUrl),
     mapPin,
     nights: doc.nights || fallback?.nights,

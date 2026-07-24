@@ -16,22 +16,16 @@ const homepageFeaturedTrips = (featuredTrips.length > 0 ? featuredTrips : trips)
 ---
 
 <Layout title="Undersea Expeditions | LGBTQ+ Scuba Dive Travel Experts">
-  <Header active="home" />
+  <Header active="home" overlayHero />
   <main>
     <section class="relative flex min-h-[720px] items-center overflow-hidden py-24 md:min-h-[780px] md:py-28">
       <img alt={homePage.hero.image.alt || homePage.hero.title} class="absolute inset-0 w-full h-full object-cover" src={homePage.hero.image.url} />
       <div class="absolute inset-0 bg-gradient-to-r from-primary/60 to-transparent"></div>
       <div class="relative z-10 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
         <div class="max-w-[52rem]">
-          {homePage.hero.logo ? (
-            <img
-              alt={homePage.hero.logo.alt || homePage.hero.title || "Undersea Expeditions"}
-              class="mb-5 max-h-56 w-auto max-w-full object-contain md:mb-6 md:max-h-72 lg:max-h-80"
-              src={homePage.hero.logo.url}
-            />
-          ) : (
-            <h1 class="mb-5 font-display-lg text-display-lg text-white md:mb-6">{homePage.hero.title}</h1>
-          )}
+          <h1 class="mb-5 font-display-lg text-display-lg text-white md:mb-6">
+            Undersea Expeditions
+          </h1>
           {homePage.hero.description && (
             <p class="mb-7 max-w-2xl font-body-lg text-body-lg text-white/90 md:mb-8">{homePage.hero.description}</p>
           )}
@@ -39,10 +33,21 @@ const homepageFeaturedTrips = (featuredTrips.length > 0 ? featuredTrips : trips)
             {homePage.hero.secondaryCtaLabel && homePage.hero.secondaryCtaHref && (
               <a class="bg-white/10 backdrop-blur-md border border-white text-white px-8 py-4 rounded-lg font-bold hover:bg-white/20 transition-colors text-center" href={homePage.hero.secondaryCtaHref}>{homePage.hero.secondaryCtaLabel}</a>
             )}
-            <a class="bg-[#C5A059] text-white px-8 py-4 rounded-lg font-bold shadow-lg hover:bg-on-tertiary-container transition-colors text-center" href={homePage.hero.primaryCtaHref}>{homePage.hero.primaryCtaLabel}</a>
+            <a class="bg-on-tertiary-container text-white px-8 py-4 rounded-lg font-bold shadow-lg hover:bg-tertiary-fixed-dim transition-colors text-center" href={homePage.hero.primaryCtaHref}>{homePage.hero.primaryCtaLabel}</a>
           </div>
         </div>
       </div>
+      <svg
+        aria-hidden="true"
+        class="wave-drift pointer-events-none absolute -bottom-px left-0 z-20 h-14 w-full md:h-20"
+        preserveAspectRatio="none"
+        viewBox="0 0 1440 96"
+      >
+        <path
+          d="M0 64C188 95 352 90 540 54C758 12 928 11 1114 54C1244 84 1344 82 1440 58V96H0Z"
+          fill="#f4f3f8"
+        />
+      </svg>
     </section>
 
     <FeaturedTripsCarousel
@@ -59,7 +64,7 @@ const homepageFeaturedTrips = (featuredTrips.length > 0 ? featuredTrips : trips)
       trips={trips}
     />
 
-    <section class="mx-auto max-w-container-max overflow-hidden px-margin-mobile py-16 md:px-margin-desktop md:py-20">
+    <section class="mx-auto max-w-container-max overflow-hidden px-margin-mobile py-24 md:px-margin-desktop md:py-28">
       <div class="flex flex-col items-center gap-10 md:flex-row md:gap-12">
         <div class="w-full md:w-1/2 relative">
           <div class="relative z-10 rounded-2xl overflow-hidden shadow-2xl">
@@ -85,25 +90,36 @@ const homepageFeaturedTrips = (featuredTrips.length > 0 ? featuredTrips : trips)
       </div>
     </section>
 
-    <section class="bg-primary py-16 text-center text-white md:py-20">
+    <section class="relative z-10 bg-[#0066B2] py-20 text-center text-white md:py-24">
+      <svg
+        aria-hidden="true"
+        class="wave-drift pointer-events-none absolute left-0 top-px h-14 w-full -translate-y-full md:h-20"
+        preserveAspectRatio="none"
+        viewBox="0 0 1440 96"
+      >
+        <path
+          d="M0 58C166 18 330 12 520 52C734 97 920 92 1112 48C1248 17 1348 20 1440 48V96H0Z"
+          fill="#0066B2"
+        />
+      </svg>
       <div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
         <h2 class="mb-6 font-headline-lg text-headline-lg text-white md:mb-7">{homePage.cta.title}</h2>
         <p class="mx-auto mb-10 max-w-2xl font-body-lg text-body-lg opacity-90 md:mb-12">{homePage.cta.description}</p>
         <div class="mb-4 flex flex-col items-center justify-center gap-10 md:mb-0 md:flex-row md:gap-12">
           <div class="flex flex-col items-center">
-            <span class="material-symbols-outlined text-4xl mb-4 text-[#C5A059]">call</span>
+            <span class="material-symbols-outlined text-4xl mb-4 text-on-tertiary-container">call</span>
             <p class="text-label-sm font-label-sm opacity-70 mb-1">{homePage.cta.phoneLabel}</p>
-            <a class="font-headline-md text-headline-md hover:text-[#C5A059] transition-colors" href={`tel:${siteSettings.contact.tollFreePhone}`}>{siteSettings.contact.tollFreePhone}</a>
+            <a class="font-headline-md text-headline-md hover:text-on-tertiary-container transition-colors" href={`tel:${siteSettings.contact.tollFreePhone}`}>{siteSettings.contact.tollFreePhone}</a>
           </div>
           <div class="w-px h-24 bg-white/20 hidden md:block"></div>
           <div class="flex flex-col items-center">
-            <span class="material-symbols-outlined text-4xl mb-4 text-[#C5A059]">mail</span>
+            <span class="material-symbols-outlined text-4xl mb-4 text-on-tertiary-container">mail</span>
             <p class="text-label-sm font-label-sm opacity-70 mb-1">{homePage.cta.emailLabel}</p>
-            <a class="font-headline-md text-headline-md hover:text-[#C5A059] transition-colors" href={`mailto:${siteSettings.contact.email}`}>{siteSettings.contact.email}</a>
+            <a class="font-headline-md text-headline-md hover:text-on-tertiary-container transition-colors" href={`mailto:${siteSettings.contact.email}`}>{siteSettings.contact.email}</a>
           </div>
         </div>
       </div>
     </section>
   </main>
-  <Footer active="home" />
+  <Footer active="home" flushTop />
 </Layout>

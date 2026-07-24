@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url";
 
 import { postgresAdapter } from "@payloadcms/db-postgres";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
-import { buildConfig, type Plugin } from "payload";
+import { buildConfig, type CollectionConfig, type GlobalConfig, type Plugin } from "payload";
 import sharp from "sharp";
 
 import { Countries } from "./src/collections/Countries";
@@ -20,6 +20,11 @@ import { HomePage } from "./src/globals/HomePage";
 import { SiteSettings } from "./src/globals/SiteSettings";
 import { SocialsPage } from "./src/globals/SocialsPage";
 import { TripsPage } from "./src/globals/TripsPage";
+import {
+  triggerFrontendDeployAfterChange,
+  triggerFrontendDeployAfterDelete,
+  triggerFrontendDeployAfterGlobalChange,
+} from "./src/hooks/triggerFrontendDeploy";
 import { migrations } from "./src/migrations";
 
 const filename = fileURLToPath(import.meta.url);
@@ -67,13 +72,37 @@ const databaseURL =
   process.env.POSTGRES_URL_NON_POOLING ||
   process.env.DATABASE_URL_UNPOOLED;
 const blobToken = process.env.BLOB_READ_WRITE_TOKEN;
+const useVercelBlob = isProduction || process.env.ENABLE_VERCEL_BLOB === "true";
 const plugins: Plugin[] = [];
 
-if (isVercelProduction && !blobToken) {
-    throw new Error("BLOB_READ_WRITE_TOKEN must be set in production to store media uploads in Vercel Blob.");
+function withFrontendDeployHooks(config: CollectionConfig): CollectionConfig {
+  return {
+    ...config,
+    hooks: {
+      ...config.hooks,
+      afterChange: [...(config.hooks?.afterChange || []), triggerFrontendDeployAfterChange],
+      afterDelete: [...(config.hooks?.afterDelete || []), triggerFrontendDeployAfterDelete],
+    },
+  };
 }
 
-if (isProduction && blobToken) {
+function withFrontendDeployGlobalHook(config: GlobalConfig): GlobalConfig {
+  return {
+    ...config,
+    hooks: {
+      ...config.hooks,
+      afterChange: [...(config.hooks?.afterChange || []), triggerFrontendDeployAfterGlobalChange],
+    },
+  };
+}
+
+if ((isVercelProduction || process.env.ENABLE_VERCEL_BLOB === "true") && !blobToken) {
+  throw new Error(
+    "BLOB_READ_WRITE_TOKEN must be set when Vercel Blob storage is enabled.",
+  );
+}
+
+if (useVercelBlob && blobToken) {
   const { vercelBlobStorage } = await import("@payloadcms/storage-vercel-blob");
 
   plugins.push(
@@ -106,7 +135,10 @@ export default buildConfig({
     },
     user: Users.slug,
   },
-  collections: [Users, Media, Regions, Countries, Stays, Trips, FAQs],
+  collections: [
+    Users,
+    ...[Media, Regions, Countries, Stays, Trips, FAQs].map(withFrontendDeployHooks),
+  ],
   cors: allowedOrigins,
   csrf: allowedOrigins,
   db: postgresAdapter({
@@ -117,7 +149,15 @@ export default buildConfig({
     push: false,
   }),
   editor: lexicalEditor(),
-  globals: [SiteSettings, HomePage, TripsPage, SocialsPage, FAQPage, ContactPage, AboutPage],
+  globals: [
+    SiteSettings,
+    HomePage,
+    TripsPage,
+    SocialsPage,
+    FAQPage,
+    ContactPage,
+    AboutPage,
+  ].map(withFrontendDeployGlobalHook),
   plugins,
   routes: {
     admin: "/admin",

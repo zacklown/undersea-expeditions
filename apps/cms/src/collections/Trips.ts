@@ -37,7 +37,7 @@ export const Trips: CollectionConfig = {
     update: isAuthenticated,
   },
   admin: {
-    defaultColumns: ["title", "tripStart", "featuredOnHomepage", "tripStyle", "gender", "isNew", "updatedAt"],
+    defaultColumns: ["title", "tripStart", "statusLabel", "featuredOnHomepage", "tripStyle", "gender", "isNew", "updatedAt"],
     group: "Content",
     useAsTitle: "title",
   },
@@ -216,6 +216,16 @@ export const Trips: CollectionConfig = {
           name: "isNew",
           defaultValue: false,
           type: "checkbox",
+        },
+        {
+          name: "statusLabel",
+          label: "Trip Status",
+          type: "text",
+          maxLength: 16,
+          admin: {
+            description: 'Optional. Suggested labels: "Sold Out!" or "Few Left!"; custom text is also allowed.',
+            placeholder: "Few Left!",
+          },
         },
         {
           name: "featuredOnHomepage",

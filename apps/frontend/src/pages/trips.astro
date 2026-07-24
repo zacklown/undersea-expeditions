@@ -387,9 +387,15 @@ const yearCalendars = visibleYears.map((year) => {
                 <img alt={trip.coverImage.alt || trip.title} class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" src={trip.coverImage.url} />
                 <div class="absolute left-4 top-4 rounded bg-white/90 px-3 py-1 text-label-sm font-label-sm text-primary backdrop-blur-md">{trip.regionLabel}</div>
                 {trip.isNew && (
-                  <div class="absolute right-4 top-4 rounded bg-[#C5A059] px-3 py-1 text-label-sm font-label-sm text-white">New</div>
+                  <div class="absolute right-4 top-4 rounded bg-on-tertiary-container px-3 py-1 text-label-sm font-label-sm text-white">New</div>
+                )}
+                {trip.statusLabel && (
+                  <div class={`absolute right-4 rounded bg-primary px-3 py-1 text-label-sm font-label-sm text-white ${trip.isNew ? "top-14" : "top-4"}`}>
+                    {trip.statusLabel}
+                  </div>
                 )}
               </div>
+              <div aria-hidden="true" class="rainbow-divider h-1 w-full shrink-0"></div>
               <div class="flex flex-1 flex-col overflow-hidden p-6">
                 <h3 class="mb-2 min-h-[5.5rem] font-headline-md text-headline-md text-primary [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] overflow-hidden">
                   {trip.title}

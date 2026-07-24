@@ -2,6 +2,51 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "Nexa Bold";
+  src: url("/fonts/Nexa-Bold.otf") format("opentype");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 700;
+}
+
+@layer components {
+  .rainbow-divider {
+    background-image: linear-gradient(
+      90deg,
+      #e40303 0%,
+      #ff8c00 16.66%,
+      #ffed00 33.33%,
+      #008026 50%,
+      #004dff 66.66%,
+      #750787 83.33%,
+      #e40303 100%
+    );
+  }
+
+  .wave-drift path {
+    animation: wave-drift 16s ease-in-out infinite alternate;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+}
+
+@keyframes wave-drift {
+  from {
+    transform: translateX(-0.7%) scaleX(1.018);
+  }
+
+  to {
+    transform: translateX(0.7%) scaleX(1.032);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wave-drift path {
+    animation: none;
+  }
+}
+
 @layer base {
   body {
     @apply bg-background text-on-background font-body-md;

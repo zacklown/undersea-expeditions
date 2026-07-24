@@ -1,11 +1,9 @@
 services:
   postgres:
-    image: postgres:16
+    image: postgres:17
     container_name: undersea-expeditions-postgres
-    environment:
-      POSTGRES_DB: undersea_payload
-      POSTGRES_PASSWORD: undersea_cms_dev_password
-      POSTGRES_USER: undersea_cms
+    env_file:
+      - ./.env.docker
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U undersea_cms -d undersea_payload"]
       interval: 5s
@@ -23,16 +21,11 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    environment:
-      PAYLOAD_SECRET: replace-with-a-long-random-secret
-      DATABASE_URL: postgresql://undersea_cms:undersea_cms_dev_password@postgres:5432/undersea_payload
-      SERVER_URL: ${CMS_PUBLIC_URL:-http://localhost:3001}
-      FRONTEND_URL: ${FRONTEND_PUBLIC_URL:-http://localhost:4321}
-      PAYLOAD_PUBLIC_ORIGINS: ${PAYLOAD_PUBLIC_ORIGINS:-http://localhost:3001,http://127.0.0.1:3001,http://localhost:4321}
-      ALLOWED_DEV_ORIGINS: ${ALLOWED_DEV_ORIGINS:-localhost,127.0.0.1}
+    env_file:
+      - ./.env.docker
     ports:
       - "3001:3001"
-    command: npm run dev
+    command: sh -c "npm install && npm run dev"
     volumes:
       - ./apps/cms:/app
       - cms-node-modules:/app/node_modules
@@ -40,15 +33,16 @@ services:
   frontend:
     build:
       context: ./apps/frontend
+      args:
+        NODE_VERSION: ${FRONTEND_NODE_VERSION:-22}
     container_name: undersea-expeditions-frontend
+    env_file:
+      - ./.env.docker
     depends_on:
       - cms
-    environment:
-      PAYLOAD_API_INTERNAL_URL: http://cms:3001/api
-      PUBLIC_PAYLOAD_API_URL: ${FRONTEND_PAYLOAD_API_URL:-http://localhost:3001/api}
-      PUBLIC_PAYLOAD_PUBLIC_URL: ${CMS_PUBLIC_URL:-http://localhost:3001}
     ports:
       - "4321:4321"
+    command: sh -c "npm install && npm run dev"
     volumes:
       - ./apps/frontend:/app
       - frontend-node-modules:/app/node_modules

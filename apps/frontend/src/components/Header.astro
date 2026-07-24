@@ -3,9 +3,10 @@ import logo from "../assets/underseax-logo.png";
 
 interface Props {
   active?: "home" | "trips" | "about" | "socials" | "faq" | "contact";
+  overlayHero?: boolean;
 }
 
-const { active = "home" } = Astro.props;
+const { active = "home", overlayHero = false } = Astro.props;
 
 const navItems = [
   { key: "home", label: "Home", href: "/" },
@@ -16,23 +17,31 @@ const navItems = [
 ];
 ---
 
-<header class="bg-surface/80 dark:bg-surface-container-highest/80 backdrop-blur-md border-b border-outline-variant/30 dark:border-outline/20 shadow-sm dark:shadow-none docked full-width top-0 sticky z-50">
-  <div class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-4 max-w-container-max mx-auto">
+<header
+  class:list={[
+    "docked full-width inset-x-0 top-0 z-50 w-full",
+    overlayHero
+      ? "absolute border-b border-outline-variant/30 bg-surface/90 shadow-sm backdrop-blur-md"
+      : "sticky border-b border-outline-variant/30 bg-surface/80 shadow-sm backdrop-blur-md dark:border-outline/20 dark:bg-surface-container-highest/80 dark:shadow-none",
+  ]}
+>
+  <div aria-hidden="true" class="rainbow-divider h-1 w-full"></div>
+  <div class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-2 max-w-container-max mx-auto">
     <a class="inline-flex items-center" href="/" aria-label="Undersea Expeditions home">
       <img
         src={logo.src}
         width={logo.width}
         height={logo.height}
         alt="Undersea Expeditions"
-        class="h-16 w-auto md:h-[4.5rem]"
+        class="h-24 w-auto lg:h-28"
       />
     </a>
 
-    <nav class="hidden md:flex items-center gap-8">
+    <nav class="hidden md:flex items-center gap-5 lg:gap-8">
       {navItems.map((item) => (
         <a
           class:list={[
-            "font-body-md text-body-md transition-colors relative pb-1",
+            "font-body-lg text-lg transition-colors relative pb-1 lg:text-xl",
             active === item.key
               ? "text-primary border-b-2 border-on-tertiary-container font-bold"
               : "text-primary hover:text-on-tertiary-container",
@@ -45,13 +54,16 @@ const navItems = [
     </nav>
 
     <div class="hidden md:flex items-center gap-4">
-      <a class="bg-on-tertiary-container text-white px-6 py-2 rounded-full font-label-sm text-label-sm uppercase tracking-wider hover:opacity-90 transition-all" href="/contact">
+      <a class="bg-on-tertiary-container px-6 py-3 rounded-full font-body-md text-base uppercase tracking-wider text-white hover:opacity-90 transition-all lg:px-7 lg:text-lg" href="/contact">
         Contact Us
       </a>
     </div>
 
     <button
-      class="md:hidden inline-flex items-center justify-center rounded-full border border-outline-variant/40 p-2 text-primary"
+      class:list={[
+        "md:hidden inline-flex items-center justify-center rounded-full border p-2",
+        "border-outline-variant/40 text-primary",
+      ]}
       type="button"
       aria-expanded="false"
       aria-controls="mobile-nav"
@@ -67,7 +79,7 @@ const navItems = [
         {navItems.map((item) => (
           <a
             class:list={[
-              "font-body-md text-body-md transition-colors",
+              "font-body-lg text-xl transition-colors",
               active === item.key ? "text-primary font-bold" : "text-primary hover:text-on-tertiary-container",
             ]}
             href={item.href}

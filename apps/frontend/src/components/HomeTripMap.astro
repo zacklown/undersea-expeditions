@@ -1,5 +1,5 @@
 ---
-import mapImage from "../assets/MapChart_Map.png";
+import mapImage from "../assets/world map with inset russia.png";
 import type { Trip } from "../lib/content";
 
 const { buttonHref, buttonLabel, description, title, trips } = Astro.props as {
@@ -47,14 +47,26 @@ const pinnedTrips = trips.filter(
 
 {
   pinnedTrips.length > 0 && (
-    <section class="bg-[#F5FBFD] py-16 md:py-20">
+    <section class="relative z-10 bg-[#0066B2] py-14 text-white md:py-16">
+      <svg
+        aria-hidden="true"
+        class="wave-drift pointer-events-none absolute left-0 top-px h-14 w-full -translate-y-full md:h-20"
+        preserveAspectRatio="none"
+        viewBox="0 0 1440 96"
+      >
+        <path
+          d="M0 66C190 22 352 16 540 51C754 91 924 96 1110 51C1242 19 1342 20 1440 45V96H0Z"
+          fill="#0066B2"
+        />
+      </svg>
+
       <div class="mx-auto max-w-container-max px-margin-mobile md:px-margin-desktop">
-        <div class="mb-7 max-w-3xl md:mb-8">
-          <h2 class="font-headline-lg text-headline-lg text-primary">
+        <div class="mb-5 max-w-3xl md:mb-6">
+          <h2 class="font-headline-lg text-headline-lg text-white">
             {title}
           </h2>
           {description && (
-            <p class="mt-3 text-body-lg text-secondary">
+            <p class="mt-3 text-body-lg text-white/85">
               {description}
             </p>
           )}
@@ -96,15 +108,27 @@ const pinnedTrips = trips.filter(
           </div>
         </div>
 
-        <div class="mt-6 flex justify-center md:mt-7">
+        <div class="mt-4 flex justify-center md:mt-5">
           <a
-            class="inline-flex items-center justify-center rounded-lg bg-[#C5A059] px-8 py-4 font-bold text-white shadow-lg transition-colors hover:bg-on-tertiary-container"
+            class="inline-flex items-center justify-center rounded-lg bg-[#FF6600] px-8 py-4 font-bold text-white shadow-lg transition-colors hover:bg-white hover:text-[#0066B2]"
             href={buttonHref}
           >
             {buttonLabel}
           </a>
         </div>
       </div>
+
+      <svg
+        aria-hidden="true"
+        class="wave-drift pointer-events-none absolute bottom-px left-0 h-14 w-full translate-y-full md:h-20"
+        preserveAspectRatio="none"
+        viewBox="0 0 1440 96"
+      >
+        <path
+          d="M0 0H1440V30C1262 77 1090 88 900 55C680 17 522 17 324 61C188 91 86 84 0 60Z"
+          fill="#0066B2"
+        />
+      </svg>
     </section>
   )
 }

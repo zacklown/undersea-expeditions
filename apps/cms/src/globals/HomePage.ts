@@ -70,6 +70,21 @@ export const HomePage: GlobalConfig = {
       ],
     },
     {
+      name: "featuredTrips",
+      type: "group",
+      fields: [
+        {
+          name: "title",
+          type: "text",
+          required: true,
+        },
+        {
+          name: "description",
+          type: "textarea",
+        },
+      ],
+    },
+    {
       name: "mapSection",
       type: "group",
       fields: [
@@ -96,21 +111,6 @@ export const HomePage: GlobalConfig = {
               required: true,
             },
           ],
-        },
-      ],
-    },
-    {
-      name: "featuredTrips",
-      type: "group",
-      fields: [
-        {
-          name: "title",
-          type: "text",
-          required: true,
-        },
-        {
-          name: "description",
-          type: "textarea",
         },
       ],
     },

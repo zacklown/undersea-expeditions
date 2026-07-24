@@ -1,6 +1,14 @@
 ---
 import { getTripBySlug, getTrips } from "../../lib/content";
 
+export async function getStaticPaths() {
+  const trips = await getTrips();
+
+  return trips.map((trip) => ({
+    params: { slug: trip.slug },
+  }));
+}
+
 const { slug } = Astro.params;
 const trip = slug ? await getTripBySlug(slug) : null;
 const redirectPath = trip?.path;

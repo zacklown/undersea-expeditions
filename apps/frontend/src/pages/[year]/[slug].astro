@@ -4,6 +4,17 @@ import Header from "../../components/Header.astro";
 import Layout from "../../layouts/Layout.astro";
 import { getSiteSettings, getTripByYearAndSlug, getTrips } from "../../lib/content";
 
+export async function getStaticPaths() {
+  const trips = await getTrips();
+
+  return trips.map((trip) => ({
+    params: {
+      slug: trip.slug,
+      year: String(trip.tripYear),
+    },
+  }));
+}
+
 const { slug, year } = Astro.params;
 const trips = await getTrips();
 const trip = slug && year ? await getTripByYearAndSlug(year, slug) : null;
@@ -63,8 +74,13 @@ const socialEmbeds =
                 {trip.regionLabel}
               </span>
               {trip.isNew && (
-                <span class="ml-3 inline-flex rounded-full bg-[#C5A059] px-4 py-1 text-label-sm font-label-sm text-white">
+                <span class="ml-3 inline-flex rounded-full bg-on-tertiary-container px-4 py-1 text-label-sm font-label-sm text-white">
                   New
+                </span>
+              )}
+              {trip.statusLabel && (
+                <span class="ml-3 inline-flex rounded-full bg-primary px-4 py-1 text-label-sm font-label-sm text-white">
+                  {trip.statusLabel}
                 </span>
               )}
               <h1 class="mt-6 mb-4 font-display-lg text-display-lg">{trip.title}</h1>

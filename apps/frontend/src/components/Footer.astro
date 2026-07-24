@@ -3,13 +3,19 @@ import { getSiteSettings } from "../lib/content";
 
 interface Props {
   active?: "home" | "trips" | "about" | "socials" | "faq" | "contact";
+  flushTop?: boolean;
 }
 
-const { active = "home" } = Astro.props;
+const { active = "home", flushTop = false } = Astro.props;
 const siteSettings = await getSiteSettings();
 ---
 
-<footer class="bg-primary dark:bg-primary-container full-width bottom-0 mt-section-padding">
+<footer
+  class:list={[
+    "relative bottom-0 full-width bg-[#0066B2]",
+    flushTop ? "mt-0" : "mt-section-padding",
+  ]}
+>
   <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter px-margin-mobile md:px-margin-desktop py-12 max-w-container-max mx-auto">
     <div class="space-y-4">
       <span class="font-headline-md text-headline-md text-tertiary-fixed block">{siteSettings.companyName}</span>
@@ -52,4 +58,5 @@ const siteSettings = await getSiteSettings();
       &copy; 2026 {siteSettings.companyName} LLC. All Rights Reserved. {siteSettings.tagline}
     </p>
   </div>
+  <div aria-hidden="true" class="rainbow-divider h-1 w-full"></div>
 </footer>

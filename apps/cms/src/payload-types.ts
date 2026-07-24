@@ -306,6 +306,10 @@ export interface Trip {
   tripEnd: string;
   isNew?: boolean | null;
   /**
+   * Optional. Suggested labels: "Sold Out!" or "Few Left!"; custom text is also allowed.
+   */
+  statusLabel?: string | null;
+  /**
    * Include this trip in the homepage Featured Trips carousel.
    */
   featuredOnHomepage?: boolean | null;
@@ -684,6 +688,7 @@ export interface TripsSelect<T extends boolean = true> {
   tripStart?: T;
   tripEnd?: T;
   isNew?: T;
+  statusLabel?: T;
   featuredOnHomepage?: T;
   days?: T;
   nights?: T;
@@ -834,15 +839,15 @@ export interface HomePage {
     secondaryCtaLabel?: string | null;
     secondaryCtaHref?: string | null;
   };
+  featuredTrips: {
+    title: string;
+    description?: string | null;
+  };
   mapSection: {
     title: string;
     description?: string | null;
     buttonLabel: string;
     buttonHref: string;
-  };
-  featuredTrips: {
-    title: string;
-    description?: string | null;
   };
   story: {
     title: string;
@@ -1101,6 +1106,12 @@ export interface HomePageSelect<T extends boolean = true> {
         secondaryCtaLabel?: T;
         secondaryCtaHref?: T;
       };
+  featuredTrips?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+      };
   mapSection?:
     | T
     | {
@@ -1108,12 +1119,6 @@ export interface HomePageSelect<T extends boolean = true> {
         description?: T;
         buttonLabel?: T;
         buttonHref?: T;
-      };
-  featuredTrips?:
-    | T
-    | {
-        title?: T;
-        description?: T;
       };
   story?:
     | T
