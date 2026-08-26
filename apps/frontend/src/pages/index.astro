@@ -4,6 +4,7 @@ import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 import HomeTripMap from "../components/HomeTripMap.astro";
 import Layout from "../layouts/Layout.astro";
+import heroVideo from "../assets/Dolphin-1080p (1).mp4";
 import { getHomePageContent, getSiteSettings, getTrips } from "../lib/content";
 
 const [homePage, siteSettings, trips] = await Promise.all([
@@ -18,22 +19,50 @@ const homepageFeaturedTrips = (featuredTrips.length > 0 ? featuredTrips : trips)
 <Layout title="Undersea Expeditions | LGBTQ+ Scuba Dive Travel Experts">
   <Header active="home" overlayHero />
   <main>
-    <section class="relative flex min-h-[720px] items-center overflow-hidden py-24 md:min-h-[780px] md:py-28">
-      <img alt={homePage.hero.image.alt || homePage.hero.title} class="absolute inset-0 w-full h-full object-cover" src={homePage.hero.image.url} />
-      <div class="absolute inset-0 bg-gradient-to-r from-primary/60 to-transparent"></div>
-      <div class="relative z-10 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
-        <div class="max-w-[52rem]">
-          <h1 class="mb-5 font-display-lg text-display-lg text-white md:mb-6">
+    <section class="relative flex min-h-[720px] items-end overflow-hidden pb-36 pt-40 md:min-h-[780px] md:pb-44 md:pt-48" data-hero-media>
+      <video
+        aria-hidden="true"
+        autoplay
+        class="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-1000 motion-reduce:hidden"
+        data-hero-video
+        loop
+        muted
+        playsinline
+        preload="auto"
+        src={heroVideo}
+      ></video>
+      <img
+        alt={homePage.hero.image.alt || homePage.hero.title}
+        class="absolute inset-0 h-full w-full object-cover opacity-100 transition-opacity duration-1000"
+        data-hero-image
+        src={homePage.hero.image.url}
+      />
+      <div
+        class="absolute inset-0"
+        style="background: linear-gradient(90deg, rgba(3, 38, 64, 0.9) 0%, rgba(4, 59, 92, 0.64) 35%, rgba(4, 59, 92, 0.2) 62%, transparent 84%);"
+      ></div>
+      <div class="relative z-10 mx-auto w-full max-w-container-max px-margin-mobile md:px-margin-desktop">
+        <div class="max-w-[44rem] md:-ml-3">
+          <h1 class="mb-7 font-display-lg text-[clamp(4rem,7vw,5.5rem)] font-medium leading-[0.98] tracking-[-0.035em] text-white drop-shadow-sm md:mb-9">
             Undersea Expeditions
           </h1>
           {homePage.hero.description && (
-            <p class="mb-7 max-w-2xl font-body-lg text-body-lg text-white/90 md:mb-8">{homePage.hero.description}</p>
+            <p class="mb-9 max-w-[31rem] font-body-lg text-[17px] leading-7 text-white/85 md:mb-11 md:text-lg">{homePage.hero.description}</p>
           )}
-          <div class="flex flex-col sm:flex-row gap-4">
-            {homePage.hero.secondaryCtaLabel && homePage.hero.secondaryCtaHref && (
-              <a class="bg-white/10 backdrop-blur-md border border-white text-white px-8 py-4 rounded-lg font-bold hover:bg-white/20 transition-colors text-center" href={homePage.hero.secondaryCtaHref}>{homePage.hero.secondaryCtaLabel}</a>
-            )}
-            <a class="bg-on-tertiary-container text-white px-8 py-4 rounded-lg font-bold shadow-lg hover:bg-tertiary-fixed-dim transition-colors text-center" href={homePage.hero.primaryCtaHref}>{homePage.hero.primaryCtaLabel}</a>
+          <div class="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-5">
+            <a
+              class="inline-flex items-center justify-center rounded-lg border border-white/55 bg-white/5 px-5 py-3 text-[15px] font-bold text-white backdrop-blur-sm transition-colors hover:border-white/80 hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+              href="/socials"
+            >
+              View Socials
+            </a>
+            <a
+              class="inline-flex items-center justify-center rounded-lg bg-on-tertiary-container px-6 py-3.5 text-[15px] font-bold text-white shadow-md shadow-black/15 transition-all hover:-translate-y-0.5 hover:bg-tertiary-fixed-dim hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+              href={homePage.hero.primaryCtaHref}
+            >
+              Book Your Trip
+              <span aria-hidden="true" class="ml-2 text-lg leading-none">→</span>
+            </a>
           </div>
         </div>
       </div>
@@ -123,3 +152,23 @@ const homepageFeaturedTrips = (featuredTrips.length > 0 ? featuredTrips : trips)
   </main>
   <Footer active="home" flushTop />
 </Layout>
+
+<script>
+  const hero = document.querySelector<HTMLElement>("[data-hero-media]");
+  const video = hero?.querySelector<HTMLVideoElement>("[data-hero-video]");
+  const image = hero?.querySelector<HTMLImageElement>("[data-hero-image]");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (video && image && !reduceMotion) {
+    const revealVideo = () => {
+      video.classList.replace("opacity-0", "opacity-100");
+      image.classList.replace("opacity-100", "opacity-0");
+    };
+
+    if (video.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) {
+      revealVideo();
+    } else {
+      video.addEventListener("canplay", revealVideo, { once: true });
+    }
+  }
+</script>
