@@ -25,6 +25,7 @@ export type Trip = {
   insuranceImage?: CMSMedia;
   isNew?: boolean;
   statusLabel?: string;
+  showInListings?: boolean;
   legacyUrl?: string;
   mapPin?: {
     color:
@@ -80,7 +81,7 @@ export type Trip = {
   tripEnd?: string;
   tripStart?: string;
   tripYear: number;
-  tripStyle?: "liveaboard" | "land-resort";
+  tripStyle?: "liveaboard" | "land-resort" | "land-tour" | "dive-resort";
   tripStyleLabel?: string;
 };
 
@@ -623,12 +624,16 @@ function getGroupTypeLabel(gender?: "male" | "female" | "mixed") {
   }
 }
 
-function getTripStyleLabel(tripStyle?: "liveaboard" | "land-resort") {
+function getTripStyleLabel(tripStyle?: "liveaboard" | "land-resort" | "land-tour" | "dive-resort") {
   switch (tripStyle) {
     case "liveaboard":
       return "Liveaboard";
     case "land-resort":
       return "Land Resort";
+    case "land-tour":
+      return "Land Tour";
+    case "dive-resort":
+      return "Dive Resort";
     default:
       return "";
   }
@@ -802,6 +807,8 @@ function normalizeTrip(doc: any, fallback?: Trip): Trip | null {
       typeof doc.statusLabel === "string" && doc.statusLabel.trim()
         ? doc.statusLabel.trim().slice(0, 16)
         : fallback?.statusLabel,
+    showInListings:
+      typeof doc.showInListings === "boolean" ? doc.showInListings : fallback?.showInListings ?? true,
     legacyUrl: normalizeLegacyUrl(doc.legacyUrl || fallback?.legacyUrl),
     mapPin,
     nights: doc.nights || fallback?.nights,

@@ -296,7 +296,7 @@ export interface Trip {
       | 'seafoam'
       | 'terracotta';
   };
-  tripStyle: 'liveaboard' | 'land-resort';
+  tripStyle: 'liveaboard' | 'land-resort' | 'land-tour' | 'dive-resort';
   gender: 'male' | 'female' | 'mixed';
   /**
    * Used in the trip URL, for example /2027/maldives.
@@ -313,6 +313,10 @@ export interface Trip {
    * Include this trip in the homepage Featured Trips carousel.
    */
   featuredOnHomepage?: boolean | null;
+  /**
+   * Turn this off to hide the trip from listing cards while keeping its direct URL available.
+   */
+  showInListings?: boolean | null;
   days: number;
   nights: number;
   /**
@@ -690,6 +694,7 @@ export interface TripsSelect<T extends boolean = true> {
   isNew?: T;
   statusLabel?: T;
   featuredOnHomepage?: T;
+  showInListings?: T;
   days?: T;
   nights?: T;
   summary?: T;

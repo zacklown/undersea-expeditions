@@ -1,5 +1,6 @@
 ---
 import type { Trip } from "../lib/content";
+import TripCard from "./TripCard.astro";
 
 const { description, title, trips } = Astro.props as {
   description?: string;
@@ -49,54 +50,7 @@ const { description, title, trips } = Astro.props as {
 
           <div class="mx-auto max-w-full overflow-hidden xl:w-[70rem]" data-featured-viewport>
             <div class="relative flex transition-transform duration-500 ease-out" data-featured-track style="gap:var(--featured-gap);">
-              {trips.map((trip) => (
-                <a
-                  class="group block shrink-0 overflow-hidden rounded-2xl border border-secondary-fixed bg-white shadow-sm transition-all hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0066B2] focus-visible:ring-offset-4"
-                  data-featured-card
-                  href={trip.path}
-                  style="flex-basis:var(--featured-card-width);"
-                >
-                <article class="flex h-[43rem] flex-col">
-                  <div class="h-56 overflow-hidden md:h-60">
-                    <img
-                      alt={trip.coverImage.alt || trip.title}
-                      class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      src={trip.coverImage.url}
-                    />
-                  </div>
-                  <div aria-hidden="true" class="rainbow-divider h-1 w-full shrink-0"></div>
-                  <div class="flex flex-1 flex-col overflow-hidden p-6">
-                    <div class="mb-4 flex flex-wrap items-center gap-2.5">
-                      <span class="rounded-full bg-secondary-container px-3 py-1 text-label-sm font-label-sm text-primary">
-                        {trip.regionLabel}
-                      </span>
-                      {trip.isNew && (
-                        <span class="rounded-full bg-on-tertiary-container px-3 py-1 text-label-sm font-label-sm text-white">
-                          New
-                        </span>
-                      )}
-                      {trip.statusLabel && (
-                        <span class="rounded-full bg-primary px-3 py-1 text-label-sm font-label-sm text-white">
-                          {trip.statusLabel}
-                        </span>
-                      )}
-                    </div>
-                    <h3 class="min-h-[5.5rem] font-headline-md text-headline-md text-[#0066B2] [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] overflow-hidden">
-                      {trip.title}
-                    </h3>
-                    <p class="mt-2 min-h-[3rem] font-bold text-on-tertiary-container [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] overflow-hidden">
-                      {trip.dateLabel}
-                    </p>
-                    <p class="mb-6 mt-3 h-[9rem] overflow-hidden text-ellipsis text-body-md leading-6 text-secondary [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:6]">
-                      {trip.summary}
-                    </p>
-                    <span class="mt-auto inline-flex items-center justify-center rounded-lg border border-[#0066B2] px-6 py-3 font-bold text-[#0066B2] transition-all group-hover:border-[#FF6600] group-hover:bg-[#FF6600] group-hover:text-white">
-                      Learn More
-                    </span>
-                  </div>
-                </article>
-                </a>
-              ))}
+              {trips.map((trip) => <TripCard featured trip={trip} />)}
             </div>
           </div>
         </div>

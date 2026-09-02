@@ -11,6 +11,7 @@ import * as migration_20260614_090700_add_socials_and_about_pages from './202606
 import * as migration_20260614_091500_remove_galleries_collection from './20260614_091500_remove_galleries_collection';
 import * as migration_20260614_124500_add_about_hero_image from './20260614_124500_add_about_hero_image';
 import * as migration_20260714_120000_add_trip_status_label from './20260714_120000_add_trip_status_label';
+import * as migration_20260901_221900_add_trip_listing_visibility from './20260901_221900_add_trip_listing_visibility';
 
 export const migrations = [
   {
@@ -77,5 +78,10 @@ export const migrations = [
     up: migration_20260714_120000_add_trip_status_label.up,
     down: migration_20260714_120000_add_trip_status_label.down,
     name: '20260714_120000_add_trip_status_label'
+  },
+  {
+    up: migration_20260901_221900_add_trip_listing_visibility.up,
+    down: migration_20260901_221900_add_trip_listing_visibility.down,
+    name: '20260901_221900_add_trip_listing_visibility'
   },
 ];

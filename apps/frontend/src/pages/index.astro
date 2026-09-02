@@ -12,8 +12,9 @@ const [homePage, siteSettings, trips] = await Promise.all([
   getSiteSettings(),
   getTrips(),
 ]);
-const featuredTrips = trips.filter((trip) => trip.featuredOnHomepage);
-const homepageFeaturedTrips = (featuredTrips.length > 0 ? featuredTrips : trips).slice(0, Math.max(featuredTrips.length, 3));
+const listedTrips = trips.filter((trip) => trip.showInListings !== false);
+const featuredTrips = listedTrips.filter((trip) => trip.featuredOnHomepage);
+const homepageFeaturedTrips = (featuredTrips.length > 0 ? featuredTrips : listedTrips).slice(0, Math.max(featuredTrips.length, 3));
 ---
 
 <Layout title="Undersea Expeditions | LGBTQ+ Scuba Dive Travel Experts">
@@ -90,7 +91,7 @@ const homepageFeaturedTrips = (featuredTrips.length > 0 ? featuredTrips : trips)
       buttonLabel="See More Trips"
       description={homePage.mapSection.description}
       title={homePage.mapSection.title}
-      trips={trips}
+      trips={listedTrips}
     />
 
     <section class="mx-auto max-w-container-max overflow-hidden px-margin-mobile py-24 md:px-margin-desktop md:py-28">

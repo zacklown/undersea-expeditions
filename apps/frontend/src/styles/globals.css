@@ -25,7 +25,7 @@
   }
 
   .wave-drift path {
-    animation: wave-drift 7s ease-in-out infinite;
+    animation: wave-drift 4.5s ease-in-out infinite;
     transform-box: fill-box;
     transform-origin: center bottom;
     will-change: transform;

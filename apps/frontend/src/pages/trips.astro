@@ -1,6 +1,7 @@
 ---
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
+import TripCard from "../components/TripCard.astro";
 import Layout from "../layouts/Layout.astro";
 import { getTrips, getTripsPageContent } from "../lib/content";
 
@@ -84,6 +85,7 @@ function getLocationOptions(trips: Awaited<ReturnType<typeof getTrips>>) {
 }
 
 const trips = allTrips
+  .filter((trip) => trip.showInListings !== false)
   .filter((trip) => visibleYears.includes(trip.tripYear))
   .filter((trip) => {
     const monthKey = getMonthKey(trip.tripStart);
@@ -356,13 +358,22 @@ const yearCalendars = visibleYears.map((year) => {
     </section>
 
     <section class="mx-auto max-w-container-max px-margin-mobile pb-20 md:px-margin-desktop" id="trip-results">
-      <div class="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+      <div class="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
           <h2 class="font-headline-lg text-headline-lg text-primary">Available Departures</h2>
           <p class="mt-2 text-body-md text-secondary">
             <span data-results-count>{trips.length}</span> matching trip<span data-results-plural>s</span>
           </p>
         </div>
+        <label class="flex items-center gap-3 font-bold text-primary">
+          <span>Sort by</span>
+          <select class="rounded-xl border border-secondary-fixed bg-white px-4 py-3 font-normal text-primary" data-trip-sort>
+            <option value="date-asc">Date: Soonest</option>
+            <option value="date-desc">Date: Latest</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+          </select>
+        </label>
       </div>
 
       <div class="hidden rounded-2xl border border-dashed border-secondary-fixed/70 bg-surface-container-low px-6 py-10 text-center" data-empty-state>
@@ -371,56 +382,7 @@ const yearCalendars = visibleYears.map((year) => {
       </div>
 
       <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3" data-trip-results>
-        {trips.map((trip) => (
-          <a
-            class="group block overflow-hidden rounded-2xl border border-secondary-fixed bg-white shadow-sm transition-shadow hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4"
-            data-trip-card
-            data-trip-countries={trip.countries.join("|")}
-            data-trip-gender={trip.gender || ""}
-            data-trip-month={getMonthKey(trip.tripStart)}
-            data-trip-region={trip.regionLabel}
-            data-trip-year={trip.tripYear}
-            href={trip.path}
-          >
-            <article class="relative flex h-[39rem] flex-col">
-              <div class="relative h-60 overflow-hidden md:h-64">
-                <img alt={trip.coverImage.alt || trip.title} class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" src={trip.coverImage.url} />
-                <div class="absolute left-4 top-4 rounded bg-white/90 px-3 py-1 text-label-sm font-label-sm text-primary backdrop-blur-md">{trip.regionLabel}</div>
-                {trip.isNew && (
-                  <div class="absolute right-4 top-4 rounded bg-on-tertiary-container px-3 py-1 text-label-sm font-label-sm text-white">New</div>
-                )}
-                {trip.statusLabel && (
-                  <div class={`absolute right-4 rounded bg-primary px-3 py-1 text-label-sm font-label-sm text-white ${trip.isNew ? "top-14" : "top-4"}`}>
-                    {trip.statusLabel}
-                  </div>
-                )}
-              </div>
-              <div aria-hidden="true" class="rainbow-divider h-1 w-full shrink-0"></div>
-              <div class="flex flex-1 flex-col overflow-hidden p-6">
-                <h3 class="mb-2 min-h-[5.5rem] font-headline-md text-headline-md text-primary [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] overflow-hidden">
-                  {trip.title}
-                </h3>
-                <p class="mb-2 min-h-[3rem] text-secondary [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] overflow-hidden">
-                  {trip.countries.join(", ")}
-                </p>
-                <p class="mb-4 min-h-[3rem] font-bold text-on-tertiary-container [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] overflow-hidden">
-                  {trip.dateLabel}
-                </p>
-                {trip.groupTypeLabel && (
-                  <p class="mb-4 text-sm font-bold uppercase tracking-[0.14em] text-on-tertiary-container">
-                    {trip.groupTypeLabel}
-                  </p>
-                )}
-                <p class="mb-6 h-[7.5rem] overflow-hidden font-body-md text-body-md leading-6 text-secondary [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:5]">
-                  {trip.summary}
-                </p>
-                <span class="mt-auto block w-full rounded-lg border border-primary py-3 text-center font-bold text-primary transition-all group-hover:bg-primary group-hover:text-white">
-                  Contact Us
-                </span>
-              </div>
-            </article>
-          </a>
-        ))}
+        {trips.map((trip) => <TripCard filterable trip={trip} />)}
       </div>
     </section>
   </main>
@@ -431,6 +393,8 @@ const yearCalendars = visibleYears.map((year) => {
   const searchRoot = document.querySelector("[data-trip-search]");
   const resultsRoot = document.querySelector("[data-trip-results]");
   const cards = Array.from(document.querySelectorAll("[data-trip-card]"));
+  const resultsGrid = document.querySelector("[data-trip-results]");
+  const sortSelect = document.querySelector("[data-trip-sort]");
   const monthsInput = searchRoot?.querySelector("[data-filter-months]");
   const calendarTrigger = searchRoot?.querySelector("[data-calendar-trigger]");
   const calendarTriggerLabel = searchRoot?.querySelector("[data-calendar-trigger-label]");
@@ -702,6 +666,30 @@ const yearCalendars = visibleYears.map((year) => {
     if (emptyState) emptyState.classList.toggle("hidden", count !== 0);
     if (resultsRoot) resultsRoot.classList.toggle("hidden", count === 0);
   };
+
+  const sortCards = (sortValue) => {
+    if (!(resultsGrid instanceof HTMLElement)) return;
+
+    const [field, direction] = sortValue.split("-");
+    const multiplier = direction === "desc" ? -1 : 1;
+    const attribute = field === "price" ? "data-trip-price" : "data-trip-start";
+
+    [...cards]
+      .sort((left, right) => {
+        const leftValue = Number(left.getAttribute(attribute));
+        const rightValue = Number(right.getAttribute(attribute));
+        const leftMissing = !left.getAttribute(attribute) || !Number.isFinite(leftValue);
+        const rightMissing = !right.getAttribute(attribute) || !Number.isFinite(rightValue);
+
+        if (leftMissing !== rightMissing) return leftMissing ? 1 : -1;
+        return (leftValue - rightValue) * multiplier;
+      })
+      .forEach((card) => resultsGrid.appendChild(card));
+  };
+
+  if (sortSelect instanceof HTMLSelectElement) {
+    sortSelect.addEventListener("change", () => sortCards(sortSelect.value));
+  }
 
   if (calendarTrigger instanceof HTMLButtonElement && calendarPanel instanceof HTMLElement) {
     calendarTrigger.addEventListener("click", () => {

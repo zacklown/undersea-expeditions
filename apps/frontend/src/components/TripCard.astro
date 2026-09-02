@@ -1,0 +1,106 @@
+---
+import type { Trip } from "../lib/content";
+
+const { featured = false, filterable = false, trip } = Astro.props as {
+  featured?: boolean;
+  filterable?: boolean;
+  trip: Trip;
+};
+
+const location = trip.countries.length > 0 ? trip.countries.join(", ") : trip.regionLabel;
+const tripType = trip.tripStyleLabel || "Land Tour";
+const tripStatus = trip.statusLabel || "Booking Open";
+const startingPrice = trip.pricingOptions?.length
+  ? Math.min(...trip.pricingOptions.map((option) => option.amount))
+  : undefined;
+const formatDate = (value?: string) => {
+  if (!value) return "Dates coming soon";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return new Intl.DateTimeFormat("en-US", {
+    day: "2-digit",
+    month: "short",
+    timeZone: "UTC",
+    year: "numeric",
+  }).format(date);
+};
+---
+
+<a
+  class="group block h-full shrink-0 overflow-hidden rounded-2xl border border-secondary-fixed bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4"
+  data-featured-card={featured ? "" : undefined}
+  data-trip-card={filterable ? "" : undefined}
+  data-trip-countries={filterable ? trip.countries.join("|") : undefined}
+  data-trip-gender={filterable ? trip.gender || "" : undefined}
+  data-trip-month={filterable && trip.tripStart ? trip.tripStart.slice(0, 7) : undefined}
+  data-trip-price={filterable && startingPrice !== undefined ? startingPrice : undefined}
+  data-trip-region={filterable ? trip.regionLabel : undefined}
+  data-trip-start={filterable && trip.tripStart ? new Date(trip.tripStart).getTime() : undefined}
+  data-trip-year={filterable ? trip.tripYear : undefined}
+  href={trip.path}
+  style={featured ? "flex-basis:var(--featured-card-width);" : undefined}
+>
+  <article class="flex h-full min-h-[39rem] flex-col">
+    <div class="relative h-64 shrink-0 overflow-hidden">
+      <img
+        alt={trip.coverImage.alt || trip.title}
+        class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        src={trip.coverImage.url}
+      />
+      {trip.isNew && (
+        <span class="absolute right-4 top-4 rounded-full bg-on-tertiary-container px-3 py-1 text-label-sm font-label-sm text-white shadow-sm">
+          New
+        </span>
+      )}
+    </div>
+
+    <div aria-hidden="true" class="rainbow-divider h-1 w-full shrink-0"></div>
+
+    <div class="flex flex-1 flex-col p-5">
+      <div class="grid grid-cols-2 items-start gap-4">
+        <div>
+          <h3 class="font-headline-md text-xl leading-tight text-primary [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] overflow-hidden">{trip.title}</h3>
+          <p class="mt-1 font-bold text-secondary">{location}</p>
+        </div>
+        <div class="text-right">
+          <p class="text-xs font-bold uppercase tracking-[0.14em] text-secondary">Start / End</p>
+          <p class="mt-1 font-bold text-primary">{formatDate(trip.tripStart)}</p>
+          <p class="text-sm text-secondary">{formatDate(trip.tripEnd)}</p>
+        </div>
+      </div>
+
+      <div class="mt-4 flex items-center justify-between gap-4 border-y border-secondary-fixed/60 py-3 text-secondary">
+        <span class="inline-flex items-center gap-2 font-bold">
+          <span aria-hidden="true" class="material-symbols-outlined text-[20px] text-on-tertiary-container">{trip.tripStyle === "liveaboard" ? "directions_boat" : "hotel"}</span>
+          {tripType}
+        </span>
+        <span class="inline-flex shrink-0 items-center gap-1.5">
+          <span aria-hidden="true" class="material-symbols-outlined text-[20px] text-on-tertiary-container">dark_mode</span>
+          {trip.nights ? `${trip.nights} Nights` : trip.days ? `${trip.days} Days` : "Nights TBD"}
+        </span>
+      </div>
+
+      <div class="mt-4">
+        <span class="inline-flex rounded-full border border-secondary-fixed bg-surface-container-low px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-primary">
+          {tripStatus}
+        </span>
+      </div>
+
+      <p class="mt-3 h-[4.5rem] overflow-hidden text-body-md leading-6 text-secondary [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:3]">
+        {trip.summary}
+      </p>
+
+      <div class="mt-auto flex items-end justify-between gap-4 pt-4">
+        <div>
+          <p class="text-sm font-bold text-secondary">Starting at</p>
+          <p class="mt-1 font-headline-md text-2xl text-primary">
+            {startingPrice !== undefined ? `$${startingPrice.toLocaleString("en-US")}` : "Price TBD"}
+          </p>
+        </div>
+        <span class="shrink-0 rounded-lg bg-primary px-5 py-3 font-bold text-white transition-colors group-hover:bg-on-tertiary-container">
+          Details
+        </span>
+      </div>
+    </div>
+  </article>
+</a>

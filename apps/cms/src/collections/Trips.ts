@@ -175,6 +175,8 @@ export const Trips: CollectionConfig = {
           options: [
             { label: "Liveaboard", value: "liveaboard" },
             { label: "Land Resort", value: "land-resort" },
+            { label: "Land Tour", value: "land-tour" },
+            { label: "Dive Resort", value: "dive-resort" },
           ],
         },
         {
@@ -234,6 +236,15 @@ export const Trips: CollectionConfig = {
             description: "Include this trip in the homepage Featured Trips carousel.",
           },
           defaultValue: false,
+          type: "checkbox",
+        },
+        {
+          name: "showInListings",
+          label: "Show On Trips Page / Homepage",
+          admin: {
+            description: "Turn this off to hide the trip from listing cards while keeping its direct URL available.",
+          },
+          defaultValue: true,
           type: "checkbox",
         },
       ],
