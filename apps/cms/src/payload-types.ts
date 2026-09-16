@@ -345,6 +345,19 @@ export interface Trip {
    * Optional image shown in the top page banner. Falls back to the main image.
    */
   bannerImage?: (number | null) | Media;
+  /**
+   * Optional photos of the boat, rooms, resort, or other trip accommodations.
+   */
+  gallery?:
+    | {
+        image: number | Media;
+        /**
+         * Shown in the caption bar at the bottom of the photo.
+         */
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   contentSections?: {
     /**
      * Main formatted description for the trip detail page.
@@ -700,6 +713,13 @@ export interface TripsSelect<T extends boolean = true> {
   summary?: T;
   coverImage?: T;
   bannerImage?: T;
+  gallery?:
+    | T
+    | {
+        image?: T;
+        description?: T;
+        id?: T;
+      };
   contentSections?:
     | T
     | {
@@ -1031,6 +1051,19 @@ export interface AboutPage {
         }[]
       | null;
   };
+  testimonialsSection?: {
+    eyebrow?: string | null;
+    title?: string | null;
+    description?: string | null;
+    items?:
+      | {
+          quote: string;
+          name: string;
+          trip?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
   pressSection?: {
     title?: string | null;
     description?: string | null;
@@ -1264,6 +1297,21 @@ export interface AboutPageSelect<T extends boolean = true> {
               role?: T;
               image?: T;
               bio?: T;
+              id?: T;
+            };
+      };
+  testimonialsSection?:
+    | T
+    | {
+        eyebrow?: T;
+        title?: T;
+        description?: T;
+        items?:
+          | T
+          | {
+              quote?: T;
+              name?: T;
+              trip?: T;
               id?: T;
             };
       };

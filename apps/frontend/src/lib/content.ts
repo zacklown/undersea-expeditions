@@ -21,6 +21,10 @@ export type Trip = {
   flights?: string;
   gender?: "male" | "female" | "mixed";
   groupTypeLabel?: string;
+  gallery?: Array<{
+    description?: string;
+    image: CMSMedia;
+  }>;
   id: number | string;
   insuranceImage?: CMSMedia;
   isNew?: boolean;
@@ -207,6 +211,16 @@ export type AboutStaffMember = {
 export type AboutPageContent = {
   body?: string;
   heroImage: CMSMedia;
+  testimonialsSection: {
+    description: string;
+    eyebrow: string;
+    items: Array<{
+      name: string;
+      quote: string;
+      trip?: string;
+    }>;
+    title: string;
+  };
   pressSection: {
     description: string;
     items: Array<{
@@ -567,6 +581,12 @@ const fallbackAboutPage: AboutPageContent = {
     },
   }),
   heroImage: { alt: "Luxury scuba expedition at sunset", url: aboutHeroImage },
+  testimonialsSection: {
+    description: "",
+    eyebrow: "Traveler Stories",
+    items: [],
+    title: "The best part is who you meet along the way",
+  },
   pressSection: {
     description: "",
     items: [],
@@ -798,6 +818,18 @@ function normalizeTrip(doc: any, fallback?: Trip): Trip | null {
     flights: renderRichText(doc.contentSections?.flights) || fallback?.flights,
     gender: doc.gender || fallback?.gender,
     groupTypeLabel: getGroupTypeLabel(doc.gender || fallback?.gender),
+    gallery:
+      doc.gallery
+        ?.map((item: any) => {
+          const image = mapOptionalMedia(item?.image);
+          const description =
+            typeof item?.description === "string" ? item.description.trim() : "";
+
+          if (!image) return null;
+
+          return { description: description || undefined, image };
+        })
+        .filter(Boolean) || fallback?.gallery,
     id: doc.id || fallback?.id || doc.slug,
     insuranceImage: doc.insuranceImage?.url
       ? mapMedia(doc.insuranceImage, fallback?.insuranceImage || fallback?.coverImage || fallbackTrips[0].coverImage)
@@ -1047,6 +1079,26 @@ export async function getAboutPageContent(): Promise<AboutPageContent> {
     heroImage: global.heroImage?.url
       ? mapMedia(global.heroImage, fallbackAboutPage.heroImage)
       : fallbackAboutPage.heroImage,
+    testimonialsSection: {
+      description:
+        global.testimonialsSection?.description ||
+        fallbackAboutPage.testimonialsSection.description,
+      eyebrow:
+        global.testimonialsSection?.eyebrow || fallbackAboutPage.testimonialsSection.eyebrow,
+      items:
+        global.testimonialsSection?.items
+          ?.map((item: any) => {
+            const quote = typeof item?.quote === "string" ? item.quote.trim() : "";
+            const name = typeof item?.name === "string" ? item.name.trim() : "";
+            const trip = typeof item?.trip === "string" ? item.trip.trim() : "";
+
+            if (!quote || !name) return null;
+
+            return { name, quote, trip: trip || undefined };
+          })
+          .filter(Boolean) || fallbackAboutPage.testimonialsSection.items,
+      title: global.testimonialsSection?.title || fallbackAboutPage.testimonialsSection.title,
+    },
     pressSection: {
       description: global.pressSection?.description || fallbackAboutPage.pressSection.description,
       items:

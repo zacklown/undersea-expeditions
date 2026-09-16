@@ -12,6 +12,8 @@ import * as migration_20260614_091500_remove_galleries_collection from './202606
 import * as migration_20260614_124500_add_about_hero_image from './20260614_124500_add_about_hero_image';
 import * as migration_20260714_120000_add_trip_status_label from './20260714_120000_add_trip_status_label';
 import * as migration_20260901_221900_add_trip_listing_visibility from './20260901_221900_add_trip_listing_visibility';
+import * as migration_20260916_073046_about_testimonials from './20260916_073046_about_testimonials';
+import * as migration_20260916_122300_add_trip_gallery from './20260916_122300_add_trip_gallery';
 
 export const migrations = [
   {
@@ -27,61 +29,71 @@ export const migrations = [
   {
     up: migration_20260610_170256_make_trip_map_pin_optional_and_expand_palette.up,
     down: migration_20260610_170256_make_trip_map_pin_optional_and_expand_palette.down,
-    name: '20260610_170256_make_trip_map_pin_optional_and_expand_palette'
+    name: '20260610_170256_make_trip_map_pin_optional_and_expand_palette',
   },
   {
     up: migration_20260610_172500_add_trip_year_legacy_url_and_homepage_pin_visibility.up,
     down: migration_20260610_172500_add_trip_year_legacy_url_and_homepage_pin_visibility.down,
-    name: '20260610_172500_add_trip_year_legacy_url_and_homepage_pin_visibility'
+    name: '20260610_172500_add_trip_year_legacy_url_and_homepage_pin_visibility',
   },
   {
     up: migration_20260610_175900_convert_trip_includes_to_richtext.up,
     down: migration_20260610_175900_convert_trip_includes_to_richtext.down,
-    name: '20260610_175900_convert_trip_includes_to_richtext'
+    name: '20260610_175900_convert_trip_includes_to_richtext',
   },
   {
     up: migration_20260610_201500_refresh_homepage_content_model.up,
     down: migration_20260610_201500_refresh_homepage_content_model.down,
-    name: '20260610_201500_refresh_homepage_content_model'
+    name: '20260610_201500_refresh_homepage_content_model',
   },
   {
     up: migration_20260610_203500_relax_legacy_home_page_constraints.up,
     down: migration_20260610_203500_relax_legacy_home_page_constraints.down,
-    name: '20260610_203500_relax_legacy_home_page_constraints'
+    name: '20260610_203500_relax_legacy_home_page_constraints',
   },
   {
     up: migration_20260611_220000_add_trip_banner_and_insurance_fields.up,
     down: migration_20260611_220000_add_trip_banner_and_insurance_fields.down,
-    name: '20260611_220000_add_trip_banner_and_insurance_fields'
+    name: '20260611_220000_add_trip_banner_and_insurance_fields',
   },
   {
     up: migration_20260613_101500_replace_trip_gallery_with_social_embeds.up,
     down: migration_20260613_101500_replace_trip_gallery_with_social_embeds.down,
-    name: '20260613_101500_replace_trip_gallery_with_social_embeds'
+    name: '20260613_101500_replace_trip_gallery_with_social_embeds',
   },
   {
     up: migration_20260614_090700_add_socials_and_about_pages.up,
     down: migration_20260614_090700_add_socials_and_about_pages.down,
-    name: '20260614_090700_add_socials_and_about_pages'
+    name: '20260614_090700_add_socials_and_about_pages',
   },
   {
     up: migration_20260614_091500_remove_galleries_collection.up,
     down: migration_20260614_091500_remove_galleries_collection.down,
-    name: '20260614_091500_remove_galleries_collection'
+    name: '20260614_091500_remove_galleries_collection',
   },
   {
     up: migration_20260614_124500_add_about_hero_image.up,
     down: migration_20260614_124500_add_about_hero_image.down,
-    name: '20260614_124500_add_about_hero_image'
+    name: '20260614_124500_add_about_hero_image',
   },
   {
     up: migration_20260714_120000_add_trip_status_label.up,
     down: migration_20260714_120000_add_trip_status_label.down,
-    name: '20260714_120000_add_trip_status_label'
+    name: '20260714_120000_add_trip_status_label',
   },
   {
     up: migration_20260901_221900_add_trip_listing_visibility.up,
     down: migration_20260901_221900_add_trip_listing_visibility.down,
-    name: '20260901_221900_add_trip_listing_visibility'
+    name: '20260901_221900_add_trip_listing_visibility',
+  },
+  {
+    up: migration_20260916_073046_about_testimonials.up,
+    down: migration_20260916_073046_about_testimonials.down,
+    name: '20260916_073046_about_testimonials'
+  },
+  {
+    up: migration_20260916_122300_add_trip_gallery.up,
+    down: migration_20260916_122300_add_trip_gallery.down,
+    name: '20260916_122300_add_trip_gallery'
   },
 ];

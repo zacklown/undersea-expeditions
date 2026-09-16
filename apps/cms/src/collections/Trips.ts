@@ -295,6 +295,30 @@ export const Trips: CollectionConfig = {
       type: "upload",
     },
     {
+      name: "gallery",
+      label: "Boat & Room Gallery",
+      type: "array",
+      admin: {
+        description: "Optional photos of the boat, rooms, resort, or other trip accommodations.",
+      },
+      fields: [
+        {
+          name: "image",
+          relationTo: "media",
+          required: true,
+          type: "upload",
+        },
+        {
+          name: "description",
+          label: "Photo Description",
+          type: "text",
+          admin: {
+            description: "Shown in the caption bar at the bottom of the photo.",
+          },
+        },
+      ],
+    },
+    {
       name: "contentSections",
       type: "group",
       fields: [

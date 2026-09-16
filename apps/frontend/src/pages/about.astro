@@ -9,21 +9,22 @@ const hasStaffSection =
   pageContent.staffSection.officeStaff.length > 0 ||
   pageContent.staffSection.tripLeaders.length > 0;
 const hasPressSection = pageContent.pressSection.items.length > 0;
+const hasTestimonials = pageContent.testimonialsSection.items.length > 0;
 const richTextClass =
-  "[&>h1]:mb-5 [&>h1]:font-display-lg [&>h1]:text-display-lg [&>h1]:leading-tight [&>h1]:text-primary " +
-  "[&>h2]:mb-4 [&>h2]:mt-8 [&>h2]:font-headline-lg [&>h2]:text-headline-lg [&>h2]:text-primary " +
+  "[&>h1]:mb-5 [&>h1]:font-display-lg [&>h1]:text-[clamp(2.25rem,4vw,3.25rem)] [&>h1]:leading-tight [&>h1]:text-primary " +
+  "[&>h2]:mb-4 [&>h2]:mt-0 [&>h2]:font-headline-lg [&>h2]:text-[clamp(2rem,3vw,2.75rem)] [&>h2]:leading-tight [&>h2]:text-primary " +
   "[&>h3]:mb-3 [&>h3]:mt-6 [&>h3]:font-headline-md [&>h3]:text-headline-md [&>h3]:text-primary " +
   "[&>h4]:mb-3 [&>h4]:mt-5 [&>h4]:font-bold [&>h4]:text-primary " +
   "[&>p]:mb-4 [&>p]:text-body-lg [&>p]:text-on-surface-variant " +
-  "[&>blockquote]:my-6 [&>blockquote]:border-l-4 [&>blockquote]:border-on-tertiary-container [&>blockquote]:pl-5 [&>blockquote]:italic [&>blockquote]:text-on-surface-variant " +
+  "[&>blockquote]:my-6 [&>blockquote]:border-l-4 [&>blockquote]:border-surface-tint [&>blockquote]:pl-5 [&>blockquote]:italic [&>blockquote]:text-on-surface-variant " +
   "[&>ol]:mb-4 [&>ol]:list-decimal [&>ol]:space-y-2 [&>ol]:pl-6 [&>ul]:mb-4 [&>ul]:list-disc [&>ul]:space-y-2 [&>ul]:pl-6 " +
-  "[&_a]:text-on-tertiary-container [&_a]:underline [&_strong]:text-primary";
+  "[&_a]:text-surface-tint [&_a]:underline [&_strong]:text-primary";
 const bioRichTextClass =
-  "[&>h1]:mb-4 [&>h1]:font-headline-lg [&>h1]:text-headline-lg [&>h1]:text-primary " +
-  "[&>h2]:mb-3 [&>h2]:mt-5 [&>h2]:font-headline-md [&>h2]:text-headline-md [&>h2]:text-primary " +
-  "[&>h3]:mb-3 [&>h3]:mt-4 [&>h3]:font-bold [&>h3]:text-primary " +
-  "[&>p]:mb-4 [&>p]:text-on-surface-variant [&>ol]:mb-4 [&>ol]:list-decimal [&>ol]:space-y-2 [&>ol]:pl-6 " +
-  "[&>ul]:mb-4 [&>ul]:list-disc [&>ul]:space-y-2 [&>ul]:pl-6 [&_a]:text-on-tertiary-container [&_a]:underline [&_strong]:text-primary";
+  "[&>h1]:mb-3 [&>h1]:text-xl [&>h1]:text-primary " +
+  "[&>h2]:mb-3 [&>h2]:mt-4 [&>h2]:text-xl [&>h2]:text-primary " +
+  "[&>h3]:mb-2 [&>h3]:mt-4 [&>h3]:font-bold [&>h3]:text-primary " +
+  "[&>p]:mb-3 [&>p]:text-base [&>p]:leading-7 [&>p]:text-on-surface-variant [&>ol]:mb-3 [&>ol]:list-decimal [&>ol]:space-y-2 [&>ol]:pl-6 " +
+  "[&>ul]:mb-4 [&>ul]:list-disc [&>ul]:space-y-2 [&>ul]:pl-6 [&_a]:text-surface-tint [&_a]:underline [&_strong]:text-primary";
 ---
 
 <Layout
@@ -32,17 +33,19 @@ const bioRichTextClass =
 >
   <Header active="about" />
   <main>
-    <section class="relative min-h-[420px] overflow-hidden py-24">
+    <section class="relative flex min-h-[400px] items-end overflow-hidden pb-14 pt-28 sm:min-h-[440px] md:pb-16 md:pt-32">
       <img
         class="absolute inset-0 h-full w-full object-cover"
         src={pageContent.heroImage.url}
         alt={pageContent.heroImage.alt || "Luxury scuba expedition at sunset"}
       />
-      <div class="absolute inset-0 bg-gradient-to-r from-primary/70 via-primary/45 to-primary/25"></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-[#032e4b]/90 via-primary/60 to-primary/15"></div>
+      <div class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#032e4b]/50 to-transparent"></div>
       <div class="relative z-10 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
         <div class="max-w-3xl text-white">
+          <p class="mb-4 text-sm font-bold uppercase tracking-[0.24em] text-primary-fixed-dim">Our story</p>
           {pageContent.title && (
-            <h1 class="font-display-lg text-display-lg mb-6 leading-tight text-white">
+            <h1 class="max-w-4xl font-display-lg text-[clamp(2.75rem,6vw,4.5rem)] leading-[1.02] tracking-[-0.025em] text-white">
               {pageContent.title}
             </h1>
           )}
@@ -50,22 +53,21 @@ const bioRichTextClass =
       </div>
     </section>
 
+    <section class="mx-auto grid max-w-container-max gap-12 px-margin-mobile py-16 md:px-margin-desktop md:py-20 lg:grid-cols-[minmax(0,3fr)_minmax(340px,2fr)] lg:items-start lg:gap-12 xl:gap-16">
     {pageContent.body && (
-      <section class="py-section-padding px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
-        <div class="rounded-[32px] border border-secondary-fixed/40 bg-white p-8 shadow-[0_24px_70px_rgba(4,44,72,0.10)] md:p-12">
+      <div class="order-1 min-w-0 lg:col-start-1 lg:row-start-1">
           <div
             class:list={["max-w-none", richTextClass]}
             set:html={pageContent.body}
           />
-        </div>
-      </section>
+      </div>
     )}
 
     {hasStaffSection && (
-      <section class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto pb-section-padding">
-        <div class="mb-10 max-w-3xl">
+      <div class="order-3 min-w-0 lg:col-start-2 lg:row-span-2 lg:row-start-1">
+        <div class="mb-8">
           {pageContent.staffSection.title && (
-            <h2 class="font-headline-lg text-headline-lg text-primary">
+            <h2 class="text-[clamp(2rem,3vw,2.75rem)] leading-tight text-primary">
               {pageContent.staffSection.title}
             </h2>
           )}
@@ -77,24 +79,24 @@ const bioRichTextClass =
         </div>
 
         {pageContent.staffSection.officeStaff.length > 0 && (
-          <div class="mb-14">
-            <h3 class="mb-6 font-headline-md text-headline-md text-primary">
+          <div class="mb-10">
+            <h3 class="mb-5 text-sm font-bold uppercase tracking-[0.2em] text-surface-tint">
               {pageContent.staffSection.officeTitle}
             </h3>
-            <div class="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
+            <div class="grid grid-cols-1 gap-7">
               {pageContent.staffSection.officeStaff.map((member) => (
-                <article class="overflow-hidden rounded-3xl border border-secondary-fixed/50 bg-white shadow-sm">
+                <article class:list={["grid gap-5 border-b border-outline-variant/70 pb-7", member.image?.url && "sm:grid-cols-[140px_minmax(0,1fr)] sm:items-start"]}>
                   {member.image?.url && (
                     <img
                       alt={member.image.alt || member.name}
-                      class="aspect-[4/3] w-full object-cover"
+                      class="aspect-square w-full max-w-[240px] rounded-2xl object-cover sm:max-w-none"
                       src={member.image.url}
                     />
                   )}
-                  <div class="p-6">
-                    <h4 class="font-headline-md text-headline-md text-primary">{member.name}</h4>
+                  <div>
+                    <h4 class="text-2xl leading-8 text-primary">{member.name}</h4>
                     {member.role && (
-                      <p class="mt-2 text-label-sm uppercase tracking-[0.18em] text-on-tertiary-container">
+                      <p class="mt-2 text-label-sm uppercase tracking-[0.18em] text-surface-tint">
                         {member.role}
                       </p>
                     )}
@@ -113,23 +115,23 @@ const bioRichTextClass =
 
         {pageContent.staffSection.tripLeaders.length > 0 && (
           <div>
-            <h3 class="mb-6 font-headline-md text-headline-md text-primary">
+            <h3 class="mb-5 text-sm font-bold uppercase tracking-[0.2em] text-surface-tint">
               {pageContent.staffSection.tripLeadersTitle}
             </h3>
-            <div class="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
+            <div class="grid grid-cols-1 gap-7">
               {pageContent.staffSection.tripLeaders.map((member) => (
-                <article class="overflow-hidden rounded-3xl border border-secondary-fixed/50 bg-white shadow-sm">
+                <article class:list={["grid gap-5 border-b border-outline-variant/70 pb-7", member.image?.url && "sm:grid-cols-[140px_minmax(0,1fr)] sm:items-start"]}>
                   {member.image?.url && (
                     <img
                       alt={member.image.alt || member.name}
-                      class="aspect-[4/3] w-full object-cover"
+                      class="aspect-square w-full max-w-[240px] rounded-2xl object-cover sm:max-w-none"
                       src={member.image.url}
                     />
                   )}
-                  <div class="p-6">
-                    <h4 class="font-headline-md text-headline-md text-primary">{member.name}</h4>
+                  <div>
+                    <h4 class="text-2xl leading-8 text-primary">{member.name}</h4>
                     {member.role && (
-                      <p class="mt-2 text-label-sm uppercase tracking-[0.18em] text-on-tertiary-container">
+                      <p class="mt-2 text-label-sm uppercase tracking-[0.18em] text-surface-tint">
                         {member.role}
                       </p>
                     )}
@@ -145,15 +147,37 @@ const bioRichTextClass =
             </div>
           </div>
         )}
-      </section>
+      </div>
     )}
+
+    {hasTestimonials && (
+      <aside class="order-2 border-t border-outline-variant/60 pt-8 lg:col-start-1 lg:row-start-2" aria-labelledby="testimonials-title">
+        <p class="mb-3 text-sm font-bold uppercase tracking-[0.22em] text-surface-tint">{pageContent.testimonialsSection.eyebrow}</p>
+        <h2 id="testimonials-title" class="text-2xl leading-8 text-primary">{pageContent.testimonialsSection.title}</h2>
+        {pageContent.testimonialsSection.description && (
+          <p class="mt-4 text-on-surface-variant">{pageContent.testimonialsSection.description}</p>
+        )}
+          <div class="mt-7 space-y-8">
+            {pageContent.testimonialsSection.items.map((testimonial) => (
+              <figure class="border-l-2 border-primary-fixed-dim pl-5">
+                <blockquote class="text-lg leading-8 text-on-surface-variant">{testimonial.quote}</blockquote>
+                <figcaption class="mt-4">
+                  <p class="font-bold text-primary">{testimonial.name}</p>
+                  {testimonial.trip && <p class="mt-1 text-sm text-surface-tint">{testimonial.trip}</p>}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+      </aside>
+    )}
+    </section>
 
     {hasPressSection && (
       <section class="bg-primary py-section-padding text-white">
         <div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
           <div class="mb-10 max-w-3xl">
             {pageContent.pressSection.title && (
-              <h2 class="font-headline-lg text-headline-lg text-tertiary-fixed">
+              <h2 class="font-headline-lg text-headline-lg text-primary-fixed">
                 {pageContent.pressSection.title}
               </h2>
             )}
@@ -164,24 +188,27 @@ const bioRichTextClass =
             )}
           </div>
 
-          <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div class="border-t border-white/20">
             {pageContent.pressSection.items.map((item) => {
               const href = item.pdf?.url || item.externalUrl;
 
               return (
-                <article class="rounded-3xl border border-white/15 bg-white/10 p-6 backdrop-blur-sm">
-                  <h3 class="font-headline-md text-headline-md text-white">{item.title}</h3>
-                  {item.description && (
-                    <p class="mt-3 text-body-md text-primary-fixed/85">{item.description}</p>
-                  )}
+                <article class="grid gap-4 border-b border-white/20 py-7 md:grid-cols-[minmax(0,1fr)_auto] md:items-center md:gap-10">
+                  <div>
+                    <h3 class="text-2xl leading-8 text-white">{item.title}</h3>
+                    {item.description && (
+                      <p class="mt-2 max-w-3xl text-body-md text-primary-fixed/80">{item.description}</p>
+                    )}
+                  </div>
                   {href && (
                     <a
-                      class="mt-5 inline-flex items-center rounded-full bg-tertiary-fixed px-5 py-3 font-bold text-primary transition-opacity hover:opacity-90"
+                      class="inline-flex items-center gap-2 font-bold text-primary-fixed underline decoration-primary-fixed/45 underline-offset-4 transition-colors hover:text-white"
                       href={href}
                       rel="noreferrer"
                       target="_blank"
                     >
                       {item.ctaLabel || (item.pdf ? "Open PDF" : "Open Link")}
+                      <span aria-hidden="true">→</span>
                     </a>
                   )}
                 </article>

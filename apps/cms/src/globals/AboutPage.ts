@@ -87,6 +87,55 @@ export const AboutPage: GlobalConfig = {
       ],
     },
     {
+      name: "testimonialsSection",
+      label: "Testimonials",
+      type: "group",
+      fields: [
+        {
+          name: "eyebrow",
+          type: "text",
+          defaultValue: "Traveler Stories",
+        },
+        {
+          name: "title",
+          type: "text",
+          defaultValue: "The best part is who you meet along the way",
+        },
+        {
+          name: "description",
+          type: "textarea",
+        },
+        {
+          name: "items",
+          label: "Testimonials",
+          type: "array",
+          maxRows: 6,
+          fields: [
+            {
+              name: "quote",
+              type: "textarea",
+              required: true,
+            },
+            {
+              type: "row",
+              fields: [
+                {
+                  name: "name",
+                  type: "text",
+                  required: true,
+                },
+                {
+                  name: "trip",
+                  label: "Trip or destination",
+                  type: "text",
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
       name: "pressSection",
       type: "group",
       fields: [
