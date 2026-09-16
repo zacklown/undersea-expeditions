@@ -1,0 +1,8 @@
+---
+import LegalPage from "../components/LegalPage.astro";
+import { getSiteSettings } from "../lib/content";
+
+const settings = await getSiteSettings();
+---
+
+<LegalPage content={settings.legalPages.cookiePolicy} title="Cookie Policy" />

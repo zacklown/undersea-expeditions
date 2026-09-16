@@ -1,0 +1,26 @@
+---
+import Footer from "./Footer.astro";
+import Header from "./Header.astro";
+import Layout from "../layouts/Layout.astro";
+
+interface Props {
+  content?: string;
+  title: string;
+}
+
+const { content, title } = Astro.props;
+---
+
+<Layout title={`${title} | Undersea Expeditions`}>
+  <Header />
+  <main class="mx-auto min-h-[50vh] max-w-4xl px-margin-mobile py-16 md:px-margin-desktop md:py-24">
+    <h1 class="mb-10 text-[clamp(2.5rem,6vw,4.5rem)] leading-[1.05] tracking-[-0.025em] text-primary">{title}</h1>
+    {content && (
+      <article
+        class="max-w-none text-on-surface-variant [&>h2]:mb-4 [&>h2]:mt-10 [&>h2]:text-3xl [&>h2]:leading-tight [&>h2]:text-primary [&>h3]:mb-3 [&>h3]:mt-8 [&>h3]:text-2xl [&>h3]:text-primary [&>ol]:mb-5 [&>ol]:list-decimal [&>ol]:space-y-2 [&>ol]:pl-6 [&>p]:mb-5 [&>p]:text-base [&>p]:leading-7 [&>ul]:mb-5 [&>ul]:list-disc [&>ul]:space-y-2 [&>ul]:pl-6 [&_a]:text-surface-tint [&_a]:underline"
+        set:html={content}
+      />
+    )}
+  </main>
+  <Footer />
+</Layout>

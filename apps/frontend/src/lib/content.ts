@@ -1,5 +1,4 @@
 import { renderRichText } from "./richText";
-import underseaLogo from "../assets/underseax-logo.png";
 
 const DEFAULT_CMS_API_URL = "http://127.0.0.1:3001/api";
 
@@ -9,7 +8,7 @@ export type CMSMedia = {
 };
 
 export type Trip = {
-  bannerImage: CMSMedia;
+  bannerImage?: CMSMedia;
   bookingHref: string;
   bookingLabel: string;
   coverImage: CMSMedia;
@@ -113,16 +112,28 @@ export type SiteSettings = {
   };
   footerBlurb: string;
   insurance: {
-    buyButtonHref: string;
-    buyButtonLabel: string;
+    description?: string;
     defaultImage: CMSMedia;
-    logo: CMSMedia;
+    links: Array<{
+      href: string;
+      label: string;
+    }>;
+  };
+  legalPages: {
+    accessibilityStatement?: string;
+    cookiePolicy?: string;
+    privacyPolicy?: string;
+    termsAndConditions?: string;
   };
   socialLinks: Array<{
     label: string;
+    platform: "facebook" | "instagram" | "linkedin" | "tiktok" | "website" | "x" | "youtube";
     url: string;
   }>;
   tagline: string;
+  tripDefaults: {
+    heroImage: CMSMedia;
+  };
 };
 
 export type HomePageContent = {
@@ -213,7 +224,6 @@ export type AboutPageContent = {
   heroImage: CMSMedia;
   testimonialsSection: {
     description: string;
-    eyebrow: string;
     items: Array<{
       name: string;
       quote: string;
@@ -234,11 +244,8 @@ export type AboutPageContent = {
   };
   staffSection: {
     description: string;
-    officeStaff: AboutStaffMember[];
-    officeTitle: string;
+    members: AboutStaffMember[];
     title: string;
-    tripLeaders: AboutStaffMember[];
-    tripLeadersTitle: string;
   };
   title: string;
 };
@@ -433,16 +440,18 @@ const fallbackSiteSettings: SiteSettings = {
   footerBlurb:
     "Gay and Lesbian Scuba Dive Travel Experts since 1991. Leading the world in community-focused aquatic adventures.",
   insurance: {
-    buyButtonHref: "/contact",
-    buyButtonLabel: "Buy Insurance",
     defaultImage: { alt: "Travel insurance planning", url: featuredTripImage },
-    logo: { alt: "Insurance logo", url: underseaLogo.src },
+    links: [],
   },
+  legalPages: {},
   socialLinks: [
-    { label: "Facebook", url: "https://www.facebook.com/GayScuba/" },
-    { label: "Instagram", url: "https://www.instagram.com/gayscuba/?hl=en" },
+    { label: "Undersea Expeditions on Facebook", platform: "facebook", url: "https://www.facebook.com/GayScuba/" },
+    { label: "Undersea Expeditions on Instagram", platform: "instagram", url: "https://www.instagram.com/gayscuba/?hl=en" },
   ],
   tagline: "World-class diving and community-driven travel for the LGBTQ+ community since 1991.",
+  tripDefaults: {
+    heroImage: { alt: "Undersea Expeditions dive trip", url: featuredTripImage },
+  },
 };
 
 const fallbackHomePage: HomePageContent = {
@@ -583,9 +592,8 @@ const fallbackAboutPage: AboutPageContent = {
   heroImage: { alt: "Luxury scuba expedition at sunset", url: aboutHeroImage },
   testimonialsSection: {
     description: "",
-    eyebrow: "Traveler Stories",
     items: [],
-    title: "The best part is who you meet along the way",
+    title: "What our customers are saying",
   },
   pressSection: {
     description: "",
@@ -594,11 +602,8 @@ const fallbackAboutPage: AboutPageContent = {
   },
   staffSection: {
     description: "",
-    officeStaff: [],
-    officeTitle: "Office",
     title: "Meet the Team",
-    tripLeaders: [],
-    tripLeadersTitle: "Trip Leaders",
+    members: [],
   },
   title: "Gay and Lesbian Scuba Dive Travel Experts",
 };
@@ -803,7 +808,9 @@ function normalizeTrip(doc: any, fallback?: Trip): Trip | null {
   const path = getTripPath({ slug: doc.slug, tripYear });
 
   return {
-    bannerImage: mapMedia(doc.bannerImage, fallback?.bannerImage || fallback?.coverImage || fallbackTrips[0].coverImage),
+    bannerImage: doc.bannerImage?.url
+      ? mapMedia(doc.bannerImage, fallback?.bannerImage || fallback?.coverImage || fallbackTrips[0].coverImage)
+      : fallback?.bannerImage,
     bookingHref: doc.bookingHref || fallback?.bookingHref || "/contact",
     bookingLabel: doc.bookingLabel || fallback?.bookingLabel || "Contact Us",
     coverImage: mapMedia(doc.coverImage, fallback?.coverImage || fallbackTrips[0].coverImage),
@@ -904,6 +911,22 @@ export async function getSiteSettings(): Promise<SiteSettings> {
 
   if (!global) return fallbackSiteSettings;
 
+  const normalizedSocialLinks = global.socialLinks
+    ?.map((item: any) => ({
+      label: item.label || item.platform || "Social channel",
+      platform:
+        item.platform ||
+        (item.url?.includes("instagram.com")
+          ? "instagram"
+          : item.url?.includes("facebook.com")
+            ? "facebook"
+            : item.url?.includes("tiktok.com")
+              ? "tiktok"
+              : "website"),
+      url: typeof item.url === "string" ? item.url.trim() : "",
+    }))
+    .filter((item: any) => item.url);
+
   return {
     certifications:
       global.certifications?.map((item: any) => item.label).filter(Boolean) ||
@@ -920,23 +943,40 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     },
     footerBlurb: global.footerBlurb || fallbackSiteSettings.footerBlurb,
     insurance: {
-      buyButtonHref:
-        global.insurance?.buyButtonHref || fallbackSiteSettings.insurance.buyButtonHref,
-      buyButtonLabel:
-        global.insurance?.buyButtonLabel || fallbackSiteSettings.insurance.buyButtonLabel,
+      description: global.insurance?.description || undefined,
       defaultImage: global.insurance?.defaultImage?.url
         ? mapMedia(global.insurance.defaultImage, fallbackSiteSettings.insurance.defaultImage)
         : fallbackSiteSettings.insurance.defaultImage,
-      logo: global.insurance?.logo?.url
-        ? mapMedia(global.insurance.logo, fallbackSiteSettings.insurance.logo)
-        : fallbackSiteSettings.insurance.logo,
+      links: [
+        {
+          href: typeof global.insurance?.danHref === "string" ? global.insurance.danHref.trim() : "",
+          label: global.insurance?.danLabel || "DAN Insurance",
+        },
+        {
+          href:
+            typeof global.insurance?.travelHref === "string"
+              ? global.insurance.travelHref.trim()
+              : "",
+          label: global.insurance?.travelLabel || "Travel Insurance",
+        },
+      ].filter((link) => /^https?:\/\//i.test(link.href)),
+    },
+    legalPages: {
+      accessibilityStatement: renderRichText(global.legalPages?.accessibilityStatement) || undefined,
+      cookiePolicy: renderRichText(global.legalPages?.cookiePolicy) || undefined,
+      privacyPolicy: renderRichText(global.legalPages?.privacyPolicy) || undefined,
+      termsAndConditions: renderRichText(global.legalPages?.termsAndConditions) || undefined,
     },
     socialLinks:
-      global.socialLinks?.map((item: any) => ({
-        label: item.label,
-        url: item.url,
-      })) || fallbackSiteSettings.socialLinks,
+      normalizedSocialLinks?.length > 0
+        ? normalizedSocialLinks
+        : fallbackSiteSettings.socialLinks,
     tagline: global.tagline || fallbackSiteSettings.tagline,
+    tripDefaults: {
+      heroImage: global.tripDefaults?.heroImage?.url
+        ? mapMedia(global.tripDefaults.heroImage, fallbackSiteSettings.tripDefaults.heroImage)
+        : fallbackSiteSettings.tripDefaults.heroImage,
+    },
   };
 }
 
@@ -1083,8 +1123,6 @@ export async function getAboutPageContent(): Promise<AboutPageContent> {
       description:
         global.testimonialsSection?.description ||
         fallbackAboutPage.testimonialsSection.description,
-      eyebrow:
-        global.testimonialsSection?.eyebrow || fallbackAboutPage.testimonialsSection.eyebrow,
       items:
         global.testimonialsSection?.items
           ?.map((item: any) => {
@@ -1126,20 +1164,11 @@ export async function getAboutPageContent(): Promise<AboutPageContent> {
     },
     staffSection: {
       description: global.staffSection?.description || fallbackAboutPage.staffSection.description,
-      officeStaff:
-        global.staffSection?.officeStaff
+      members:
+        global.staffSection?.members
           ?.map((item: any) => normalizeAboutStaffMember(item))
-          .filter(Boolean) || fallbackAboutPage.staffSection.officeStaff,
-      officeTitle:
-        global.staffSection?.officeTitle || fallbackAboutPage.staffSection.officeTitle,
+          .filter(Boolean) || fallbackAboutPage.staffSection.members,
       title: global.staffSection?.title || fallbackAboutPage.staffSection.title,
-      tripLeaders:
-        global.staffSection?.tripLeaders
-          ?.map((item: any) => normalizeAboutStaffMember(item))
-          .filter(Boolean) || fallbackAboutPage.staffSection.tripLeaders,
-      tripLeadersTitle:
-        global.staffSection?.tripLeadersTitle ||
-        fallbackAboutPage.staffSection.tripLeadersTitle,
     },
     title: global.title || fallbackAboutPage.title,
   };

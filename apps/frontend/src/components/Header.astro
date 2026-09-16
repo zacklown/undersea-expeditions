@@ -6,7 +6,7 @@ interface Props {
   overlayHero?: boolean;
 }
 
-const { active = "home", overlayHero = false } = Astro.props;
+const { active, overlayHero = false } = Astro.props;
 
 const navItems = [
   { key: "home", label: "Home", href: "/" },

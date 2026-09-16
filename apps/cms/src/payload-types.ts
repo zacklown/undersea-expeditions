@@ -829,18 +829,107 @@ export interface SiteSetting {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Footer social icons. Choose a platform and add its public profile URL.
+   */
   socialLinks?:
     | {
-        label: string;
+        platform: 'instagram' | 'facebook' | 'tiktok' | 'youtube' | 'x' | 'linkedin' | 'website';
+        /**
+         * Accessible label, such as Undersea Expeditions on Instagram.
+         */
+        label?: string | null;
         url: string;
         id?: string | null;
       }[]
     | null;
-  insurance: {
-    logo?: (number | null) | Media;
+  insurance?: {
+    /**
+     * Used on trip pages when that trip does not provide its own insurance image.
+     */
     defaultImage?: (number | null) | Media;
-    buyButtonLabel: string;
-    buyButtonHref: string;
+    description?: string | null;
+    danLabel?: string | null;
+    /**
+     * Use the complete external URL, including https://.
+     */
+    danHref?: string | null;
+    travelLabel?: string | null;
+    /**
+     * Use the complete external URL, including https://.
+     */
+    travelHref?: string | null;
+  };
+  tripDefaults?: {
+    /**
+     * Used when a trip does not have its own banner image.
+     */
+    heroImage?: (number | null) | Media;
+  };
+  /**
+   * Content is intentionally blank until reviewed and supplied by your legal advisor.
+   */
+  legalPages?: {
+    privacyPolicy?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    cookiePolicy?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    termsAndConditions?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    accessibilityStatement?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -933,7 +1022,7 @@ export interface SocialsPage {
           image?: (number | null) | Media;
           buttonLabel?: string | null;
           /**
-           * Use an Instagram or Facebook post URL to render the embed.
+           * Use an Instagram, Facebook, TikTok, or YouTube post URL to render the official embed.
            */
           href?: string | null;
           id?: string | null;
@@ -1002,32 +1091,7 @@ export interface AboutPage {
   staffSection?: {
     title?: string | null;
     description?: string | null;
-    officeTitle?: string | null;
-    officeStaff?:
-      | {
-          name?: string | null;
-          role?: string | null;
-          image?: (number | null) | Media;
-          bio?: {
-            root: {
-              type: string;
-              children: {
-                type: any;
-                version: number;
-                [k: string]: unknown;
-              }[];
-              direction: ('ltr' | 'rtl') | null;
-              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-              indent: number;
-              version: number;
-            };
-            [k: string]: unknown;
-          } | null;
-          id?: string | null;
-        }[]
-      | null;
-    tripLeadersTitle?: string | null;
-    tripLeaders?:
+    members?:
       | {
           name?: string | null;
           role?: string | null;
@@ -1052,7 +1116,6 @@ export interface AboutPage {
       | null;
   };
   testimonialsSection?: {
-    eyebrow?: string | null;
     title?: string | null;
     description?: string | null;
     items?:
@@ -1111,6 +1174,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   socialLinks?:
     | T
     | {
+        platform?: T;
         label?: T;
         url?: T;
         id?: T;
@@ -1118,10 +1182,25 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   insurance?:
     | T
     | {
-        logo?: T;
         defaultImage?: T;
-        buyButtonLabel?: T;
-        buyButtonHref?: T;
+        description?: T;
+        danLabel?: T;
+        danHref?: T;
+        travelLabel?: T;
+        travelHref?: T;
+      };
+  tripDefaults?:
+    | T
+    | {
+        heroImage?: T;
+      };
+  legalPages?:
+    | T
+    | {
+        privacyPolicy?: T;
+        cookiePolicy?: T;
+        termsAndConditions?: T;
+        accessibilityStatement?: T;
       };
   updatedAt?: T;
   createdAt?: T;
@@ -1279,18 +1358,7 @@ export interface AboutPageSelect<T extends boolean = true> {
     | {
         title?: T;
         description?: T;
-        officeTitle?: T;
-        officeStaff?:
-          | T
-          | {
-              name?: T;
-              role?: T;
-              image?: T;
-              bio?: T;
-              id?: T;
-            };
-        tripLeadersTitle?: T;
-        tripLeaders?:
+        members?:
           | T
           | {
               name?: T;
@@ -1303,7 +1371,6 @@ export interface AboutPageSelect<T extends boolean = true> {
   testimonialsSection?:
     | T
     | {
-        eyebrow?: T;
         title?: T;
         description?: T;
         items?:

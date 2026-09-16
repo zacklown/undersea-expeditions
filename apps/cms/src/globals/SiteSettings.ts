@@ -76,15 +76,36 @@ export const SiteSettings: GlobalConfig = {
     },
     {
       name: "socialLinks",
+      label: "Social Channels",
       type: "array",
+      admin: {
+        description: "Footer social icons. Choose a platform and add its public profile URL.",
+      },
       fields: [
         {
           type: "row",
           fields: [
             {
+              name: "platform",
+              type: "select",
+              defaultValue: "website",
+              options: [
+                { label: "Instagram", value: "instagram" },
+                { label: "Facebook", value: "facebook" },
+                { label: "TikTok", value: "tiktok" },
+                { label: "YouTube", value: "youtube" },
+                { label: "X", value: "x" },
+                { label: "LinkedIn", value: "linkedin" },
+                { label: "Website", value: "website" },
+              ],
+              required: true,
+            },
+            {
               name: "label",
               type: "text",
-              required: true,
+              admin: {
+                description: "Accessible label, such as Undersea Expeditions on Instagram.",
+              },
             },
             {
               name: "url",
@@ -101,19 +122,35 @@ export const SiteSettings: GlobalConfig = {
       type: "group",
       fields: [
         {
+          name: "defaultImage",
+          label: "Default Trip Insurance Image",
+          relationTo: "media",
+          type: "upload",
+          admin: {
+            description: "Used on trip pages when that trip does not provide its own insurance image.",
+          },
+        },
+        {
+          name: "description",
+          label: "Insurance Blurb",
+          type: "textarea",
+        },
+        {
           type: "row",
           fields: [
             {
-              name: "logo",
-              label: "Insurance Logo",
-              relationTo: "media",
-              type: "upload",
+              name: "danLabel",
+              label: "DAN Link Label",
+              type: "text",
+              defaultValue: "DAN Insurance",
             },
             {
-              name: "defaultImage",
-              label: "Default Panel Image",
-              relationTo: "media",
-              type: "upload",
+              name: "danHref",
+              label: "DAN Insurance URL",
+              type: "text",
+              admin: {
+                description: "Use the complete external URL, including https://.",
+              },
             },
           ],
         },
@@ -121,18 +158,66 @@ export const SiteSettings: GlobalConfig = {
           type: "row",
           fields: [
             {
-              name: "buyButtonLabel",
+              name: "travelLabel",
+              label: "Travel Insurance Link Label",
               type: "text",
-              defaultValue: "Buy Insurance",
-              required: true,
+              defaultValue: "Travel Insurance",
             },
             {
-              name: "buyButtonHref",
+              name: "travelHref",
+              label: "Travel Insurance URL",
               type: "text",
-              defaultValue: "/contact",
-              required: true,
+              admin: {
+                description: "Use the complete external URL, including https://.",
+              },
             },
           ],
+        },
+      ],
+    },
+    {
+      name: "tripDefaults",
+      label: "Trip Page Defaults",
+      type: "group",
+      fields: [
+        {
+          name: "heroImage",
+          label: "Default Trip Hero Image",
+          relationTo: "media",
+          type: "upload",
+          admin: {
+            description: "Used when a trip does not have its own banner image.",
+          },
+        },
+      ],
+    },
+    {
+      name: "legalPages",
+      label: "Legal Pages",
+      type: "group",
+      admin: {
+        description: "Content is intentionally blank until reviewed and supplied by your legal advisor.",
+      },
+      fields: [
+        {
+          name: "privacyPolicy",
+          label: "Privacy Policy",
+          type: "richText",
+        },
+        {
+          name: "cookiePolicy",
+          label: "Cookie Policy",
+          type: "richText",
+        },
+        {
+          name: "termsAndConditions",
+          label: "Terms & Conditions",
+          type: "richText",
+        },
+        {
+          name: "accessibilityStatement",
+          label: "Accessibility Statement",
+          type: "richText",
         },
       ],
     },

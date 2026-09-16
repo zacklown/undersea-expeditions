@@ -125,7 +125,7 @@ export const SocialsPage: GlobalConfig = {
                 {
                   name: "href",
                   admin: {
-                    description: "Use an Instagram or Facebook post URL to render the embed.",
+                    description: "Use an Instagram, Facebook, TikTok, or YouTube post URL to render the official embed.",
                   },
                   label: "Post URL",
                   type: "text",

@@ -1,56 +1,70 @@
 ---
 import { getSiteSettings } from "../lib/content";
+import SocialIcon from "./SocialIcon.astro";
 
 interface Props {
   active?: "home" | "trips" | "about" | "socials" | "faq" | "contact";
   flushTop?: boolean;
 }
 
-const { active = "home", flushTop = false } = Astro.props;
+const { active, flushTop = false } = Astro.props;
 const siteSettings = await getSiteSettings();
 ---
 
 <footer
   class:list={[
-    "relative bottom-0 full-width bg-[#0066B2]",
+    "relative bottom-0 full-width bg-primary",
     flushTop ? "mt-0" : "mt-section-padding",
   ]}
 >
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter px-margin-mobile md:px-margin-desktop py-12 max-w-container-max mx-auto">
+  <div class="mx-auto grid max-w-container-max grid-cols-1 gap-10 px-margin-mobile py-12 sm:grid-cols-2 md:px-margin-desktop lg:grid-cols-3 xl:grid-cols-5">
     <div class="space-y-4">
-      <span class="font-headline-md text-headline-md text-tertiary-fixed block">{siteSettings.companyName}</span>
+      <p class="block text-2xl leading-8 text-white">{siteSettings.companyName}</p>
       <p class="font-body-md text-body-md text-primary-fixed/80">
         {siteSettings.footerBlurb}
       </p>
     </div>
     <div class="space-y-4">
-      <h6 class="font-label-sm text-label-sm text-white uppercase tracking-widest">Navigation</h6>
+      <h2 class="text-sm font-bold uppercase tracking-widest text-white">Navigation</h2>
       <div class="grid grid-cols-1 gap-2">
-        <a class:list={["font-body-md transition-colors", active === "home" ? "text-tertiary-fixed font-bold underline" : "text-primary-fixed/80 hover:text-white"]} href="/">Home</a>
-        <a class:list={["font-body-md transition-colors", active === "trips" ? "text-tertiary-fixed font-bold underline" : "text-primary-fixed/80 hover:text-white"]} href="/trips">Trips</a>
-        <a class:list={["font-body-md transition-colors", active === "about" ? "text-tertiary-fixed font-bold underline" : "text-primary-fixed/80 hover:text-white"]} href="/about">About</a>
-        <a class:list={["font-body-md transition-colors", active === "socials" ? "text-tertiary-fixed font-bold underline" : "text-primary-fixed/80 hover:text-white"]} href="/socials">Socials</a>
-        <a class:list={["font-body-md transition-colors", active === "faq" ? "text-tertiary-fixed font-bold underline" : "text-primary-fixed/80 hover:text-white"]} href="/faq">FAQ</a>
-        <a class:list={["font-body-md transition-colors", active === "contact" ? "text-tertiary-fixed font-bold underline" : "text-primary-fixed/80 hover:text-white"]} href="/contact">Contact</a>
+        <a class:list={["font-body-md transition-colors", active === "home" ? "font-bold text-primary-fixed-dim underline" : "text-primary-fixed/80 hover:text-white"]} href="/">Home</a>
+        <a class:list={["font-body-md transition-colors", active === "trips" ? "font-bold text-primary-fixed-dim underline" : "text-primary-fixed/80 hover:text-white"]} href="/trips">Trips</a>
+        <a class:list={["font-body-md transition-colors", active === "about" ? "font-bold text-primary-fixed-dim underline" : "text-primary-fixed/80 hover:text-white"]} href="/about">About</a>
+        <a class:list={["font-body-md transition-colors", active === "socials" ? "font-bold text-primary-fixed-dim underline" : "text-primary-fixed/80 hover:text-white"]} href="/socials">Socials</a>
+        <a class:list={["font-body-md transition-colors", active === "faq" ? "font-bold text-primary-fixed-dim underline" : "text-primary-fixed/80 hover:text-white"]} href="/faq">FAQ</a>
+        <a class:list={["font-body-md transition-colors", active === "contact" ? "font-bold text-primary-fixed-dim underline" : "text-primary-fixed/80 hover:text-white"]} href="/contact">Contact</a>
       </div>
     </div>
     <div class="space-y-4">
-      <h6 class="font-label-sm text-label-sm text-white uppercase tracking-widest">Certifications</h6>
+      <h2 class="text-sm font-bold uppercase tracking-widest text-white">Certifications</h2>
       {siteSettings.certifications.map((certification) => (
         <p class="text-body-md text-primary-fixed/80">{certification}</p>
       ))}
-      <div class="flex gap-4 mt-4">
+    </div>
+    <div class="space-y-4">
+      <h2 class="text-sm font-bold uppercase tracking-widest text-white">Follow</h2>
+      <div class="flex flex-wrap gap-3">
         {siteSettings.socialLinks.map((social) => (
           <a
-            class="text-primary-fixed/80 hover:text-white transition-colors"
+            aria-label={social.label}
+            class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-primary-fixed/30 text-primary-fixed transition-colors hover:border-white hover:bg-white hover:text-primary"
             href={social.url}
             rel="noreferrer"
             target="_blank"
           >
-            {social.label}
+            <SocialIcon platform={social.platform} />
           </a>
         ))}
       </div>
+    </div>
+    <div class="space-y-4">
+      <h2 class="text-sm font-bold uppercase tracking-widest text-white">Legal</h2>
+      <nav aria-label="Legal" class="grid gap-2">
+        <a class="text-primary-fixed/80 transition-colors hover:text-white" href="/privacy-policy">Privacy Policy</a>
+        <a class="text-primary-fixed/80 transition-colors hover:text-white" href="/cookie-policy">Cookie Policy</a>
+        <a class="text-primary-fixed/80 transition-colors hover:text-white" href="/terms-and-conditions">Terms &amp; Conditions</a>
+        <a class="text-primary-fixed/80 transition-colors hover:text-white" href="/accessibility">Accessibility</a>
+      </nav>
     </div>
   </div>
   <div class="border-t border-white/10 px-margin-mobile md:px-margin-desktop py-6 max-w-container-max mx-auto text-center">

@@ -64,23 +64,8 @@ export const AboutPage: GlobalConfig = {
           type: "textarea",
         },
         {
-          name: "officeTitle",
-          label: "Office Section Title",
-          type: "text",
-        },
-        {
-          name: "officeStaff",
-          label: "Office Staff",
-          type: "array",
-          fields: staffFields,
-        },
-        {
-          name: "tripLeadersTitle",
-          label: "Trip Leaders Section Title",
-          type: "text",
-        },
-        {
-          name: "tripLeaders",
+          name: "members",
+          label: "Team Members",
           type: "array",
           fields: staffFields,
         },
@@ -91,11 +76,6 @@ export const AboutPage: GlobalConfig = {
       label: "Testimonials",
       type: "group",
       fields: [
-        {
-          name: "eyebrow",
-          type: "text",
-          defaultValue: "Traveler Stories",
-        },
         {
           name: "title",
           type: "text",

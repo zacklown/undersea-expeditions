@@ -14,6 +14,8 @@ import * as migration_20260714_120000_add_trip_status_label from './20260714_120
 import * as migration_20260901_221900_add_trip_listing_visibility from './20260901_221900_add_trip_listing_visibility';
 import * as migration_20260916_073046_about_testimonials from './20260916_073046_about_testimonials';
 import * as migration_20260916_122300_add_trip_gallery from './20260916_122300_add_trip_gallery';
+import * as migration_20260916_130000_site_settings_footer_legal_defaults from './20260916_130000_site_settings_footer_legal_defaults';
+import * as migration_20260916_133000_unify_team_and_split_insurance_links from './20260916_133000_unify_team_and_split_insurance_links';
 
 export const migrations = [
   {
@@ -95,5 +97,15 @@ export const migrations = [
     up: migration_20260916_122300_add_trip_gallery.up,
     down: migration_20260916_122300_add_trip_gallery.down,
     name: '20260916_122300_add_trip_gallery'
+  },
+  {
+    up: migration_20260916_130000_site_settings_footer_legal_defaults.up,
+    down: migration_20260916_130000_site_settings_footer_legal_defaults.down,
+    name: '20260916_130000_site_settings_footer_legal_defaults'
+  },
+  {
+    up: migration_20260916_133000_unify_team_and_split_insurance_links.up,
+    down: migration_20260916_133000_unify_team_and_split_insurance_links.down,
+    name: '20260916_133000_unify_team_and_split_insurance_links'
   },
 ];

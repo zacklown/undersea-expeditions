@@ -47,7 +47,7 @@ const pinnedTrips = trips.filter(
 
 {
   pinnedTrips.length > 0 && (
-    <section class="relative z-10 bg-[#0066B2] py-14 text-white md:py-16">
+    <section class="relative z-10 bg-primary py-14 text-white md:py-16">
       <svg
         aria-hidden="true"
         class="wave-drift pointer-events-none absolute left-0 top-px h-14 w-full -translate-y-full md:h-20"
@@ -56,7 +56,7 @@ const pinnedTrips = trips.filter(
       >
         <path
           d="M0 66C190 22 352 16 540 51C754 91 924 96 1110 51C1242 19 1342 20 1440 45V96H0Z"
-          fill="#0066B2"
+          fill="#064e78"
         />
       </svg>
 
@@ -110,7 +110,7 @@ const pinnedTrips = trips.filter(
 
         <div class="mt-4 flex justify-center md:mt-5">
           <a
-            class="inline-flex items-center justify-center rounded-lg bg-[#FF6600] px-8 py-4 font-bold text-white shadow-lg transition-colors hover:bg-white hover:text-[#0066B2]"
+            class="inline-flex items-center justify-center rounded-lg bg-white px-8 py-4 font-bold text-primary shadow-lg transition-colors hover:bg-primary-fixed hover:text-primary"
             href={buttonHref}
           >
             {buttonLabel}
@@ -126,7 +126,7 @@ const pinnedTrips = trips.filter(
       >
         <path
           d="M0 0H1440V30C1262 77 1090 88 900 55C680 17 522 17 324 61C188 91 86 84 0 60Z"
-          fill="#0066B2"
+          fill="#064e78"
         />
       </svg>
     </section>

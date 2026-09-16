@@ -31,7 +31,7 @@ const { description, title, trips } = Astro.props as {
             <>
               <button
                 aria-label="Previous featured trips"
-                class="absolute left-0 top-1/2 z-10 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-[#0066B2] text-white shadow-lg transition-colors hover:bg-[#FF6600] 2xl:flex"
+                class="absolute left-0 top-1/2 z-10 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-primary text-white shadow-lg transition-colors hover:bg-surface-tint 2xl:flex"
                 data-featured-prev
                 type="button"
               >
@@ -39,7 +39,7 @@ const { description, title, trips } = Astro.props as {
               </button>
               <button
                 aria-label="Next featured trips"
-                class="absolute right-0 top-1/2 z-10 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-[#0066B2] text-white shadow-lg transition-colors hover:bg-[#FF6600] 2xl:flex"
+                class="absolute right-0 top-1/2 z-10 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-primary text-white shadow-lg transition-colors hover:bg-surface-tint 2xl:flex"
                 data-featured-next
                 type="button"
               >
@@ -59,7 +59,7 @@ const { description, title, trips } = Astro.props as {
           <div class="mt-5 flex items-center justify-center gap-3 2xl:hidden">
             <button
               aria-label="Previous featured trips"
-              class="flex h-11 w-11 items-center justify-center rounded-full bg-[#0066B2] text-white transition-colors hover:bg-[#FF6600]"
+              class="flex h-11 w-11 items-center justify-center rounded-full bg-primary text-white transition-colors hover:bg-surface-tint"
               data-featured-prev
               type="button"
             >
@@ -67,7 +67,7 @@ const { description, title, trips } = Astro.props as {
             </button>
             <button
               aria-label="Next featured trips"
-              class="flex h-11 w-11 items-center justify-center rounded-full bg-[#0066B2] text-white transition-colors hover:bg-[#FF6600]"
+              class="flex h-11 w-11 items-center justify-center rounded-full bg-primary text-white transition-colors hover:bg-surface-tint"
               data-featured-next
               type="button"
             >

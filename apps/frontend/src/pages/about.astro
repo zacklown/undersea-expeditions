@@ -5,9 +5,7 @@ import Layout from "../layouts/Layout.astro";
 import { getAboutPageContent } from "../lib/content";
 
 const pageContent = await getAboutPageContent();
-const hasStaffSection =
-  pageContent.staffSection.officeStaff.length > 0 ||
-  pageContent.staffSection.tripLeaders.length > 0;
+const hasStaffSection = pageContent.staffSection.members.length > 0;
 const hasPressSection = pageContent.pressSection.items.length > 0;
 const hasTestimonials = pageContent.testimonialsSection.items.length > 0;
 const richTextClass =
@@ -43,7 +41,6 @@ const bioRichTextClass =
       <div class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#032e4b]/50 to-transparent"></div>
       <div class="relative z-10 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
         <div class="max-w-3xl text-white">
-          <p class="mb-4 text-sm font-bold uppercase tracking-[0.24em] text-primary-fixed-dim">Our story</p>
           {pageContent.title && (
             <h1 class="max-w-4xl font-display-lg text-[clamp(2.75rem,6vw,4.5rem)] leading-[1.02] tracking-[-0.025em] text-white">
               {pageContent.title}
@@ -78,48 +75,10 @@ const bioRichTextClass =
           )}
         </div>
 
-        {pageContent.staffSection.officeStaff.length > 0 && (
-          <div class="mb-10">
-            <h3 class="mb-5 text-sm font-bold uppercase tracking-[0.2em] text-surface-tint">
-              {pageContent.staffSection.officeTitle}
-            </h3>
-            <div class="grid grid-cols-1 gap-7">
-              {pageContent.staffSection.officeStaff.map((member) => (
-                <article class:list={["grid gap-5 border-b border-outline-variant/70 pb-7", member.image?.url && "sm:grid-cols-[140px_minmax(0,1fr)] sm:items-start"]}>
-                  {member.image?.url && (
-                    <img
-                      alt={member.image.alt || member.name}
-                      class="aspect-square w-full max-w-[240px] rounded-2xl object-cover sm:max-w-none"
-                      src={member.image.url}
-                    />
-                  )}
-                  <div>
-                    <h4 class="text-2xl leading-8 text-primary">{member.name}</h4>
-                    {member.role && (
-                      <p class="mt-2 text-label-sm uppercase tracking-[0.18em] text-surface-tint">
-                        {member.role}
-                      </p>
-                    )}
-                    {member.bio && (
-                      <div
-                        class:list={["mt-4 max-w-none", bioRichTextClass]}
-                        set:html={member.bio}
-                      />
-                    )}
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {pageContent.staffSection.tripLeaders.length > 0 && (
+        {pageContent.staffSection.members.length > 0 && (
           <div>
-            <h3 class="mb-5 text-sm font-bold uppercase tracking-[0.2em] text-surface-tint">
-              {pageContent.staffSection.tripLeadersTitle}
-            </h3>
             <div class="grid grid-cols-1 gap-7">
-              {pageContent.staffSection.tripLeaders.map((member) => (
+              {pageContent.staffSection.members.map((member) => (
                 <article class:list={["grid gap-5 border-b border-outline-variant/70 pb-7", member.image?.url && "sm:grid-cols-[140px_minmax(0,1fr)] sm:items-start"]}>
                   {member.image?.url && (
                     <img
@@ -129,7 +88,7 @@ const bioRichTextClass =
                     />
                   )}
                   <div>
-                    <h4 class="text-2xl leading-8 text-primary">{member.name}</h4>
+                    <h3 class="text-2xl leading-8 text-primary">{member.name}</h3>
                     {member.role && (
                       <p class="mt-2 text-label-sm uppercase tracking-[0.18em] text-surface-tint">
                         {member.role}
@@ -152,8 +111,7 @@ const bioRichTextClass =
 
     {hasTestimonials && (
       <aside class="order-2 border-t border-outline-variant/60 pt-8 lg:col-start-1 lg:row-start-2" aria-labelledby="testimonials-title">
-        <p class="mb-3 text-sm font-bold uppercase tracking-[0.22em] text-surface-tint">{pageContent.testimonialsSection.eyebrow}</p>
-        <h2 id="testimonials-title" class="text-2xl leading-8 text-primary">{pageContent.testimonialsSection.title}</h2>
+        <h2 id="testimonials-title" class="text-[clamp(2rem,3vw,2.75rem)] leading-tight text-primary">{pageContent.testimonialsSection.title}</h2>
         {pageContent.testimonialsSection.description && (
           <p class="mt-4 text-on-surface-variant">{pageContent.testimonialsSection.description}</p>
         )}
