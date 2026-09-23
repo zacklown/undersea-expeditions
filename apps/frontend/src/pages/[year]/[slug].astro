@@ -34,35 +34,52 @@ const tripHighlights = [
   },
 ].filter((highlight) => highlight.value);
 const insuranceImage = trip?.insuranceImage || siteSettings.insurance.defaultImage || trip?.coverImage;
-const socialEmbeds =
-  trip?.socialEmbeds
-    ?.map((embed) => {
-      if (!embed?.postUrl) return null;
+type TripSocialEmbed = NonNullable<NonNullable<typeof trip>["socialEmbeds"]>[number];
+type SocialEmbed = TripSocialEmbed & { embedUrl: string };
 
-      try {
-        const url = new URL(embed.postUrl);
-        const pathname = url.pathname.endsWith("/") ? url.pathname : `${url.pathname}/`;
+function normalizeSocialUrl(value: string) {
+  const trimmed = value.trim();
+  if (!trimmed) return null;
 
-        if (embed.platform === "instagram") {
-          return {
-            ...embed,
-            embedUrl: `https://www.instagram.com${pathname}embed/captioned/`,
-          };
-        }
+  try {
+    return new URL(/^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed.replace(/^\/+/, "")}`);
+  } catch {
+    return null;
+  }
+}
 
-        if (embed.platform === "facebook") {
-          return {
-            ...embed,
-            embedUrl: `https://www.facebook.com/plugins/post.php?href=${encodeURIComponent(embed.postUrl)}&show_text=true&width=500`,
-          };
-        }
-      } catch {
-        return null;
-      }
+function createSocialEmbed(embed: TripSocialEmbed): SocialEmbed | null {
+  const url = normalizeSocialUrl(embed.postUrl);
+  if (!url) return null;
 
-      return null;
-    })
-    .filter(Boolean) || [];
+  const hostname = url.hostname.replace(/^(www\.|m\.)/, "").toLowerCase();
+
+  if (embed.platform === "instagram" && hostname === "instagram.com") {
+    const [kind, id] = url.pathname.split("/").filter(Boolean);
+    if (!["p", "reel", "tv"].includes(kind || "") || !id) return null;
+
+    return {
+      ...embed,
+      postUrl: url.href,
+      embedUrl: `https://www.instagram.com/${kind}/${id}/embed/captioned/`,
+    };
+  }
+
+  if (embed.platform === "facebook" && ["facebook.com", "fb.com"].includes(hostname)) {
+    return {
+      ...embed,
+      postUrl: url.href,
+      embedUrl: `https://www.facebook.com/plugins/post.php?href=${encodeURIComponent(url.href)}&show_text=true&width=500`,
+    };
+  }
+
+  return null;
+}
+
+const socialEmbeds: SocialEmbed[] = trip?.socialEmbeds?.flatMap((embed) => {
+  const normalized = createSocialEmbed(embed);
+  return normalized ? [normalized] : [];
+}) || [];
 ---
 
 <Layout title={`${trip?.title || "Trip"} | Undersea Expeditions`}>
@@ -286,9 +303,9 @@ const socialEmbeds =
                             src={embed.embedUrl}
                             class="w-full"
                             height={embed.platform === "facebook" ? "640" : "720"}
-                            style="border:none;overflow:hidden;"
-                            scrolling="no"
-                            frameborder="0"
+                            loading="lazy"
+                            referrerpolicy="strict-origin-when-cross-origin"
+                            style="border:0; overflow:hidden;"
                             allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
                           ></iframe>
                         </div>
