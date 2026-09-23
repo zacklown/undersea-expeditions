@@ -24,8 +24,16 @@ const featuredTrips = otherTrips.filter((item) => item.featuredOnHomepage).slice
 const upcomingTrips = otherTrips.filter((item) => !item.featuredOnHomepage).slice(0, 6);
 const stayIcon = trip?.tripStyle === "liveaboard" ? "directions_boat" : "hotel";
 const stayLabel = trip?.stays?.join(", ") || "";
+const tripHighlights = [
+  { icon: "explore", label: "Destination", value: trip?.countries.join(", ") },
+  { icon: stayIcon, label: "Your stay", value: stayLabel || trip?.tripStyleLabel },
+  {
+    icon: "schedule",
+    label: "Time away",
+    value: trip?.days ? [`${trip.days} days`, trip.nights != null ? `${trip.nights} nights` : ""].filter(Boolean).join(" / ") : trip?.dateLabel,
+  },
+].filter((highlight) => highlight.value);
 const insuranceImage = trip?.insuranceImage || siteSettings.insurance.defaultImage || trip?.coverImage;
-const heroImage = trip?.bannerImage || siteSettings.tripDefaults.heroImage || trip?.coverImage;
 const socialEmbeds =
   trip?.socialEmbeds
     ?.map((embed) => {
@@ -62,48 +70,9 @@ const socialEmbeds =
   <main>
     {trip ? (
       <>
-        <section class="relative flex min-h-[520px] items-end overflow-hidden">
-          <img
-            alt={heroImage.alt || trip.title}
-            class="absolute inset-0 h-full w-full object-cover"
-            src={heroImage.url}
-          />
-          <div class="absolute inset-0 bg-gradient-to-t from-primary via-primary/50 to-transparent"></div>
-          <div class="relative z-10 mx-auto w-full max-w-container-max px-margin-mobile py-20 text-white md:px-margin-desktop">
-            <div class="max-w-3xl">
-              <span class="inline-flex rounded-full bg-white/15 px-4 py-1 text-label-sm font-label-sm backdrop-blur-md">
-                {trip.regionLabel}
-              </span>
-              {trip.isNew && (
-                <span class="ml-3 inline-flex rounded-full bg-on-tertiary-container px-4 py-1 text-label-sm font-label-sm text-white">
-                  New
-                </span>
-              )}
-              {trip.statusLabel && (
-                <span class="ml-3 inline-flex rounded-full bg-primary px-4 py-1 text-label-sm font-label-sm text-white">
-                  {trip.statusLabel}
-                </span>
-              )}
-              <h1 class="mt-6 mb-4 font-display-lg text-display-lg">{trip.title}</h1>
-              <p class="mb-4 font-headline-md text-headline-md text-white/90">
-                {trip.countries.join(", ")}
-              </p>
-              {trip.groupTypeLabel && (
-                <p class="mb-4 font-label-sm text-label-sm uppercase tracking-[0.16em] text-white/80">
-                  {trip.groupTypeLabel}
-                </p>
-              )}
-              <div
-                class="max-w-2xl text-white/85 [&>p]:mb-4 [&>p]:font-body-lg [&>p]:text-body-lg"
-                set:html={trip.summaryHtml || trip.summary}
-              ></div>
-            </div>
-          </div>
-        </section>
-
         <section class="mx-auto max-w-[1520px] px-margin-mobile pt-8 pb-section-padding md:px-margin-desktop md:pt-10">
-          <div class="grid grid-cols-1 gap-8 xl:grid-cols-[18rem_minmax(0,1fr)_18rem]">
-            <aside class="order-2 xl:order-none xl:sticky xl:top-36 xl:self-start">
+          <div class="grid grid-cols-1 gap-8 xl:grid-cols-[13rem_minmax(0,1fr)_16rem]">
+            <aside class="order-2 xl:order-none xl:self-start">
               <div class="space-y-6">
                 {featuredTrips.length > 0 && (
                   <div class="border-t-2 border-primary pt-5">
@@ -140,48 +109,48 @@ const socialEmbeds =
 
             <div class="order-1 min-w-0 space-y-8 xl:order-none">
               <article>
-                <section class="mb-10">
-                  <div class="mb-6 flex flex-col gap-4 border-b border-outline-variant/20 pb-5 lg:flex-row lg:flex-wrap lg:items-center lg:justify-between">
-                    <div class="flex items-center gap-3 text-primary">
-                      <span class="material-symbols-outlined">calendar_today</span>
-                      <span class="font-bold">{trip.dateLabel}</span>
-                    </div>
-                    {stayLabel && (
-                      <div class="flex items-center gap-3 text-on-surface-variant">
-                        <span class="material-symbols-outlined text-primary">{stayIcon}</span>
-                        <span class="font-medium">{stayLabel}</span>
-                      </div>
-                    )}
-                    {(trip.days || trip.nights) && (
-                        <div class="text-sm font-semibold text-primary">
-                        {trip.days || 0} Days / {trip.nights || 0} Nights
-                      </div>
-                    )}
+                <header class="mb-8">
+                  <div class="mb-4 flex flex-wrap items-center gap-3 text-label-sm font-label-sm">
+                    <span class="rounded-full bg-primary/10 px-4 py-1 text-primary">{trip.regionLabel}</span>
+                    {trip.isNew && <span class="rounded-full bg-on-tertiary-container px-4 py-1 text-white">New</span>}
+                    {trip.statusLabel && <span class="rounded-full bg-primary px-4 py-1 text-white">{trip.statusLabel}</span>}
                   </div>
-
-                  <div class="text-on-surface-variant">
+                  <h1 class="mb-3 font-headline-lg text-headline-lg-mobile text-primary md:text-headline-lg">{trip.title}</h1>
+                  <p class="flex items-center gap-2 font-body-lg text-body-lg text-on-surface-variant">
+                    <span aria-hidden="true" class="material-symbols-outlined text-surface-tint">calendar_today</span>
+                    {trip.dateLabel}
+                  </p>
+                </header>
+                <section class="mb-10" aria-label="Trip introduction">
+                  <figure class="mb-6 overflow-hidden rounded-xl bg-primary-fixed">
                     <img
                       alt={trip.coverImage.alt || trip.title}
-                      class="mb-6 h-72 w-full object-cover lg:float-right lg:mb-4 lg:ml-8 lg:h-[26rem] lg:w-[22rem] xl:w-[24rem]"
+                      class="aspect-[4/3] w-full object-cover sm:aspect-[16/10]"
+                      fetchpriority="high"
                       src={trip.coverImage.url}
                     />
+                  </figure>
 
-                    {(trip.summaryHtml || trip.summary) && (
-                      <div
-                        class="mb-6 text-primary [&>p]:mb-4 [&>p]:font-body-lg [&>p]:text-body-lg"
-                        set:html={trip.summaryHtml || trip.summary}
-                      ></div>
-                    )}
+                  {tripHighlights.length > 0 && (
+                    <dl class="mb-8 grid w-full grid-cols-1 divide-y divide-primary/10 py-2 sm:grid-cols-[repeat(var(--trip-highlight-count),minmax(0,1fr))] sm:divide-x sm:divide-y-0 sm:py-5" style={`--trip-highlight-count: ${tripHighlights.length}`}>
+                      {tripHighlights.map((highlight) => (
+                        <div class="min-w-0 py-4 sm:px-5 sm:py-0 sm:first:pl-0 sm:last:pr-0">
+                          <dt class="sr-only">{highlight.label}</dt>
+                          <dd class="flex items-center justify-center gap-3 text-center text-sm font-medium leading-6 text-primary">
+                            <span aria-hidden="true" class="material-symbols-outlined shrink-0 text-2xl text-surface-tint">{highlight.icon}</span>
+                            <span class="min-w-0 break-words">{highlight.value}</span>
+                          </dd>
+                        </div>
+                      ))}
+                    </dl>
+                  )}
 
-                    {trip.overview && (
-                      <div
-                        class="[&>p]:mb-4 [&>p]:font-body-md [&>p]:text-body-md [&_a]:text-on-tertiary-container [&_a]:underline [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6"
-                        set:html={trip.overview}
-                      ></div>
-                    )}
-
-                    <div class="clear-both"></div>
-                  </div>
+                  {trip.overview && (
+                    <div
+                      class="text-on-surface-variant [&>p]:mb-4 [&>p]:font-body-md [&>p]:text-body-md [&>p:first-child]:text-lg [&>p:first-child]:leading-8 [&>p:first-child]:text-primary [&_a]:text-on-tertiary-container [&_a]:underline [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6"
+                      set:html={trip.overview}
+                    ></div>
+                  )}
                 </section>
 
                 {trip.gallery && trip.gallery.length > 0 && (
@@ -237,7 +206,7 @@ const socialEmbeds =
 
                 <div class="space-y-6 leading-relaxed text-on-surface-variant">
                   {trip.packageIncludes && (
-                    <section class="border-t border-outline-variant/60 pt-7">
+                    <section class="rounded-xl border border-primary/10 bg-primary-fixed/40 p-6 sm:p-8">
                       <h2 class="mb-4 font-headline-md text-headline-md text-primary">
                         Our Package Includes
                       </h2>
@@ -266,12 +235,20 @@ const socialEmbeds =
                     </section>
                   )}
                   {trip.deposit && (
-                    <section class="border-t border-outline-variant/60 pt-7">
+                    <section class="rounded-xl border border-primary/10 bg-primary-fixed/40 p-6 sm:p-8">
                       <h2 class="mb-4 font-headline-md text-headline-md text-primary">Deposit</h2>
                       <div
                         class="[&>p]:mb-4 [&>p]:font-body-md [&>p]:text-body-md [&_a]:text-on-tertiary-container [&_a]:underline [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6"
                         set:html={trip.deposit}
                       ></div>
+                      <div class="mt-6 flex justify-center">
+                        <a
+                          class="inline-flex items-center justify-center rounded-full bg-on-tertiary-container px-8 py-3 text-center font-bold text-white transition-opacity hover:opacity-90"
+                          href={trip.bookingHref || "/contact"}
+                        >
+                          {trip.bookingLabel || "Contact Us"}
+                        </a>
+                      </div>
                     </section>
                   )}
                 </div>
@@ -322,7 +299,7 @@ const socialEmbeds =
               )}
             </div>
 
-            <aside class="order-3 xl:order-none xl:sticky xl:top-36 xl:self-start">
+            <aside class="order-3 xl:order-none xl:self-start" data-trip-sidebar>
               <div class="space-y-6">
                 <div class="border-t-2 border-primary pt-5">
                   <h2 class="mb-4 font-headline-md text-headline-md text-primary">Contact Us</h2>
@@ -354,10 +331,10 @@ const socialEmbeds =
                 </div>
 
                 <div class="border-t border-outline-variant/70 pt-6">
-                  {insuranceImage && (
+                  {insuranceImage && siteSettings.insurance.links.length === 0 && (
                     <img
                       alt={insuranceImage.alt || "Travel insurance"}
-                      class="mb-5 h-52 w-full object-cover"
+                      class="mb-5 h-auto w-full object-contain"
                       src={insuranceImage.url}
                     />
                   )}
@@ -367,6 +344,19 @@ const socialEmbeds =
                   {siteSettings.insurance.links.length > 0 && (
                     <div class="grid gap-3">
                       {siteSettings.insurance.links.map((link) => (
+                        <div class="space-y-4">
+                        {link.provider !== "dan" && insuranceImage && (
+                          <img alt={insuranceImage.alt || "Travel insurance"} class="h-auto w-full object-contain" src={insuranceImage.url} />
+                        )}
+                        {link.provider === "dan" && (
+                          <div class="w-full bg-white">
+                            {siteSettings.insurance.danImage ? (
+                              <img alt={siteSettings.insurance.danImage.alt || "DAN Insurance"} class="h-auto w-full object-contain" src={siteSettings.insurance.danImage.url} />
+                            ) : (
+                              <div class="flex aspect-[2/1] items-center justify-center text-3xl font-bold text-primary">DAN</div>
+                            )}
+                          </div>
+                        )}
                         <a
                           class="block w-full rounded-full bg-primary px-5 py-3 text-center font-bold text-white transition-colors hover:bg-primary-container"
                           href={link.href}
@@ -375,6 +365,7 @@ const socialEmbeds =
                         >
                           {link.label}
                         </a>
+                        </div>
                       ))}
                     </div>
                   )}
@@ -397,6 +388,52 @@ const socialEmbeds =
 </Layout>
 
 <script>
+  const sidebar = document.querySelector<HTMLElement>("[data-trip-sidebar]");
+  const desktopSidebar = window.matchMedia("(min-width: 1280px)");
+  const sidebarReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  if (sidebar && sidebar.parentElement) {
+    const container = sidebar.parentElement;
+    let frame = 0;
+    let currentOffset = 0;
+    let targetOffset = 0;
+    const measureSidebar = () => {
+      if (!desktopSidebar.matches || sidebarReducedMotion.matches) {
+        currentOffset = 0;
+        targetOffset = 0;
+        sidebar.style.transform = "";
+        return;
+      }
+      const top = container.getBoundingClientRect().top + window.scrollY;
+      const scrollDistance = Math.max(1, container.clientHeight - window.innerHeight + 144);
+      const travel = Math.min(Math.max(0, container.clientHeight - sidebar.offsetHeight), scrollDistance * 0.65);
+      const progress = Math.min(1, Math.max(0, (window.scrollY - top + 144) / scrollDistance));
+      targetOffset = progress * travel;
+    };
+    const updateSidebar = () => {
+      measureSidebar();
+      const distance = targetOffset - currentOffset;
+      currentOffset = Math.abs(distance) < 0.1 ? targetOffset : currentOffset + distance * 0.16;
+      sidebar.style.transform = `translate3d(0, ${currentOffset}px, 0)`;
+
+      if (Math.abs(targetOffset - currentOffset) >= 0.1) {
+        frame = requestAnimationFrame(updateSidebar);
+      } else {
+        frame = 0;
+      }
+    };
+    const scheduleSidebar = () => {
+      if (!frame) frame = requestAnimationFrame(updateSidebar);
+    };
+    window.addEventListener("scroll", scheduleSidebar, { passive: true });
+    window.addEventListener("resize", scheduleSidebar);
+    desktopSidebar.addEventListener("change", scheduleSidebar);
+    sidebarReducedMotion.addEventListener("change", scheduleSidebar);
+    const sidebarObserver = new ResizeObserver(scheduleSidebar);
+    sidebarObserver.observe(container);
+    sidebarObserver.observe(sidebar);
+    scheduleSidebar();
+  }
+
   document.querySelectorAll<HTMLElement>("[data-trip-gallery]").forEach((gallery) => {
     const viewport = gallery.querySelector<HTMLElement>("[data-gallery-viewport]");
     const slides = Array.from(gallery.querySelectorAll<HTMLElement>("[data-gallery-slide]"));

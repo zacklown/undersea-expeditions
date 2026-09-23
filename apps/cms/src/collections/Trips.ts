@@ -267,15 +267,6 @@ export const Trips: CollectionConfig = {
       ],
     },
     {
-      name: "summary",
-      label: "Trip Summary",
-      admin: {
-        description: "Short formatted intro shown near the top of the trip page.",
-      },
-      required: true,
-      type: "richText",
-    },
-    {
       name: "coverImage",
       label: "Main Image",
       admin: {
@@ -283,15 +274,6 @@ export const Trips: CollectionConfig = {
       },
       relationTo: "media",
       required: true,
-      type: "upload",
-    },
-    {
-      name: "bannerImage",
-      label: "Banner Image",
-      admin: {
-        description: "Optional image shown in the top page banner. Falls back to the main image.",
-      },
-      relationTo: "media",
       type: "upload",
     },
     {
@@ -326,7 +308,7 @@ export const Trips: CollectionConfig = {
           name: "overview",
           label: "Trip Description",
           admin: {
-            description: "Main formatted description for the trip detail page.",
+            description: "The single formatted introduction and description shown beside the main trip image.",
           },
           type: "richText",
         },

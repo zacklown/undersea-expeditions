@@ -122,6 +122,12 @@ export const SiteSettings: GlobalConfig = {
       type: "group",
       fields: [
         {
+          name: "danImage",
+          label: "DAN Insurance Image",
+          relationTo: "media",
+          type: "upload",
+        },
+        {
           name: "defaultImage",
           label: "Default Trip Insurance Image",
           relationTo: "media",
@@ -172,22 +178,6 @@ export const SiteSettings: GlobalConfig = {
               },
             },
           ],
-        },
-      ],
-    },
-    {
-      name: "tripDefaults",
-      label: "Trip Page Defaults",
-      type: "group",
-      fields: [
-        {
-          name: "heroImage",
-          label: "Default Trip Hero Image",
-          relationTo: "media",
-          type: "upload",
-          admin: {
-            description: "Used when a trip does not have its own banner image.",
-          },
         },
       ],
     },

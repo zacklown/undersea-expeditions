@@ -1,3 +1,5 @@
+import * as migration_20260916_150000_add_dan_insurance_image from "./20260916_150000_add_dan_insurance_image";
+import * as migration_20260916_140000_simplify_trip_content from "./20260916_140000_simplify_trip_content";
 import * as migration_20260610_161320_init from './20260610_161320_init';
 import * as migration_20260610_164628_add_trip_map_pins from './20260610_164628_add_trip_map_pins';
 import * as migration_20260610_170256_make_trip_map_pin_optional_and_expand_palette from './20260610_170256_make_trip_map_pin_optional_and_expand_palette';
@@ -107,5 +109,15 @@ export const migrations = [
     up: migration_20260916_133000_unify_team_and_split_insurance_links.up,
     down: migration_20260916_133000_unify_team_and_split_insurance_links.down,
     name: '20260916_133000_unify_team_and_split_insurance_links'
+  },
+  {
+    up: migration_20260916_140000_simplify_trip_content.up,
+    down: migration_20260916_140000_simplify_trip_content.down,
+    name: '20260916_140000_simplify_trip_content'
+  },
+  {
+    up: migration_20260916_150000_add_dan_insurance_image.up,
+    down: migration_20260916_150000_add_dan_insurance_image.down,
+    name: '20260916_150000_add_dan_insurance_image'
   },
 ];

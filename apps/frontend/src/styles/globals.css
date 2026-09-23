@@ -30,6 +30,12 @@
     transform-origin: center bottom;
     will-change: transform;
   }
+
+  /* The lower wave's filled edge meets the section at its top. Keeping that
+     edge as the transform origin prevents the animation from opening a gap. */
+  .wave-drift-bottom path {
+    transform-origin: center top;
+  }
 }
 
 @keyframes wave-drift {

@@ -8,7 +8,6 @@ export type CMSMedia = {
 };
 
 export type Trip = {
-  bannerImage?: CMSMedia;
   bookingHref: string;
   bookingLabel: string;
   coverImage: CMSMedia;
@@ -78,8 +77,6 @@ export type Trip = {
     title?: string;
   }>;
   stays: string[];
-  summary: string;
-  summaryHtml?: string;
   title: string;
   tripEnd?: string;
   tripStart?: string;
@@ -112,9 +109,11 @@ export type SiteSettings = {
   };
   footerBlurb: string;
   insurance: {
+    danImage?: CMSMedia;
     description?: string;
     defaultImage: CMSMedia;
     links: Array<{
+      provider?: string;
       href: string;
       label: string;
     }>;
@@ -131,9 +130,6 @@ export type SiteSettings = {
     url: string;
   }>;
   tagline: string;
-  tripDefaults: {
-    heroImage: CMSMedia;
-  };
 };
 
 export type HomePageContent = {
@@ -277,11 +273,10 @@ const aboutHeroImage =
 
 const fallbackTrips: Trip[] = [
   {
-    bannerImage: { alt: "Saba Expedition", url: featuredTripImage },
     bookingHref: "/contact",
     bookingLabel: "Reserve Your Spot",
     overview:
-      "Join us in the Unspoiled Queen of the Caribbean for a week of dramatic volcanic pinnacles, lush reefs, and a social onboard atmosphere built for LGBTQ+ divers.",
+      "Join us for an exclusive week in the Unspoiled Queen of the Caribbean, with Sea & Learn programming and a warm, community-first atmosphere." + "<br /><br />" + "Join us in the Unspoiled Queen of the Caribbean for a week of dramatic volcanic pinnacles, lush reefs, and a social onboard atmosphere built for LGBTQ+ divers.",
     coverImage: { alt: "Saba Expedition", url: featuredTripImage },
     countries: ["Saba"],
     dateLabel: "October 17-24, 2026",
@@ -294,8 +289,6 @@ const fallbackTrips: Trip[] = [
     regionLabel: "SABA",
     stays: ["Juliana's Hotel"],
     slug: "lgbtq-scuba-saba",
-    summary:
-      "Join us for an exclusive week in the Unspoiled Queen of the Caribbean, with Sea & Learn programming and a warm, community-first atmosphere.",
     title: "LGBTQ+ Scuba Saba",
     tripEnd: "2026-10-24T00:00:00.000Z",
     tripStart: "2026-10-17T00:00:00.000Z",
@@ -303,14 +296,10 @@ const fallbackTrips: Trip[] = [
     tripStyle: "land-resort",
   },
   {
-    bannerImage: {
-      alt: "Red Sea",
-      url: "https://lh3.googleusercontent.com/aida-public/AB6AXuDlPUIVi1CcXvmr1q1Ys3FSJDneOpJbw_vknGnvYLDjj5r0aS7pVnaXuyyNVGbewNztVq_aTE8ks2XwtpKRawDB8NomyfkLWQLPJYl8JaY-SauTrkHM09YZPOhcHwr9EBnfG4tRk7jWtS4cEBBG1FMvsnFTf6lXoqlfaQGa6ImzuoOIQewVeF7ln_qVYA6G9xkfUGGfv34b55xt-zjBIzLBX-R4NqBrQVQ-2TIWvLvyaZhBNIq2vEwJw7ciZS-fiAPkJy3p7quyf8wW",
-    },
     bookingHref: "/contact",
     bookingLabel: "Details & Booking",
     overview:
-      "Explore the legendary Red Sea with pristine house reefs, strong hospitality, and a trip design tuned for women who want both diving and community.",
+      "Explore the legendary Red Sea for women only, featuring pristine house reefs and world-class hospitality." + "<br /><br />" + "Explore the legendary Red Sea with pristine house reefs, strong hospitality, and a trip design tuned for women who want both diving and community.",
     coverImage: {
       alt: "Red Sea",
       url: "https://lh3.googleusercontent.com/aida-public/AB6AXuDlPUIVi1CcXvmr1q1Ys3FSJDneOpJbw_vknGnvYLDjj5r0aS7pVnaXuyyNVGbewNztVq_aTE8ks2XwtpKRawDB8NomyfkLWQLPJYl8JaY-SauTrkHM09YZPOhcHwr9EBnfG4tRk7jWtS4cEBBG1FMvsnFTf6lXoqlfaQGa6ImzuoOIQewVeF7ln_qVYA6G9xkfUGGfv34b55xt-zjBIzLBX-R4NqBrQVQ-2TIWvLvyaZhBNIq2vEwJw7ciZS-fiAPkJy3p7quyf8wW",
@@ -325,8 +314,6 @@ const fallbackTrips: Trip[] = [
     regionLabel: "RED SEA",
     stays: ["Marsa Shagra Dive Village"],
     slug: "marsa-shagra-dive-village",
-    summary:
-      "Explore the legendary Red Sea for women only, featuring pristine house reefs and world-class hospitality.",
     title: "Marsa Shagra Dive Village",
     tripEnd: "2026-10-18T00:00:00.000Z",
     tripStart: "2026-10-11T00:00:00.000Z",
@@ -334,14 +321,10 @@ const fallbackTrips: Trip[] = [
     tripStyle: "land-resort",
   },
   {
-    bannerImage: {
-      alt: "La Paz",
-      url: "https://lh3.googleusercontent.com/aida-public/AB6AXuC56og5pfXNSCbdx3GnLnULIShYtyXbrXCmLdEW9jvVauWpnaLN-tNjFT6A8-m4mU8WxCarO9ptWp6SV5hh6sVBdxcfSTKWBZANeBjfvZTVOkidc3agefFe--3L3ZqEq0A_DeVMBuhwrOqk8WXXqQtOlHnq5wfMPw4md9h_IE2hIh4SsnvnHcgy82g-jAqhBkwJYAFHDNplfOuB8J4P3OL0C61MBeisbu2_FM4pBRK9nDd5RO5OnlgaHby-eUHRkTggbFfrU5QQINu8",
-    },
     bookingHref: "/contact",
     bookingLabel: "Details & Booking",
     overview:
-      "Dive the Sea of Cortez for sea lion encounters, whale shark sightings, and relaxed Baja energy with a group that actually wants to hang out after the dives.",
+      'Dive the Sea of Cortez, the "world\'s aquarium," for sea lion encounters and whale shark sightings.' + "<br /><br />" + "Dive the Sea of Cortez for sea lion encounters, whale shark sightings, and relaxed Baja energy with a group that actually wants to hang out after the dives.",
     coverImage: {
       alt: "La Paz",
       url: "https://lh3.googleusercontent.com/aida-public/AB6AXuC56og5pfXNSCbdx3GnLnULIShYtyXbrXCmLdEW9jvVauWpnaLN-tNjFT6A8-m4mU8WxCarO9ptWp6SV5hh6sVBdxcfSTKWBZANeBjfvZTVOkidc3agefFe--3L3ZqEq0A_DeVMBuhwrOqk8WXXqQtOlHnq5wfMPw4md9h_IE2hIh4SsnvnHcgy82g-jAqhBkwJYAFHDNplfOuB8J4P3OL0C61MBeisbu2_FM4pBRK9nDd5RO5OnlgaHby-eUHRkTggbFfrU5QQINu8",
@@ -356,8 +339,6 @@ const fallbackTrips: Trip[] = [
     regionLabel: "MEXICO",
     stays: ["La Paz Resort"],
     slug: "la-paz-baja-california",
-    summary:
-      'Dive the Sea of Cortez, the "world\'s aquarium," for sea lion encounters and whale shark sightings.',
     title: "La Paz, Baja California",
     tripEnd: "2026-11-28T00:00:00.000Z",
     tripStart: "2026-11-21T00:00:00.000Z",
@@ -365,14 +346,10 @@ const fallbackTrips: Trip[] = [
     tripStyle: "land-resort",
   },
   {
-    bannerImage: {
-      alt: "Maldives",
-      url: "https://lh3.googleusercontent.com/aida-public/AB6AXuBycCrQqKtoSOqz6jXNXXD37n9FYxOosdJSN_Ai2pQI1kapCZjwJyd-CChOg6a6lMURhqXmAcfbC-9vRWs3IPdIRa_z_MEeZ7JWrTCDuryIWDwiLM_D3lZe3hOUmITbyVZbugpCsrzRBm1uWa8M1UgiakpZeb2eU8M5cVbE8NrbMyWnVZfZ8BN9p65avRT2JR1MScukUTi8XsNmDsMBHp0clenKkKpF3l4c6Ftz7Fd_bJKbGAT6APHDpapGzLWRhSXMCkj8hiXcpHGo",
-    },
     bookingHref: "/contact",
     bookingLabel: "Details & Booking",
     overview:
-      "Board a luxury liveaboard for manta action, current-swept channels, and the kind of polished logistics that let you focus on the diving.",
+      "A luxury liveaboard expedition through the central atolls, seeking mantas and breathtaking reefs." + "<br /><br />" + "Board a luxury liveaboard for manta action, current-swept channels, and the kind of polished logistics that let you focus on the diving.",
     coverImage: {
       alt: "Maldives",
       url: "https://lh3.googleusercontent.com/aida-public/AB6AXuBycCrQqKtoSOqz6jXNXXD37n9FYxOosdJSN_Ai2pQI1kapCZjwJyd-CChOg6a6lMURhqXmAcfbC-9vRWs3IPdIRa_z_MEeZ7JWrTCDuryIWDwiLM_D3lZe3hOUmITbyVZbugpCsrzRBm1uWa8M1UgiakpZeb2eU8M5cVbE8NrbMyWnVZfZ8BN9p65avRT2JR1MScukUTi8XsNmDsMBHp0clenKkKpF3l4c6Ftz7Fd_bJKbGAT6APHDpapGzLWRhSXMCkj8hiXcpHGo",
@@ -388,8 +365,6 @@ const fallbackTrips: Trip[] = [
     regionLabel: "MALDIVES",
     stays: ["Luxury Liveaboard"],
     slug: "magic-of-the-maldives",
-    summary:
-      "A luxury liveaboard expedition through the central atolls, seeking mantas and breathtaking reefs.",
     title: "Magic of the Maldives",
     tripEnd: "2027-02-27T00:00:00.000Z",
     tripStart: "2027-02-17T00:00:00.000Z",
@@ -449,9 +424,6 @@ const fallbackSiteSettings: SiteSettings = {
     { label: "Undersea Expeditions on Instagram", platform: "instagram", url: "https://www.instagram.com/gayscuba/?hl=en" },
   ],
   tagline: "World-class diving and community-driven travel for the LGBTQ+ community since 1991.",
-  tripDefaults: {
-    heroImage: { alt: "Undersea Expeditions dive trip", url: featuredTripImage },
-  },
 };
 
 const fallbackHomePage: HomePageContent = {
@@ -676,12 +648,6 @@ function decodeHtmlEntities(value: string) {
     .replace(/&nbsp;/gi, " ");
 }
 
-function stripHtml(value?: string) {
-  return value
-    ? decodeHtmlEntities(value.replace(/<[^>]+>/g, "")).replace(/\s+/g, " ").trim()
-    : "";
-}
-
 function formatTripDateLabel(tripStart?: string, tripEnd?: string, fallback?: string) {
   if (!tripStart || !tripEnd) return fallback || "";
 
@@ -808,9 +774,6 @@ function normalizeTrip(doc: any, fallback?: Trip): Trip | null {
   const path = getTripPath({ slug: doc.slug, tripYear });
 
   return {
-    bannerImage: doc.bannerImage?.url
-      ? mapMedia(doc.bannerImage, fallback?.bannerImage || fallback?.coverImage || fallbackTrips[0].coverImage)
-      : fallback?.bannerImage,
     bookingHref: doc.bookingHref || fallback?.bookingHref || "/contact",
     bookingLabel: doc.bookingLabel || fallback?.bookingLabel || "Contact Us",
     coverImage: mapMedia(doc.coverImage, fallback?.coverImage || fallbackTrips[0].coverImage),
@@ -852,7 +815,7 @@ function normalizeTrip(doc: any, fallback?: Trip): Trip | null {
     mapPin,
     nights: doc.nights || fallback?.nights,
     notIncluded: renderRichText(doc.contentSections?.notIncluded) || fallback?.notIncluded,
-    overview: renderRichText(doc.contentSections?.overview) || fallback?.overview,
+    overview: renderRichText(doc.contentSections?.overview) || renderRichText(doc.summary) || fallback?.overview,
     packageIncludes: renderRichText(doc.contentSections?.packageIncludes) || fallback?.packageIncludes,
     pricingOptions:
       doc.pricingOptions?.map((item: any) => ({
@@ -879,8 +842,6 @@ function normalizeTrip(doc: any, fallback?: Trip): Trip | null {
         })
         .filter(Boolean) || fallback?.socialEmbeds,
     stays,
-    summary: stripHtml(renderRichText(doc.summary)) || fallback?.summary || "",
-    summaryHtml: renderRichText(doc.summary) || fallback?.summaryHtml,
     title: doc.title,
     tripEnd: doc.tripEnd || fallback?.tripEnd,
     tripStart: doc.tripStart || fallback?.tripStart,
@@ -944,6 +905,9 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     footerBlurb: global.footerBlurb || fallbackSiteSettings.footerBlurb,
     insurance: {
       description: global.insurance?.description || undefined,
+      danImage: global.insurance?.danImage?.url
+        ? mapMedia(global.insurance.danImage, fallbackSiteSettings.insurance.defaultImage)
+        : undefined,
       defaultImage: global.insurance?.defaultImage?.url
         ? mapMedia(global.insurance.defaultImage, fallbackSiteSettings.insurance.defaultImage)
         : fallbackSiteSettings.insurance.defaultImage,
@@ -951,6 +915,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
         {
           href: typeof global.insurance?.danHref === "string" ? global.insurance.danHref.trim() : "",
           label: global.insurance?.danLabel || "DAN Insurance",
+          provider: "dan",
         },
         {
           href:
@@ -958,6 +923,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
               ? global.insurance.travelHref.trim()
               : "",
           label: global.insurance?.travelLabel || "Travel Insurance",
+          provider: "travel",
         },
       ].filter((link) => /^https?:\/\//i.test(link.href)),
     },
@@ -972,11 +938,6 @@ export async function getSiteSettings(): Promise<SiteSettings> {
         ? normalizedSocialLinks
         : fallbackSiteSettings.socialLinks,
     tagline: global.tagline || fallbackSiteSettings.tagline,
-    tripDefaults: {
-      heroImage: global.tripDefaults?.heroImage?.url
-        ? mapMedia(global.tripDefaults.heroImage, fallbackSiteSettings.tripDefaults.heroImage)
-        : fallbackSiteSettings.tripDefaults.heroImage,
-    },
   };
 }
 

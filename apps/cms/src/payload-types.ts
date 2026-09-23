@@ -320,31 +320,9 @@ export interface Trip {
   days: number;
   nights: number;
   /**
-   * Short formatted intro shown near the top of the trip page.
-   */
-  summary: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  /**
    * Displayed inside the main trip information panel.
    */
   coverImage: number | Media;
-  /**
-   * Optional image shown in the top page banner. Falls back to the main image.
-   */
-  bannerImage?: (number | null) | Media;
   /**
    * Optional photos of the boat, rooms, resort, or other trip accommodations.
    */
@@ -360,7 +338,7 @@ export interface Trip {
     | null;
   contentSections?: {
     /**
-     * Main formatted description for the trip detail page.
+     * The single formatted introduction and description shown beside the main trip image.
      */
     overview?: {
       root: {
@@ -710,9 +688,7 @@ export interface TripsSelect<T extends boolean = true> {
   showInListings?: T;
   days?: T;
   nights?: T;
-  summary?: T;
   coverImage?: T;
-  bannerImage?: T;
   gallery?:
     | T
     | {
@@ -844,6 +820,7 @@ export interface SiteSetting {
       }[]
     | null;
   insurance?: {
+    danImage?: (number | null) | Media;
     /**
      * Used on trip pages when that trip does not provide its own insurance image.
      */
@@ -859,12 +836,6 @@ export interface SiteSetting {
      * Use the complete external URL, including https://.
      */
     travelHref?: string | null;
-  };
-  tripDefaults?: {
-    /**
-     * Used when a trip does not have its own banner image.
-     */
-    heroImage?: (number | null) | Media;
   };
   /**
    * Content is intentionally blank until reviewed and supplied by your legal advisor.
@@ -1182,17 +1153,13 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   insurance?:
     | T
     | {
+        danImage?: T;
         defaultImage?: T;
         description?: T;
         danLabel?: T;
         danHref?: T;
         travelLabel?: T;
         travelHref?: T;
-      };
-  tripDefaults?:
-    | T
-    | {
-        heroImage?: T;
       };
   legalPages?:
     | T
