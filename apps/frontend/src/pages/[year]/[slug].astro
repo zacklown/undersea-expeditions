@@ -316,7 +316,7 @@ const socialEmbeds: SocialEmbed[] = trip?.socialEmbeds?.flatMap((embed) => {
               )}
             </div>
 
-            <aside class="order-3 xl:order-none xl:self-start" data-trip-sidebar>
+            <aside class="order-3 xl:order-none xl:self-start">
               <div class="space-y-6">
                 <div class="border-t-2 border-primary pt-5">
                   <h2 class="mb-4 font-headline-md text-headline-md text-primary">Contact Us</h2>
@@ -405,52 +405,6 @@ const socialEmbeds: SocialEmbed[] = trip?.socialEmbeds?.flatMap((embed) => {
 </Layout>
 
 <script>
-  const sidebar = document.querySelector<HTMLElement>("[data-trip-sidebar]");
-  const desktopSidebar = window.matchMedia("(min-width: 1280px)");
-  const sidebarReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-  if (sidebar && sidebar.parentElement) {
-    const container = sidebar.parentElement;
-    let frame = 0;
-    let currentOffset = 0;
-    let targetOffset = 0;
-    const measureSidebar = () => {
-      if (!desktopSidebar.matches || sidebarReducedMotion.matches) {
-        currentOffset = 0;
-        targetOffset = 0;
-        sidebar.style.transform = "";
-        return;
-      }
-      const top = container.getBoundingClientRect().top + window.scrollY;
-      const scrollDistance = Math.max(1, container.clientHeight - window.innerHeight + 144);
-      const travel = Math.min(Math.max(0, container.clientHeight - sidebar.offsetHeight), scrollDistance * 0.65);
-      const progress = Math.min(1, Math.max(0, (window.scrollY - top + 144) / scrollDistance));
-      targetOffset = progress * travel;
-    };
-    const updateSidebar = () => {
-      measureSidebar();
-      const distance = targetOffset - currentOffset;
-      currentOffset = Math.abs(distance) < 0.1 ? targetOffset : currentOffset + distance * 0.16;
-      sidebar.style.transform = `translate3d(0, ${currentOffset}px, 0)`;
-
-      if (Math.abs(targetOffset - currentOffset) >= 0.1) {
-        frame = requestAnimationFrame(updateSidebar);
-      } else {
-        frame = 0;
-      }
-    };
-    const scheduleSidebar = () => {
-      if (!frame) frame = requestAnimationFrame(updateSidebar);
-    };
-    window.addEventListener("scroll", scheduleSidebar, { passive: true });
-    window.addEventListener("resize", scheduleSidebar);
-    desktopSidebar.addEventListener("change", scheduleSidebar);
-    sidebarReducedMotion.addEventListener("change", scheduleSidebar);
-    const sidebarObserver = new ResizeObserver(scheduleSidebar);
-    sidebarObserver.observe(container);
-    sidebarObserver.observe(sidebar);
-    scheduleSidebar();
-  }
-
   document.querySelectorAll<HTMLElement>("[data-trip-gallery]").forEach((gallery) => {
     const viewport = gallery.querySelector<HTMLElement>("[data-gallery-viewport]");
     const slides = Array.from(gallery.querySelectorAll<HTMLElement>("[data-gallery-slide]"));

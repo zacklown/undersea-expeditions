@@ -5,7 +5,7 @@ type RichTextNode = {
     newTab?: boolean;
     url?: string;
   };
-  format?: number;
+  format?: number | string;
   listType?: "bullet" | "number";
   tag?: string;
   text?: string;
@@ -28,12 +28,23 @@ function escapeHtml(value: string) {
 function formatText(node: RichTextNode) {
   let text = escapeHtml(node.text || "");
 
-  if (node.format && (node.format & 1) === 1) text = `<strong>${text}</strong>`;
-  if (node.format && (node.format & 2) === 2) text = `<em>${text}</em>`;
-  if (node.format && (node.format & 8) === 8) text = `<u>${text}</u>`;
-  if (node.format && (node.format & 4) === 4) text = `<s>${text}</s>`;
+  const format = typeof node.format === "number" ? node.format : 0;
+  if ((format & 1) === 1) text = `<strong>${text}</strong>`;
+  if ((format & 2) === 2) text = `<em>${text}</em>`;
+  if ((format & 8) === 8) text = `<u>${text}</u>`;
+  if ((format & 4) === 4) text = `<s>${text}</s>`;
 
   return text;
+}
+
+function getAlignmentStyle(node: RichTextNode) {
+  if (typeof node.format !== "string") return "";
+
+  const alignment = ["left", "center", "right", "justify", "start", "end"].includes(node.format)
+    ? node.format
+    : "";
+
+  return alignment ? ` style="text-align:${alignment}"` : "";
 }
 
 function renderNode(node?: RichTextNode): string {
@@ -43,18 +54,19 @@ function renderNode(node?: RichTextNode): string {
   if (node.type === "linebreak") return "<br />";
 
   const children = (node.children || []).map((child) => renderNode(child)).join("");
+  const alignmentStyle = getAlignmentStyle(node);
 
   switch (node.type) {
     case "paragraph":
-      return children ? `<p>${children}</p>` : "";
+      return children ? `<p${alignmentStyle}>${children}</p>` : "";
     case "heading":
-      return `<${node.tag || "h2"}>${children}</${node.tag || "h2"}>`;
+      return `<${node.tag || "h2"}${alignmentStyle}>${children}</${node.tag || "h2"}>`;
     case "list":
-      return node.listType === "number" ? `<ol>${children}</ol>` : `<ul>${children}</ul>`;
+      return node.listType === "number" ? `<ol${alignmentStyle}>${children}</ol>` : `<ul${alignmentStyle}>${children}</ul>`;
     case "listitem":
       return `<li>${children}</li>`;
     case "quote":
-      return `<blockquote>${children}</blockquote>`;
+      return `<blockquote${alignmentStyle}>${children}</blockquote>`;
     case "link": {
       const href = escapeHtml(node.fields?.url || "#");
       const target = node.fields?.newTab ? ` target="_blank" rel="noreferrer"` : "";

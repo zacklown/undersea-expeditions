@@ -112,7 +112,7 @@ export const Trips: CollectionConfig = {
                 clientProps: {
                   colorPath: "mapPin.color",
                   showOnHomepagePath: "mapPin.showOnHomepage",
-                  imageSrc: "/MapChart_Map.png",
+                  imageSrc: "/world-map-with-inset-russia.png",
                   xPath: "mapPin.xPercent",
                   yPath: "mapPin.yPercent",
                 },
@@ -127,7 +127,7 @@ export const Trips: CollectionConfig = {
               name: "showOnHomepage",
               label: "Show Pin On Homepage",
               type: "checkbox",
-              defaultValue: false,
+              defaultValue: true,
             },
             {
               name: "xPercent",
