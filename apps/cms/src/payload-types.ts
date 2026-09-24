@@ -373,6 +373,7 @@ export interface Trip {
       };
       [k: string]: unknown;
     } | null;
+    packageIncludesHeading?: string | null;
     /**
      * Formatted exclusions shown on the trip detail page.
      */
@@ -391,6 +392,7 @@ export interface Trip {
       };
       [k: string]: unknown;
     } | null;
+    notIncludedHeading?: string | null;
     flights?: {
       root: {
         type: string;
@@ -406,6 +408,7 @@ export interface Trip {
       };
       [k: string]: unknown;
     } | null;
+    flightsHeading?: string | null;
     deposit?: {
       root: {
         type: string;
@@ -421,6 +424,52 @@ export interface Trip {
       };
       [k: string]: unknown;
     } | null;
+    depositHeading?: string | null;
+    /**
+     * Optional notice shown above the other content sections as "Update as of [date]".
+     */
+    update?: {
+      asOf?: string | null;
+      content?: {
+        root: {
+          type: string;
+          children: {
+            type: any;
+            version: number;
+            [k: string]: unknown;
+          }[];
+          direction: ('ltr' | 'rtl') | null;
+          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+          indent: number;
+          version: number;
+        };
+        [k: string]: unknown;
+      } | null;
+    };
+    /**
+     * Add and drag sections into the order you want them shown after the default sections.
+     */
+    additionalSections?:
+      | {
+          heading: string;
+          content: {
+            root: {
+              type: string;
+              children: {
+                type: any;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
+            [k: string]: unknown;
+          };
+          id?: string | null;
+        }[]
+      | null;
   };
   pricingOptions?:
     | {
@@ -445,14 +494,14 @@ export interface Trip {
       }[]
     | null;
   /**
-   * Add Instagram or Facebook post URLs to show embedded social posts on the trip page.
+   * Add Instagram, Facebook, TikTok, or YouTube post URLs to show embedded social posts on the trip page.
    */
   socialEmbeds?:
     | {
-        platform: 'instagram' | 'facebook';
+        platform: 'instagram' | 'facebook' | 'tiktok' | 'youtube';
         title?: string | null;
         /**
-         * Paste the full Instagram or Facebook post URL. The frontend converts it into an embed automatically.
+         * Paste the full Instagram, Facebook, TikTok, or YouTube post URL. The frontend converts it into an embed automatically.
          */
         postUrl: string;
         id?: string | null;
@@ -473,9 +522,8 @@ export interface Trip {
  */
 export interface Faq {
   id: number;
+  _order?: string | null;
   question: string;
-  category?: string | null;
-  sortOrder?: number | null;
   answer: string;
   updatedAt: string;
   createdAt: string;
@@ -701,9 +749,26 @@ export interface TripsSelect<T extends boolean = true> {
     | {
         overview?: T;
         packageIncludes?: T;
+        packageIncludesHeading?: T;
         notIncluded?: T;
+        notIncludedHeading?: T;
         flights?: T;
+        flightsHeading?: T;
         deposit?: T;
+        depositHeading?: T;
+        update?:
+          | T
+          | {
+              asOf?: T;
+              content?: T;
+            };
+        additionalSections?:
+          | T
+          | {
+              heading?: T;
+              content?: T;
+              id?: T;
+            };
       };
   pricingOptions?:
     | T
@@ -732,9 +797,8 @@ export interface TripsSelect<T extends boolean = true> {
  * via the `definition` "faqs_select".
  */
 export interface FaqsSelect<T extends boolean = true> {
+  _order?: T;
   question?: T;
-  category?: T;
-  sortOrder?: T;
   answer?: T;
   updatedAt?: T;
   createdAt?: T;

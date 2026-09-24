@@ -1,4 +1,5 @@
 import * as migration_20260916_150000_add_dan_insurance_image from "./20260916_150000_add_dan_insurance_image";
+import * as migration_20260923_120000_trip_sections_and_faq_order from "./20260923_120000_trip_sections_and_faq_order";
 import * as migration_20260916_140000_simplify_trip_content from "./20260916_140000_simplify_trip_content";
 import * as migration_20260610_161320_init from './20260610_161320_init';
 import * as migration_20260610_164628_add_trip_map_pins from './20260610_164628_add_trip_map_pins';
@@ -119,5 +120,10 @@ export const migrations = [
     up: migration_20260916_150000_add_dan_insurance_image.up,
     down: migration_20260916_150000_add_dan_insurance_image.down,
     name: '20260916_150000_add_dan_insurance_image'
+  },
+  {
+    up: migration_20260923_120000_trip_sections_and_faq_order.up,
+    down: migration_20260923_120000_trip_sections_and_faq_order.down,
+    name: '20260923_120000_trip_sections_and_faq_order'
   },
 ];

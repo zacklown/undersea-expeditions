@@ -847,6 +847,7 @@ const yearCalendars = visibleYears.map((year) => {
     viewButton.addEventListener("click", () => {
       appliedFilters = getPendingFilters();
       renderAppliedResults();
+      closePanels();
       document.getElementById("trip-results")?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   }

@@ -10,30 +10,16 @@ export const FAQs: CollectionConfig = {
     update: isAuthenticated,
   },
   admin: {
-    defaultColumns: ["question", "category", "updatedAt"],
+    defaultColumns: ["question", "updatedAt"],
     group: "Content",
     useAsTitle: "question",
   },
-  defaultSort: "sortOrder",
+  orderable: true,
   fields: [
     {
       name: "question",
       type: "text",
       required: true,
-    },
-    {
-      type: "row",
-      fields: [
-        {
-          name: "category",
-          type: "text",
-        },
-        {
-          name: "sortOrder",
-          type: "number",
-          defaultValue: 10,
-        },
-      ],
     },
     {
       name: "answer",

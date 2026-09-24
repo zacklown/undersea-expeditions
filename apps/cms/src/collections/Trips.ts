@@ -321,6 +321,12 @@ export const Trips: CollectionConfig = {
           type: "richText",
         },
         {
+          name: "packageIncludesHeading",
+          label: "Package Includes Heading",
+          type: "text",
+          defaultValue: "Our Package Includes",
+        },
+        {
           name: "notIncluded",
           label: "Not Included",
           admin: {
@@ -329,12 +335,74 @@ export const Trips: CollectionConfig = {
           type: "richText",
         },
         {
+          name: "notIncludedHeading",
+          label: "Not Included Heading",
+          type: "text",
+          defaultValue: "Not Included",
+        },
+        {
           name: "flights",
+          label: "Getting There",
           type: "richText",
+        },
+        {
+          name: "flightsHeading",
+          label: "Getting There Heading",
+          type: "text",
+          defaultValue: "Getting There",
         },
         {
           name: "deposit",
           type: "richText",
+        },
+        {
+          name: "depositHeading",
+          label: "Deposit Heading",
+          type: "text",
+          defaultValue: "Deposit",
+        },
+        {
+          name: "update",
+          label: "Trip Update",
+          type: "group",
+          admin: {
+            description: 'Optional notice shown above the other content sections as "Update as of [date]".',
+          },
+          fields: [
+            {
+              name: "asOf",
+              label: "Update As Of",
+              type: "date",
+              admin: {
+                date: { pickerAppearance: "dayOnly" },
+              },
+            },
+            {
+              name: "content",
+              label: "Update Content",
+              type: "richText",
+            },
+          ],
+        },
+        {
+          name: "additionalSections",
+          label: "Additional Sections",
+          type: "array",
+          admin: {
+            description: "Add and drag sections into the order you want them shown after the default sections.",
+          },
+          fields: [
+            {
+              name: "heading",
+              type: "text",
+              required: true,
+            },
+            {
+              name: "content",
+              type: "richText",
+              required: true,
+            },
+          ],
         },
       ],
     },
@@ -369,7 +437,7 @@ export const Trips: CollectionConfig = {
       type: "array",
       admin: {
         description:
-          "Add Instagram or Facebook post URLs to show embedded social posts on the trip page.",
+          "Add Instagram, Facebook, TikTok, or YouTube post URLs to show embedded social posts on the trip page.",
       },
       fields: [
         {
@@ -383,6 +451,8 @@ export const Trips: CollectionConfig = {
               options: [
                 { label: "Instagram", value: "instagram" },
                 { label: "Facebook", value: "facebook" },
+                { label: "TikTok", value: "tiktok" },
+                { label: "YouTube", value: "youtube" },
               ],
               required: true,
             },
@@ -400,7 +470,7 @@ export const Trips: CollectionConfig = {
           required: true,
           admin: {
             description:
-              "Paste the full Instagram or Facebook post URL. The frontend converts it into an embed automatically.",
+              "Paste the full Instagram, Facebook, TikTok, or YouTube post URL. The frontend converts it into an embed automatically.",
           },
         },
       ],

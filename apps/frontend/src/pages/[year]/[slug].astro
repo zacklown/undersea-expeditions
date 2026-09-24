@@ -73,6 +73,33 @@ function createSocialEmbed(embed: TripSocialEmbed): SocialEmbed | null {
     };
   }
 
+  if (embed.platform === "tiktok" && ["tiktok.com", "vm.tiktok.com", "vt.tiktok.com"].includes(hostname)) {
+    const videoId = url.pathname.match(/\/video\/(\d+)/)?.[1];
+    if (!videoId) return null;
+
+    return {
+      ...embed,
+      postUrl: url.href,
+      embedUrl: `https://www.tiktok.com/player/v1/${videoId}`,
+    };
+  }
+
+  if (embed.platform === "youtube" && ["youtube.com", "youtu.be"].includes(hostname)) {
+    const pathParts = url.pathname.split("/").filter(Boolean);
+    const videoId =
+      hostname === "youtu.be"
+        ? pathParts[0]
+        : url.searchParams.get("v") ||
+          (["shorts", "embed", "live"].includes(pathParts[0] || "") ? pathParts[1] : "");
+    if (!videoId || !/^[\w-]{6,}$/.test(videoId)) return null;
+
+    return {
+      ...embed,
+      postUrl: url.href,
+      embedUrl: `https://www.youtube-nocookie.com/embed/${videoId}`,
+    };
+  }
+
   return null;
 }
 
@@ -222,10 +249,28 @@ const socialEmbeds: SocialEmbed[] = trip?.socialEmbeds?.flatMap((embed) => {
                 )}
 
                 <div class="space-y-6 leading-relaxed text-on-surface-variant">
+                  {trip.update?.asOf && (
+                    <section class="rounded-xl border border-on-tertiary-container/25 bg-secondary-container/60 p-6 sm:p-8">
+                      <h2 class="mb-4 font-headline-md text-headline-md text-primary">
+                        Update as of {new Intl.DateTimeFormat("en-US", {
+                          day: "numeric",
+                          month: "long",
+                          timeZone: "UTC",
+                          year: "numeric",
+                        }).format(new Date(trip.update.asOf))}
+                      </h2>
+                      {trip.update.content && (
+                        <div
+                          class="[&>p]:mb-4 [&>p]:font-body-md [&>p]:text-body-md [&_a]:text-on-tertiary-container [&_a]:underline [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6"
+                          set:html={trip.update.content}
+                        ></div>
+                      )}
+                    </section>
+                  )}
                   {trip.packageIncludes && (
                     <section class="rounded-xl border border-primary/10 bg-primary-fixed/40 p-6 sm:p-8">
                       <h2 class="mb-4 font-headline-md text-headline-md text-primary">
-                        Our Package Includes
+                        {trip.packageIncludesHeading}
                       </h2>
                       <div
                         class="[&>p]:mb-4 [&>p]:font-body-md [&>p]:text-body-md [&_a]:text-on-tertiary-container [&_a]:underline [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6"
@@ -235,7 +280,7 @@ const socialEmbeds: SocialEmbed[] = trip?.socialEmbeds?.flatMap((embed) => {
                   )}
                   {trip.notIncluded && (
                     <section class="border-t border-outline-variant/60 pt-7">
-                      <h2 class="mb-4 font-headline-md text-headline-md text-primary">Not Included</h2>
+                      <h2 class="mb-4 font-headline-md text-headline-md text-primary">{trip.notIncludedHeading}</h2>
                       <div
                         class="[&>p]:mb-4 [&>p]:font-body-md [&>p]:text-body-md [&_a]:text-on-tertiary-container [&_a]:underline [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6"
                         set:html={trip.notIncluded}
@@ -244,7 +289,7 @@ const socialEmbeds: SocialEmbed[] = trip?.socialEmbeds?.flatMap((embed) => {
                   )}
                   {trip.flights && (
                     <section class="border-t border-outline-variant/60 pt-7">
-                      <h2 class="mb-4 font-headline-md text-headline-md text-primary">Flights</h2>
+                      <h2 class="mb-4 font-headline-md text-headline-md text-primary">{trip.flightsHeading}</h2>
                       <div
                         class="[&>p]:mb-4 [&>p]:font-body-md [&>p]:text-body-md [&_a]:text-on-tertiary-container [&_a]:underline [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6"
                         set:html={trip.flights}
@@ -253,7 +298,7 @@ const socialEmbeds: SocialEmbed[] = trip?.socialEmbeds?.flatMap((embed) => {
                   )}
                   {trip.deposit && (
                     <section class="rounded-xl border border-primary/10 bg-primary-fixed/40 p-6 sm:p-8">
-                      <h2 class="mb-4 font-headline-md text-headline-md text-primary">Deposit</h2>
+                      <h2 class="mb-4 font-headline-md text-headline-md text-primary">{trip.depositHeading}</h2>
                       <div
                         class="[&>p]:mb-4 [&>p]:font-body-md [&>p]:text-body-md [&_a]:text-on-tertiary-container [&_a]:underline [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6"
                         set:html={trip.deposit}
@@ -268,6 +313,15 @@ const socialEmbeds: SocialEmbed[] = trip?.socialEmbeds?.flatMap((embed) => {
                       </div>
                     </section>
                   )}
+                  {trip.additionalSections?.map((section) => (
+                    <section class="border-t border-outline-variant/60 pt-7">
+                      <h2 class="mb-4 font-headline-md text-headline-md text-primary">{section.heading}</h2>
+                      <div
+                        class="[&>p]:mb-4 [&>p]:font-body-md [&>p]:text-body-md [&_a]:text-on-tertiary-container [&_a]:underline [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6"
+                        set:html={section.content}
+                      ></div>
+                    </section>
+                  ))}
                 </div>
               </article>
 
@@ -302,7 +356,7 @@ const socialEmbeds: SocialEmbed[] = trip?.socialEmbeds?.flatMap((embed) => {
                             title={embed.title || `${embed.platform} post`}
                             src={embed.embedUrl}
                             class="w-full"
-                            height={embed.platform === "facebook" ? "640" : "720"}
+                            height={embed.platform === "youtube" ? "360" : embed.platform === "tiktok" ? "740" : embed.platform === "facebook" ? "640" : "720"}
                             loading="lazy"
                             referrerpolicy="strict-origin-when-cross-origin"
                             style="border:0; overflow:hidden;"

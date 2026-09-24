@@ -15,8 +15,14 @@ export type Trip = {
   dateLabel: string;
   days?: number;
   deposit?: string;
+  depositHeading?: string;
+  additionalSections?: Array<{
+    content: string;
+    heading: string;
+  }>;
   featuredOnHomepage?: boolean;
   flights?: string;
+  flightsHeading?: string;
   gender?: "male" | "female" | "mixed";
   groupTypeLabel?: string;
   gallery?: Array<{
@@ -61,8 +67,10 @@ export type Trip = {
   };
   nights?: number;
   notIncluded?: string;
+  notIncludedHeading?: string;
   overview?: string;
   packageIncludes?: string;
+  packageIncludesHeading?: string;
   pricingOptions?: Array<{
     amount: number;
     label: string;
@@ -72,10 +80,11 @@ export type Trip = {
   path: string;
   slug: string;
   socialEmbeds?: Array<{
-    platform: "facebook" | "instagram";
+    platform: "facebook" | "instagram" | "tiktok" | "youtube";
     postUrl: string;
     title?: string;
   }>;
+  summary?: string;
   stays: string[];
   title: string;
   tripEnd?: string;
@@ -83,11 +92,14 @@ export type Trip = {
   tripYear: number;
   tripStyle?: "liveaboard" | "land-resort" | "land-tour" | "dive-resort";
   tripStyleLabel?: string;
+  update?: {
+    asOf: string;
+    content?: string;
+  };
 };
 
 export type FAQ = {
   answer: string;
-  category?: string;
   id: number | string;
   question: string;
 };
@@ -377,27 +389,23 @@ const fallbackFaqs: FAQ[] = [
   {
     answer:
       "No. Some trips suit newer divers and some are intended for more experienced guests. We help place you on the right departure.",
-    category: "Experience Levels",
     id: "faq-1",
     question: "Do I need to be an advanced diver?",
   },
   {
     answer: "Yes. The social atmosphere is a core part of the experience, not an afterthought.",
-    category: "Community",
     id: "faq-2",
     question: "Are trips community-focused?",
   },
   {
     answer:
       "Yes. Use the contact page to ask about destinations, dive requirements, cabins, or itinerary fit.",
-    category: "Booking",
     id: "faq-3",
     question: "Can I ask questions before booking?",
   },
   {
     answer:
       "Examples include Saba, the Red Sea, Baja California, the Maldives, and additional curated departures by season.",
-    category: "Destinations",
     id: "faq-4",
     question: "What destinations are offered?",
   },
@@ -781,11 +789,23 @@ function normalizeTrip(doc: any, fallback?: Trip): Trip | null {
     dateLabel: formatTripDateLabel(doc.tripStart, doc.tripEnd, doc.dateLabel || fallback?.dateLabel),
     days: doc.days || fallback?.days,
     deposit: renderRichText(doc.contentSections?.deposit) || fallback?.deposit,
+    depositHeading:
+      doc.contentSections?.depositHeading?.trim() || fallback?.depositHeading || "Deposit",
+    additionalSections:
+      doc.contentSections?.additionalSections
+        ?.map((section: any) => ({
+          content: renderRichText(section?.content),
+          heading: typeof section?.heading === "string" ? section.heading.trim() : "",
+        }))
+        .filter((section: { content: string; heading: string }) => section.content && section.heading) ||
+      fallback?.additionalSections,
     featuredOnHomepage:
       typeof doc.featuredOnHomepage === "boolean"
         ? doc.featuredOnHomepage
         : fallback?.featuredOnHomepage,
     flights: renderRichText(doc.contentSections?.flights) || fallback?.flights,
+    flightsHeading:
+      doc.contentSections?.flightsHeading?.trim() || fallback?.flightsHeading || "Getting There",
     gender: doc.gender || fallback?.gender,
     groupTypeLabel: getGroupTypeLabel(doc.gender || fallback?.gender),
     gallery:
@@ -815,8 +835,14 @@ function normalizeTrip(doc: any, fallback?: Trip): Trip | null {
     mapPin,
     nights: doc.nights || fallback?.nights,
     notIncluded: renderRichText(doc.contentSections?.notIncluded) || fallback?.notIncluded,
+    notIncludedHeading:
+      doc.contentSections?.notIncludedHeading?.trim() || fallback?.notIncludedHeading || "Not Included",
     overview: renderRichText(doc.contentSections?.overview) || renderRichText(doc.summary) || fallback?.overview,
     packageIncludes: renderRichText(doc.contentSections?.packageIncludes) || fallback?.packageIncludes,
+    packageIncludesHeading:
+      doc.contentSections?.packageIncludesHeading?.trim() ||
+      fallback?.packageIncludesHeading ||
+      "Our Package Includes",
     pricingOptions:
       doc.pricingOptions?.map((item: any) => ({
         amount: item.amount,
@@ -829,7 +855,9 @@ function normalizeTrip(doc: any, fallback?: Trip): Trip | null {
     socialEmbeds:
       doc.socialEmbeds
         ?.map((item: any) => {
-          const platform = item?.platform === "facebook" ? "facebook" : item?.platform === "instagram" ? "instagram" : null;
+          const platform = ["facebook", "instagram", "tiktok", "youtube"].includes(item?.platform)
+            ? item.platform
+            : null;
           const postUrl = typeof item?.postUrl === "string" ? item.postUrl.trim() : "";
 
           if (!platform || !postUrl) return null;
@@ -842,12 +870,21 @@ function normalizeTrip(doc: any, fallback?: Trip): Trip | null {
         })
         .filter(Boolean) || fallback?.socialEmbeds,
     stays,
+    summary:
+      typeof doc.summary === "string" ? doc.summary.trim() : fallback?.summary,
     title: doc.title,
     tripEnd: doc.tripEnd || fallback?.tripEnd,
     tripStart: doc.tripStart || fallback?.tripStart,
     tripYear,
     tripStyle: doc.tripStyle || fallback?.tripStyle,
     tripStyleLabel: getTripStyleLabel(doc.tripStyle || fallback?.tripStyle),
+    update:
+      doc.contentSections?.update?.asOf
+        ? {
+            asOf: doc.contentSections.update.asOf,
+            content: renderRichText(doc.contentSections.update.content) || undefined,
+          }
+        : fallback?.update,
   };
 }
 
@@ -1170,11 +1207,10 @@ export async function getTripBySlug(slug: string): Promise<Trip | null> {
 }
 
 export async function getFAQs(): Promise<FAQ[]> {
-  const response = await fetchCMS<CollectionResponse<any>>("/faqs?limit=100&sort=sortOrder");
+  const response = await fetchCMS<CollectionResponse<any>>("/faqs?limit=100&sort=_order");
   const faqs =
     response?.docs?.map((doc) => ({
       answer: doc.answer || "",
-      category: doc.category || "",
       id: doc.id || doc.question,
       question: doc.question || "",
     })) || [];
